@@ -1,0 +1,45 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class button3_3rd : MonoBehaviour
+{
+    public GameObject a;
+
+    public GameObject wall0;
+    public Transform wall1_pos;
+    //private Vector3 wall0_pos;
+    public GameObject wall0_;
+    public Transform wall1_pos_;
+
+    public float speed = 10f;
+
+    public bool wall3_isopen_2st = false;
+
+    void Start()
+    {
+        //wall0_pos = wall0.transform.position;
+        wall3_isopen_2st = false;
+    }
+
+    void Update()
+    {
+        if (wall3_isopen_2st)
+        {
+            wall0.transform.position = Vector3.Lerp(wall0.transform.position, wall1_pos.position, Mathf.Min(speed * Time.deltaTime, 1f));
+            wall0_.transform.position = Vector3.Lerp(wall0_.transform.position, wall1_pos_.position, Mathf.Min(speed * Time.deltaTime, 1f));
+            a.SetActive(false);
+        }
+        //else
+        //{
+        //    wall0.transform.position = Vector3.Lerp(wall0.transform.position, wall0_pos, Mathf.Min(speed * Time.deltaTime, 1f));
+        //}
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            wall3_isopen_2st = true;
+        }
+    }
+}
