@@ -60,20 +60,20 @@
     <Analyzer Include="E:\unity特供版\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Level\Button_once.cs" />
-    <Compile Include="Assets\Scripts\start\two_to_play.cs" />
-    <Compile Include="Assets\Scripts\player\ladder_move.cs" />
-    <Compile Include="Assets\Scripts\start\choose.cs" />
-    <Compile Include="Assets\Scripts\Level\Next_Level.cs" />
-    <Compile Include="Assets\Scripts\Level\Die.cs" />
-    <Compile Include="Assets\Scripts\start\tutorial.cs" />
-    <Compile Include="Assets\Scripts\Level\Button_twice.cs" />
-    <Compile Include="Assets\Scripts\start\music.cs" />
-    <Compile Include="Assets\Scripts\start\one_to_two.cs" />
-    <Compile Include="Assets\Scripts\start\playToChoose.cs" />
-    <Compile Include="Assets\Scripts\player\move_first.cs" />
-    <Compile Include="Assets\Scripts\start\menu.cs" />
-    <Compile Include="Assets\Scripts\player\move_late.cs" />
+    <Compile Include="Assets\scripts\player\ladder_move.cs" />
+    <Compile Include="Assets\scripts\Level\Next_Level.cs" />
+    <Compile Include="Assets\scripts\Level\Button_once.cs" />
+    <Compile Include="Assets\scripts\player\move_late.cs" />
+    <Compile Include="Assets\scripts\start\one_to_two.cs" />
+    <Compile Include="Assets\scripts\start\playToChoose.cs" />
+    <Compile Include="Assets\scripts\start\tutorial.cs" />
+    <Compile Include="Assets\scripts\Level\Die.cs" />
+    <Compile Include="Assets\scripts\start\menu.cs" />
+    <Compile Include="Assets\scripts\Level\Button_twice.cs" />
+    <Compile Include="Assets\scripts\start\two_to_play.cs" />
+    <Compile Include="Assets\scripts\start\music.cs" />
+    <Compile Include="Assets\scripts\player\move_first.cs" />
+    <Compile Include="Assets\scripts\start\choose.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMPro.cginc" />
