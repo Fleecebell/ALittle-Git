@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "E:\\unity\\UnityProgram\\ALittle-Git\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\old\\3rd\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:assets\\scripts\\old\\3rd\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\level\\button_once.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\button_once.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\new\\button_twice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\button_twice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\new\\button_once.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\new\\button_once.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\level\\button_twice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\button_twice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,40 +30,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Die.cs",
-              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Old\\3rd\\Die.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Old\\3rd\\Die.cs",
-              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Old\\3rd\\Die.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Old\\3rd\\Die.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAQAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "Button_twice.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Button_twice.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Button_twice.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Button_twice.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Level\\Button_twice.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABUAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-25T14:38:54.56Z",
+              "WhenOpened": "2026-03-27T05:50:22.224Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Button_twice.cs",
-              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\New\\Button_twice.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Button_twice.cs",
-              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\New\\Button_twice.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Button_twice.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAYwAsAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-25T14:10:31.253Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Button_once.cs",
-              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\New\\Button_once.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\New\\Button_once.cs",
-              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\New\\Button_once.cs",
-              "RelativeToolTip": "Assets\\Scripts\\New\\Button_once.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAbAAAAAAAAAA==",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Button_once.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Button_once.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Button_once.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Level\\Button_once.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAYwBMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-25T14:10:01.933Z"
+              "WhenOpened": "2026-03-27T05:50:12.255Z",
+              "EditorCaption": ""
             }
           ]
         },

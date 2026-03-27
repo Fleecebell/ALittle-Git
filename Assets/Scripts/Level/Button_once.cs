@@ -4,17 +4,26 @@ using UnityEngine;
 
 public class Button_once : MonoBehaviour
 {
-    public GameObject big_button;
+    GameObject big_button;
 
+    [Header("要移动的物体")]
     public GameObject wall0;
-    public Transform wall0_pos;
-
+    [Header("移动到的位置")]
+    public Transform wall1_pos;
+    private Vector3 wall0_pos;
+    [Header("移动速度")]
     public float speed = 10f;
 
-    public bool wall_isgone = false;
+    bool wall_isgone = false;
 
     void Start()
     {
+        if (wall0 != null && wall0_pos != null)
+        {
+            wall0_pos = wall0.transform.position;
+        }
+        else Debug.Log("未正确挂载移动物体");
+        big_button = transform.Find("big").gameObject;
         //wall0_pos = wall0.transform.position;
         wall_isgone = false;
     }
@@ -23,8 +32,9 @@ public class Button_once : MonoBehaviour
     {
         if (wall_isgone)
         {
-            wall0.transform.position = Vector3.Lerp(wall0.transform.position, wall0_pos.position, Mathf.Min(speed * Time.deltaTime, 1f));
             big_button.SetActive(false);
+            wall0.transform.position = Vector3.Lerp(wall0.transform.position, wall1_pos.position, Mathf.Min(speed * Time.deltaTime, 1f));
+
         }
     }
     private void OnTriggerStay2D(Collider2D collision)

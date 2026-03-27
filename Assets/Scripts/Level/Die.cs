@@ -13,6 +13,8 @@ public class Die : MonoBehaviour
 
     private void Start()
     {
+        p1 = GameObject.Find("Player");
+        p2 = GameObject.Find("Player2");
         //记录两个物体的世界位置
         p1Pos = p1.transform.position;
         p2Pos = p2.transform.position;
