@@ -191,6 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c334f0d118cdb44d8cf245ac8173fec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  climbSpeed: 5
   rb: {fileID: 7977779924686991533}
 --- !u!95 &9194768901541431613
 Animator:
@@ -277,7 +278,7 @@ Transform:
   m_GameObject: {fileID: 6455782588203100808}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: -2.8, z: -0.35515904}
+  m_LocalPosition: {x: 1.64, y: -2.8, z: -0.35515904}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -435,6 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c334f0d118cdb44d8cf245ac8173fec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  climbSpeed: 5
   rb: {fileID: 35034224458218996}
 --- !u!95 &3882868352637421675
 Animator:
