@@ -6,13 +6,18 @@ public class move_first : MonoBehaviour
 
     public static float moveSpeed = 10f;
     public static float jumpForce = 20f;
-    public static float dashForce = 20f;//
-    public float dashTime = 0.1f;//
-    public bool canDash = true;
-    private Rigidbody2D rb;
-    public static bool isGrounded;
+    public float dashForce = 20f;
 
-    // 用于判断地面的角度阈值，小于这个角度认为是地面
+    [Header("冲刺设置")]
+    public float dashDuration = 0.1f;
+    public float dashCooldown = 1f;
+    private bool canDash = true;
+    private float dashCooldownTimer;
+    private bool isDashing;
+
+    private Rigidbody2D rb;
+    public bool isGrounded;
+
     public float groundAngleThreshold = 45f;
 
     void Start()
@@ -22,10 +27,32 @@ public class move_first : MonoBehaviour
 
     void Update()
     {
-        float moveInput = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        // 冷却计时
+        if (!canDash)
+        {
+            dashCooldownTimer -= Time.deltaTime;
+            if (dashCooldownTimer <= 0)
+            {
+                canDash = true;
+            }
+        }
 
-        if(isGrounded)
+        float moveInput = Input.GetAxis("Horizontal");
+
+        // 正常移动（冲刺时不覆盖速度）
+        if (!isDashing)
+        {
+            rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        }
+
+        // ========== 长按空格连续跳（只有在地面才跳） ==========
+        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        }
+
+        // 动画
+        if (isGrounded)
         {
             p1_jump.SetBool("p1j", false);
         }
@@ -34,68 +61,48 @@ public class move_first : MonoBehaviour
             p1_jump.SetBool("p1j", true);
         }
 
-        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        // 冲刺（支持空中）
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
-            rb.velocity = Vector2.up * jumpForce;
-            isGrounded = false; // 跳跃后立即设为未落地
+            StartCoroutine(Dash());
+        }
+    }
+
+    // 冲刺协程
+    private System.Collections.IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0;
+
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        if (horizontal != 0)
+        {
+            rb.velocity = new Vector2(horizontal * dashForce, 0);
         }
 
-        if(Input.GetKey(KeyCode.A) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && canDash)
-        {
-            dashTime -= Time.deltaTime;
-            if (dashTime <= 0)
-            {
-                canDash = false;
-            }
-            else
-            {
-                rb.velocity = Vector2.left * dashForce;
-            }
-        }
+        yield return new WaitForSeconds(dashDuration);
 
-        if (Input.GetKey(KeyCode.D) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && canDash)
-        {
-            dashTime -= Time.deltaTime;
-            if (dashTime <= 0)
-            {
-                canDash = false;
-            }
-            else
-            {
-                rb.velocity = Vector2.right * dashForce;
-            }
-        }
-
-        if(isGrounded)
-        {
-            dashForce = 10f;
-        }
-        else
-        {
-            dashForce = 20f;
-        }
+        rb.gravityScale = originalGravity;
+        isDashing = false;
+        dashCooldownTimer = dashCooldown;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            // 检查是否有碰撞点的法线接近垂直（地面）
             foreach (ContactPoint2D contact in collision.contacts)
             {
-                // 计算法线与竖直方向的夹角
                 float angle = Vector2.Angle(contact.normal, Vector2.up);
-
-                // 如果角度小于阈值，认为是在地面上
                 if (angle < groundAngleThreshold)
                 {
                     isGrounded = true;
                     canDash = true;
-                    dashTime = 0.1f;
-                    return; // 找到一个有效地面接触点就可以返回了
+                    return;
                 }
             }
-            // 如果所有接触点都不满足地面条件，则不是在地面上
             isGrounded = false;
         }
     }
@@ -107,6 +114,7 @@ public class move_first : MonoBehaviour
             isGrounded = false;
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("red"))
@@ -114,11 +122,4 @@ public class move_first : MonoBehaviour
             move_late.isR = true;
         }
     }
-    //private void OnTriggerStay2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Finish"))
-    //    {
-    //        isGrounded = true;
-    //    }
-    //}
 }

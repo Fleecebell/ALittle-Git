@@ -1,24 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System;
-
 
 public class move_late : MonoBehaviour
 {
     public Animator p2_jump;
 
-    // 主角的引用，需要在Inspector中手动赋值
     public move_first player;
-    // 延迟时间（秒）
     public float delayTime = 0.5f;
 
     private Rigidbody2D rb;
     private bool isGrounded;
 
-    // 存储主角的动作历史（包含冲刺状态）
     private Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
-    
-    // 用于判断地面的角度阈值，小于这个角度认为是地面
     public float groundAngleThreshold = 45f;
 
     public GameObject p1;
@@ -28,13 +21,30 @@ public class move_late : MonoBehaviour
     Vector3 p2Pos;
     public static bool isR = false;
 
-    // 扩展记录结构，增加冲刺相关信息
+    // 冲刺冷却
+    public float dashCooldown = 1f;
+    private float lastDashTime;
+
+    [Header("缓降")]
+    public float fallSpeedLimit = -3f;
+
+    // 用来记录缓降时间段
+    private Queue<ShiftRecord> shiftHistory = new Queue<ShiftRecord>();
+    private struct ShiftRecord
+    {
+        public bool isShiftDown;
+        public float timeRecorded;
+    }
+
+    // 当前P2是否应该缓降
+    private bool isSlowFalling = false;
+
     private struct MovementRecord
     {
         public float horizontalInput;
         public bool jumpInput;
-        public bool isDashingLeft;  // 是否向左冲刺
-        public bool isDashingRight; // 是否向右冲刺
+        public bool isDashingLeft;
+        public bool isDashingRight;
         public float timeRecorded;
     }
 
@@ -49,11 +59,15 @@ public class move_late : MonoBehaviour
     {
         if (player == null) return;
 
-        // 记录主角当前的输入（包括冲刺）
         RecordPlayerInput();
-
-        // 执行延迟后的动作
+        UpdateSlowFallState(); // 更新缓降状态（延迟）
         ExecuteDelayedActions();
+
+        // 应用缓降
+        if (!isGrounded && rb.velocity.y < 0 && isSlowFalling)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, fallSpeedLimit));
+        }
 
         if (isGrounded)
         {
@@ -68,20 +82,22 @@ public class move_late : MonoBehaviour
         {
             p1.transform.position = p1Pos;
             p2.transform.position = p2Pos;
-            
             isR = false;
+            lastDashTime = -10f;
+            shiftHistory.Clear();
+            isSlowFalling = false;
         }
-
     }
 
-    // 记录主角的输入（增加冲刺状态记录）
+    // 记录Shift按下/松开
     private void RecordPlayerInput()
     {
         float horizontal = Input.GetAxis("Horizontal");
-        bool jump = Input.GetKey(KeyCode.Space);// && move_first.isGrounded;
-        // 记录冲刺状态
-        bool dashLeft = Input.GetKey(KeyCode.A) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
-        bool dashRight = Input.GetKey(KeyCode.D) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+        bool jump = Input.GetKey(KeyCode.Space);
+        bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
+        bool dashLeft = Input.GetKey(KeyCode.A) && shift;
+        bool dashRight = Input.GetKey(KeyCode.D) && shift;
 
         movementHistory.Enqueue(new MovementRecord
         {
@@ -91,37 +107,54 @@ public class move_late : MonoBehaviour
             isDashingRight = dashRight,
             timeRecorded = Time.time
         });
+
+        // 记录shift状态变化
+        if (shiftHistory.Count == 0 || shiftHistory.Peek().isShiftDown != shift)
+        {
+            shiftHistory.Enqueue(new ShiftRecord
+            {
+                isShiftDown = shift,
+                timeRecorded = Time.time
+            });
+        }
     }
 
-    // 执行延迟后的动作（增加冲刺动作执行）
+    // 更新P2的缓降状态（延迟执行）
+    private void UpdateSlowFallState()
+    {
+        while (shiftHistory.Count > 0 && Time.time - shiftHistory.Peek().timeRecorded >= delayTime)
+        {
+            var rec = shiftHistory.Dequeue();
+            isSlowFalling = rec.isShiftDown;
+        }
+    }
+
     private void ExecuteDelayedActions()
     {
-        // 移除过期的记录
-        while (movementHistory.Count > 0 &&
-               Time.time - movementHistory.Peek().timeRecorded >= delayTime)
+        while (movementHistory.Count > 0 && Time.time - movementHistory.Peek().timeRecorded >= delayTime)
         {
             var record = movementHistory.Dequeue();
 
-            // 优先处理冲刺动作
-            if (record.isDashingLeft)
+            bool canDash = Time.time >= lastDashTime + dashCooldown;
+
+            if (canDash && record.isDashingLeft)
             {
-                rb.velocity = Vector2.left * move_first.dashForce * 0.3f;
+                rb.velocity = Vector2.left * player.dashForce * 0.3f;
+                lastDashTime = Time.time;
             }
-            else if (record.isDashingRight)
+            else if (canDash && record.isDashingRight)
             {
-                rb.velocity = -Vector2.left * move_first.dashForce * 0.3f;
+                rb.velocity = Vector2.right * player.dashForce * 0.3f;
+                lastDashTime = Time.time;
             }
-            // 常规移动
             else
             {
                 rb.velocity = new Vector2(record.horizontalInput * move_first.moveSpeed, rb.velocity.y);
             }
 
-            // 跳跃动作
             if (record.jumpInput && isGrounded)
             {
                 rb.velocity = Vector2.up * move_first.jumpForce;
-                Debug.Log("jump");
             }
         }
     }
@@ -130,20 +163,15 @@ public class move_late : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            // 检查是否有碰撞点的法线接近垂直（地面）
             foreach (ContactPoint2D contact in collision.contacts)
             {
-                // 计算法线与竖直方向的夹角
                 float angle = Vector2.Angle(contact.normal, Vector2.up);
-
-                // 如果角度小于阈值，认为是在地面上
                 if (angle < groundAngleThreshold)
                 {
                     isGrounded = true;
-                    return; // 找到一个有效地面接触点就可以返回了
+                    return;
                 }
             }
-            // 如果所有接触点都不满足地面条件，则不是在地面上
             isGrounded = false;
         }
     }
@@ -155,6 +183,7 @@ public class move_late : MonoBehaviour
             isGrounded = false;
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("red"))

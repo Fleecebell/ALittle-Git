@@ -5,25 +5,24 @@ public class Ladder : MonoBehaviour
     [Header("攀爬速度")]
     public float climbSpeed = 5f;
 
-    private bool isOnLadder;   // 是否在梯子触发区内
-    private bool canClimb;     // 是否激活攀爬悬停状态
+    private bool isOnLadder;
+    private bool isClimbing; // 是否处于攀爬状态
 
     [SerializeField] private Rigidbody2D rb;
 
     void Update()
     {
-        // 在梯子内 按下空格 → 开启攀爬悬停
-        if (isOnLadder && Input.GetKeyDown(KeyCode.Space))
+        // 只要在梯子上按住空格，就进入攀爬状态
+        if (isOnLadder && Input.GetKey(KeyCode.Space))
         {
-            canClimb = true;
+            isClimbing = true;
         }
     }
 
     private void FixedUpdate()
     {
-        if (canClimb)
+        if (isClimbing)
         {
-            // 攀爬模式：无重力、可上下移动/悬停
             rb.gravityScale = 0f;
 
             float verticalVel = 0f;
@@ -34,7 +33,6 @@ public class Ladder : MonoBehaviour
         }
         else
         {
-            // 没开启攀爬：正常重力、会掉落
             rb.gravityScale = 9.8f;
         }
     }
@@ -52,7 +50,7 @@ public class Ladder : MonoBehaviour
         if (collision.CompareTag("Ladder"))
         {
             isOnLadder = false;
-            canClimb = false; // 离开梯子重置攀爬状态
+            isClimbing = false; // 离开梯子才取消攀爬悬浮
         }
     }
 }
