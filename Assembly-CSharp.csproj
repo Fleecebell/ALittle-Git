@@ -69,35 +69,34 @@
     <Compile Include="Assets\Scripts\player\move_first.cs" />
     <Compile Include="Assets\Scripts\player\move_late.cs" />
     <Compile Include="Assets\Scripts\Level\Button_once.cs" />
-    <Compile Include="Assets\Scripts\player\Ladder.cs" />
     <Compile Include="Assets\Scripts\start\tutorial.cs" />
     <Compile Include="Assets\Scripts\start\music.cs" />
     <Compile Include="Assets\Scripts\start\playToChoose.cs" />
     <Compile Include="Assets\Scripts\start\menu.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMPro.cginc" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
-    <None Include="Assets\resources\文字\7000汉字+符号+英文字符集(1).txt" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
-    <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_Sprite.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMPro.cginc" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Resources\文字\7000汉字+符号+英文字符集(1).txt" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\Resources\文字\TextMesh Pro\Shaders\TMP_Sprite.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
