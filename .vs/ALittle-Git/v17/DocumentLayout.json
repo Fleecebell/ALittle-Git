@@ -5,6 +5,7 @@
     {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -42,6 +43,20 @@
     },
     {
 >>>>>>> Nanami
+=======
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\ALittle-Git\\assets\\scripts\\level\\next_level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\next_level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\alittle-git\\assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\ALittle-Git\\assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+>>>>>>> Nanami
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\ALittle-Git\\assets\\scripts\\player\\ladder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\ladder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -63,6 +78,7 @@
         {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           "DockedWidth": 200,
 =======
           "DockedWidth": 326,
@@ -71,6 +87,10 @@
           "DockedWidth": 326,
 >>>>>>> Nanami
           "SelectedChildIndex": 2,
+=======
+          "DockedWidth": 326,
+          "SelectedChildIndex": 6,
+>>>>>>> Nanami
           "Children": [
             {
               "$type": "Bookmark",
@@ -81,6 +101,7 @@
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
+<<<<<<< HEAD
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "move_first.cs",
@@ -92,11 +113,16 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-30T08:06:10.608Z",
               "EditorCaption": ""
+=======
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+>>>>>>> Nanami
             },
             {
 <<<<<<< HEAD
 <<<<<<< HEAD
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 0,
               "Title": "Die.cs",
               "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Die.cs",
@@ -106,6 +132,17 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-01T09:23:51.287Z",
+=======
+              "DocumentIndex": 1,
+              "Title": "move_first.cs",
+              "DocumentMoniker": "E:\\ALittle-Git\\Assets\\scripts\\player\\move_first.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\player\\move_first.cs",
+              "ToolTip": "E:\\ALittle-Git\\Assets\\scripts\\player\\move_first.cs",
+              "RelativeToolTip": "Assets\\scripts\\player\\move_first.cs",
+              "ViewState": "AgIAAGQAAACAmZmZmZkfwHYAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T08:06:10.608Z",
+>>>>>>> Nanami
               "EditorCaption": ""
 =======
               "$type": "Bookmark",
@@ -131,6 +168,7 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
               "Title": "move_first.cs",
@@ -198,6 +236,56 @@
             },
             {
               "$type": "Document",
+=======
+              "Title": "Die.cs",
+              "DocumentMoniker": "E:\\ALittle-Git\\Assets\\Scripts\\Level\\Die.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Die.cs",
+              "ToolTip": "E:\\ALittle-Git\\Assets\\Scripts\\Level\\Die.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Level\\Die.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T05:50:29.399Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Ladder.cs",
+              "DocumentMoniker": "E:\\ALittle-Git\\Assets\\Scripts\\player\\Ladder.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\player\\Ladder.cs",
+              "ToolTip": "E:\\ALittle-Git\\Assets\\Scripts\\player\\Ladder.cs",
+              "RelativeToolTip": "Assets\\Scripts\\player\\Ladder.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAADwvzkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T08:56:42.581Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Next_Level.cs",
+              "DocumentMoniker": "E:\\ALittle-Git\\Assets\\scripts\\Level\\Next_Level.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\Level\\Next_Level.cs",
+              "ToolTip": "E:\\ALittle-Git\\Assets\\scripts\\Level\\Next_Level.cs",
+              "RelativeToolTip": "Assets\\scripts\\Level\\Next_Level.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T07:51:05.422Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Button_twice.cs",
+              "DocumentMoniker": "E:\\ALittle-Git\\Assets\\Scripts\\Level\\Button_twice.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Button_twice.cs",
+              "ToolTip": "E:\\ALittle-Git\\Assets\\Scripts\\Level\\Button_twice.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Level\\Button_twice.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAcwCcAAACAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T05:50:22.224Z"
+            },
+            {
+              "$type": "Document",
+>>>>>>> Nanami
               "DocumentIndex": 4,
               "Title": "Button_once.cs",
               "DocumentMoniker": "E:\\ALittle-Git\\Assets\\Scripts\\Level\\Button_once.cs",
@@ -208,6 +296,9 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T05:50:12.255Z"
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> Nanami
+=======
 >>>>>>> Nanami
 =======
 >>>>>>> Nanami

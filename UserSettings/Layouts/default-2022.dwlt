@@ -111,7 +111,11 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
+<<<<<<< HEAD
   controlID: 57
+=======
+  controlID: 52
+>>>>>>> Nanami
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -213,12 +217,16 @@ MonoBehaviour:
   vertical: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   controlID: 126
 =======
   controlID: 147
 >>>>>>> Nanami
 =======
   controlID: 147
+>>>>>>> Nanami
+=======
+  controlID: 130
 >>>>>>> Nanami
   draggingID: 0
 --- !u!114 &6
@@ -242,6 +250,7 @@ MonoBehaviour:
     y: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     width: 772
     height: 722.8
   m_MinSize: {x: 100, y: 100}
@@ -251,15 +260,21 @@ MonoBehaviour:
 =======
 =======
 >>>>>>> Nanami
+=======
+>>>>>>> Nanami
     width: 1361
     height: 1299
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
+<<<<<<< HEAD
   controlID: 26
 <<<<<<< HEAD
 >>>>>>> Nanami
 =======
+>>>>>>> Nanami
+=======
+  controlID: 29
 >>>>>>> Nanami
   draggingID: 0
 --- !u!114 &7
@@ -281,8 +296,13 @@ MonoBehaviour:
     y: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     width: 772
     height: 412
+=======
+    width: 1361
+    height: 647
+>>>>>>> Nanami
 =======
     width: 1361
     height: 647
@@ -317,9 +337,15 @@ MonoBehaviour:
     x: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     y: 412
     width: 772
     height: 310.8
+=======
+    y: 647
+    width: 1361
+    height: 652
+>>>>>>> Nanami
 =======
     y: 647
     width: 1361
@@ -533,9 +559,15 @@ MonoBehaviour:
     x: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     y: 485.6
     width: 771
     height: 289.8
+=======
+    y: 720
+    width: 1360
+    height: 631
+>>>>>>> Nanami
 =======
     y: 720
     width: 1360
@@ -1254,6 +1286,9 @@ MonoBehaviour:
     width: 1360
     height: 626
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> Nanami
+=======
 >>>>>>> Nanami
 =======
 >>>>>>> Nanami
@@ -1656,6 +1691,7 @@ MonoBehaviour:
   m_Position:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     m_Target: {x: -0.8644472, y: -0.6217054, z: 0.7098287}
     speed: 2
     m_Value: {x: -0.8644472, y: -0.6217054, z: 0.7098287}
@@ -1668,6 +1704,11 @@ MonoBehaviour:
     m_Target: {x: -2.5729508, y: -3.272022, z: 0.12387195}
     speed: 2
     m_Value: {x: -2.5729508, y: -3.272022, z: 0.12387195}
+>>>>>>> Nanami
+=======
+    m_Target: {x: -3.5439625, y: -3.5512314, z: 0.18301322}
+    speed: 2
+    m_Value: {x: -3.5439625, y: -3.5512314, z: 0.18301322}
 >>>>>>> Nanami
   m_RenderMode: 0
   m_CameraMode:
@@ -1720,6 +1761,7 @@ MonoBehaviour:
   m_Size:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     m_Target: 10.411155
     speed: 2
     m_Value: 10.411155
@@ -1732,6 +1774,11 @@ MonoBehaviour:
     m_Target: 8.282787
     speed: 2
     m_Value: 8.282787
+>>>>>>> Nanami
+=======
+    m_Target: 2.3686178
+    speed: 2
+    m_Value: 2.3686178
 >>>>>>> Nanami
   m_Ortho:
     m_Target: 1
@@ -1982,11 +2029,14 @@ MonoBehaviour:
     serializedVersion: 2
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     x: 772
     y: 73.6
     width: 239.59998
     height: 701.8
 =======
+=======
+>>>>>>> Nanami
 =======
 >>>>>>> Nanami
     x: 1878
@@ -2009,6 +2059,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       m_SelectedIDs: 
       m_LastClickedID: 0
       m_ExpandedIDs: 16fbffff
@@ -2021,6 +2072,11 @@ MonoBehaviour:
       m_SelectedIDs: 4c630000
       m_LastClickedID: 25420
       m_ExpandedIDs: 1afbffff70630000
+>>>>>>> Nanami
+=======
+      m_SelectedIDs: f2690000
+      m_LastClickedID: 0
+      m_ExpandedIDs: e4faffff1afbffff
 >>>>>>> Nanami
       m_RenameOverlay:
         m_UserAcceptedRename: 0
@@ -2039,7 +2095,11 @@ MonoBehaviour:
         m_IsRenamingFilename: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         m_ClientGUIView: {fileID: 9}
+=======
+        m_ClientGUIView: {fileID: 2}
+>>>>>>> Nanami
 =======
         m_ClientGUIView: {fileID: 2}
 >>>>>>> Nanami
@@ -2075,11 +2135,14 @@ MonoBehaviour:
     serializedVersion: 2
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     x: 1013.60004
     y: 73.6
     width: 258.80005
     height: 701.8
 =======
+=======
+>>>>>>> Nanami
 =======
 >>>>>>> Nanami
     x: 1361
@@ -2110,12 +2173,16 @@ MonoBehaviour:
     m_Folders:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     - Assets/Scripts/Level
 =======
     - Assets/Perfabs
 >>>>>>> Nanami
 =======
     - Assets/Perfabs
+>>>>>>> Nanami
+=======
+    - Assets/Scenes
 >>>>>>> Nanami
     m_Globs: []
     m_OriginalText: 
@@ -2126,6 +2193,7 @@ MonoBehaviour:
   m_LastFolders:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   - Assets/Scripts/Level
 =======
   - Assets/Perfabs
@@ -2133,12 +2201,16 @@ MonoBehaviour:
 =======
   - Assets/Perfabs
 >>>>>>> Nanami
+=======
+  - Assets/Scenes
+>>>>>>> Nanami
   m_LastFoldersGridSize: 16
   m_LastProjectPath: E:\unity\UnityProgram\ALittle-Git
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     m_SelectedIDs: 74750000
@@ -2153,6 +2225,11 @@ MonoBehaviour:
     m_SelectedIDs: 92660000
     m_LastClickedID: 26258
     m_ExpandedIDs: 0000000072650000
+>>>>>>> Nanami
+=======
+    m_SelectedIDs: 82660000
+    m_LastClickedID: 26242
+    m_ExpandedIDs: 000000007265000084660000
 >>>>>>> Nanami
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -2183,7 +2260,11 @@ MonoBehaviour:
     m_LastClickedID: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     m_ExpandedIDs: 00000000487200004a7200004c7200004e72000050720000
+=======
+    m_ExpandedIDs: 0000000072650000
+>>>>>>> Nanami
 =======
     m_ExpandedIDs: 0000000072650000
 >>>>>>> Nanami
@@ -2217,7 +2298,11 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
+<<<<<<< HEAD
     m_ExpandedInstanceIDs: 205d0000545d0000985c0000ce6e0000d46e0000da6e0000445e0000e66500008af80100806a0000ce940000f8640000de940000d2640000d6640000ca660000c8660000c8630000f2b200000000000080c30000
+=======
+    m_ExpandedInstanceIDs: 205d0000545d0000985c0000ce6e0000d46e0000da6e0000445e0000e66500008af80100806a0000ce940000f8640000de94000000000000d2640000d6640000ca660000c8660000ea640000e46400008a650000
+>>>>>>> Nanami
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2246,9 +2331,12 @@ MonoBehaviour:
   m_SkipHiddenPackages: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_DirectoriesAreaWidth: 149.59998
 --- !u!114 &18
 =======
+=======
+>>>>>>> Nanami
 =======
 >>>>>>> Nanami
   m_DirectoriesAreaWidth: 105.99997
@@ -2275,11 +2363,14 @@ MonoBehaviour:
     serializedVersion: 2
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     x: 1274.4
     y: 73.6
     width: 260.59998
     height: 701.8
 =======
+=======
+>>>>>>> Nanami
 =======
 >>>>>>> Nanami
     x: 2258
