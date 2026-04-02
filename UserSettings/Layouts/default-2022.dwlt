@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1536
     height: 772.8
   m_ShowMode: 4
-  m_Title: "\u5C42\u7EA7"
+  m_Title: "\u573A\u666F"
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 122
+  controlID: 125
   draggingID: 0
 --- !u!114 &6
 MonoBehaviour:
@@ -1335,9 +1335,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.8644472, y: -0.6217054, z: 0.7098287}
+    m_Target: {x: 1.3575138, y: -1.6522424, z: 0.0018078899}
     speed: 2
-    m_Value: {x: -0.8644472, y: -0.6217054, z: 0.7098287}
+    m_Value: {x: 0.97194237, y: -1.542659, z: -0.0028189803}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1387,9 +1387,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 10.411155
+    m_Target: 9.819219
     speed: 2
-    m_Value: 10.411155
+    m_Value: 10.281904
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1654,9 +1654,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 422effff
-      m_LastClickedID: -53694
-      m_ExpandedIDs: 462efffff693ffff5296ffff5496ffff6c97ffff9e97fffff699fffffe99ffff169bffff3c9bffffdc9effffee9effffe0abffff34baffff56baffff86baffff98baffff9abaffff1cbcffff82bcfffff8bdffff2ebeffffc0bfffffd4bfffffa0c4ffffb4c4ffff16fbffff0a7100007685000084850000aa900000
+      m_SelectedIDs: e6710000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 08b6fffffab6ffff1eb8ffff12b9ffffb6b9ffffcebaffffcabbffffd8bcffffeabdffff12bfffff26c0ffffbac0ffff4cc1ffff6ec2ffff0cc3fffff0c5ffff0ac7ffff1ec8ffff1ac9ffff0ecaffffb4caffffd2cbffff70ccffff4acdffff68ceffff0ecfffff02d0ffffa0d0ffff38d1ffff5ad2fffff2d2ffff8ed3ffff34d4ffff28d5ffffc6d5ffff5ed6ffff86d7ffff20d8ffff14d9ffffb2d9ffff4adaffff6adbffff84dcffff98ddffff94deffffb0dfffffa8e1ffff4ae2ffff48e3ffff60e4ffff66e5ffff0ce6ffff06e7ffffa4e7ffff44e8ffff72e9ffff14eaffff34ebffffdcebffff3aedfffff8eeffff0af0ffff2af1ffff44f2ffff58f3ffffaaf5ffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1725,7 +1725,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/player
+    - Assets/Scenes
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1733,16 +1733,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/player
+  - Assets/Scenes
   m_LastFoldersGridSize: 16
   m_LastProjectPath: E:\unity\UnityProgram\ALittle-Git
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: ce730000
-    m_LastClickedID: 29646
-    m_ExpandedIDs: 000000003472000036720000387200003a7200003c72000000ca9a3b
+    m_SelectedIDs: 22760000
+    m_LastClickedID: 30242
+    m_ExpandedIDs: 000000005e7400006074000062740000647400006674000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1770,7 +1770,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000003472000036720000387200003a7200003c720000
+    m_ExpandedIDs: 000000005e74000060740000627400006474000066740000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
