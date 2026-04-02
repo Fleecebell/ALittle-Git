@@ -3,6 +3,7 @@
   "WorkspaceRootPath": "E:\\ALittle-Git\\",
   "Documents": [
     {
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\level\\aaa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,10 +16,15 @@
     {
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\level\\next_level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\next_level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> Stashed changes
     },
     {
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+<<<<<<< Updated upstream
 =======
 =======
 >>>>>>> Nanami
@@ -39,6 +45,15 @@
     },
     {
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\ALittle-Git\\assets\\scripts\\level\\button_once.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+=======
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\player\\ladder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\ladder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\level\\button_once.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+>>>>>>> Stashed changes
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\button_once.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -56,6 +71,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
           "DockedWidth": 200,
+<<<<<<< Updated upstream
           "SelectedChildIndex": 2,
 =======
 =======
@@ -63,6 +79,9 @@
           "DockedWidth": 326,
           "SelectedChildIndex": 3,
 >>>>>>> Nanami
+=======
+          "SelectedChildIndex": 4,
+>>>>>>> Stashed changes
           "Children": [
             {
               "$type": "Bookmark",
@@ -80,6 +99,7 @@
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 0,
               "Title": "aaa.cs",
               "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\aaa.cs",
@@ -87,6 +107,54 @@
               "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\aaa.cs",
               "RelativeToolTip": "Assets\\Scripts\\Level\\aaa.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAFAAAAAAAAAA==",
+=======
+              "DocumentIndex": 1,
+              "Title": "Die.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Die.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Die.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Die.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Level\\Die.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T05:50:29.399Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Ladder.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\Ladder.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\player\\Ladder.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\Ladder.cs",
+              "RelativeToolTip": "Assets\\Scripts\\player\\Ladder.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAADwvzkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T08:56:42.581Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Next_Level.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Next_Level.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Next_Level.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Next_Level.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Level\\Next_Level.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T07:51:05.422Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Button_twice.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Button_twice.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Button_twice.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Button_twice.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Level\\Button_twice.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAcwCcAAACAAAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-01T14:29:47.519Z",
               "EditorCaption": ""
@@ -94,12 +162,21 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
+<<<<<<< Updated upstream
               "Title": "Die.cs",
               "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Die.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Die.cs",
               "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Die.cs",
               "RelativeToolTip": "Assets\\Scripts\\Level\\Die.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAhAAAAAAAAAA==",
+=======
+              "Title": "Button_once.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Button_once.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Button_once.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Button_once.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Level\\Button_once.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAuwCYAAAAFAAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-01T09:23:51.287Z"
             },

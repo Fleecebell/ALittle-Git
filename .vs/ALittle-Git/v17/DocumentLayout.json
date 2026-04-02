@@ -3,13 +3,25 @@
   "WorkspaceRootPath": "E:\\ALittle-Git\\",
   "Documents": [
     {
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\level\\next_level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\next_level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+>>>>>>> Stashed changes
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+<<<<<<< Updated upstream
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\player\\move_late.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_late.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -58,6 +70,9 @@
     {
 >>>>>>> Nanami
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\ALittle-Git\\assets\\scripts\\player\\ladder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+=======
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\player\\ladder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+>>>>>>> Stashed changes
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\ladder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -80,6 +95,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
           "DockedWidth": 200,
+<<<<<<< Updated upstream
 =======
           "DockedWidth": 326,
 >>>>>>> Nanami
@@ -91,6 +107,9 @@
           "DockedWidth": 326,
           "SelectedChildIndex": 6,
 >>>>>>> Nanami
+=======
+          "SelectedChildIndex": 2,
+>>>>>>> Stashed changes
           "Children": [
             {
               "$type": "Bookmark",
@@ -122,8 +141,25 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
               "$type": "Document",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               "DocumentIndex": 0,
+=======
+              "DocumentIndex": 0,
+              "Title": "move_first.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\move_first.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\player\\move_first.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\move_first.cs",
+              "RelativeToolTip": "Assets\\Scripts\\player\\move_first.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T07:40:40.737Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+>>>>>>> Stashed changes
               "Title": "Die.cs",
               "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Die.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Die.cs",
@@ -131,6 +167,7 @@
               "RelativeToolTip": "Assets\\Scripts\\Level\\Die.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< Updated upstream
               "WhenOpened": "2026-04-01T09:23:51.287Z",
 =======
               "DocumentIndex": 1,
@@ -200,6 +237,12 @@
             },
             {
               "$type": "Document",
+=======
+              "WhenOpened": "2026-03-27T05:50:29.399Z"
+            },
+            {
+              "$type": "Document",
+>>>>>>> Stashed changes
               "DocumentIndex": 3,
               "Title": "Ladder.cs",
               "DocumentMoniker": "E:\\ALittle-Git\\Assets\\Scripts\\player\\Ladder.cs",
@@ -209,6 +252,7 @@
               "ViewState": "AgIAABgAAAAAAAAAAADwvzkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T08:56:42.581Z"
+<<<<<<< Updated upstream
             },
             {
               "$type": "Document",
@@ -257,10 +301,12 @@
               "ViewState": "AgIAABgAAAAAAAAAAADwvzkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T08:56:42.581Z"
+=======
+>>>>>>> Stashed changes
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Next_Level.cs",
               "DocumentMoniker": "E:\\ALittle-Git\\Assets\\scripts\\Level\\Next_Level.cs",
               "RelativeDocumentMoniker": "Assets\\scripts\\Level\\Next_Level.cs",
@@ -285,7 +331,10 @@
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
 >>>>>>> Nanami
+=======
+>>>>>>> Stashed changes
               "DocumentIndex": 4,
               "Title": "Button_once.cs",
               "DocumentMoniker": "E:\\ALittle-Git\\Assets\\Scripts\\Level\\Button_once.cs",
@@ -295,6 +344,7 @@
               "ViewState": "AgIAAA0AAAAAAAAAAAAuwCYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T05:50:12.255Z"
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> Nanami
@@ -302,6 +352,8 @@
 >>>>>>> Nanami
 =======
 >>>>>>> Nanami
+=======
+>>>>>>> Stashed changes
             }
           ]
         },

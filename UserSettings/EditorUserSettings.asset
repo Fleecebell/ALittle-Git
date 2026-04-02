@@ -6,6 +6,7 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     RecentlyUsedSceneGuid-0:
+<<<<<<< Updated upstream
       value: 0202025f51045f5a0e0c0f23487207444f4f4b29747e77687d2c1b6bb7e2376e
       flags: 0
     RecentlyUsedSceneGuid-1:
@@ -13,8 +14,15 @@ EditorUserSettings:
 <<<<<<< HEAD
 <<<<<<< HEAD
       value: 0007500250015b0d5f5c597140765a4415151e727b7877617978446ae6b6303a
+=======
+      value: 5b06055257045e5e5a565b2012210e444f154f7d757c76317d7b4b32e3b06368
+>>>>>>> Stashed changes
+      flags: 0
+    RecentlyUsedSceneGuid-1:
+      value: 50520352570d5a590b0c5b7542205a44434f4b7e2f2970637d2a1b6ae4b5616a
       flags: 0
     RecentlyUsedSceneGuid-2:
+<<<<<<< Updated upstream
       value: 5b09565104010d08550a552412270944404e4a2f2e79756479281e67e7b16469
 =======
       value: 5b06055257045e5e5a565b2012210e444f154f7d757c76317d7b4b32e3b06368
@@ -40,10 +48,26 @@ EditorUserSettings:
     RecentlyUsedSceneGuid-2:
       value: 5755065451510a035856087743765c444e16487e747b2064292a4d66b6b2376f
 >>>>>>> Nanami
+=======
+      value: 515250075c0c595e5f5a5e71122159444e4e4a2f7a7d7f602f284d66b4b76661
+>>>>>>> Stashed changes
       flags: 0
     RecentlyUsedSceneGuid-3:
+      value: 5b09565104010d08550a552412270944404e4a2f2e79756479281e67e7b16469
+      flags: 0
+    RecentlyUsedSceneGuid-4:
+      value: 0605055606560a0a0e5f5e7714275c44444f4b287d7d23602c2d1f63e7b6373c
+      flags: 0
+    RecentlyUsedSceneGuid-5:
+      value: 0007500250015b0d5f5c597140765a4415151e727b7877617978446ae6b6303a
+      flags: 0
+    RecentlyUsedSceneGuid-6:
+      value: 5755065451510a035856087743765c444e16487e747b2064292a4d66b6b2376f
+      flags: 0
+    RecentlyUsedSceneGuid-7:
       value: 0504025650015f58580f0d7a42215a44404f1e7b7d712232792f4b6ab6e4356f
       flags: 0
+<<<<<<< Updated upstream
     RecentlyUsedSceneGuid-4:
       value: 5755065451510a035856087743765c444e16487e747b2064292a4d66b6b2376f
       flags: 0
@@ -61,6 +85,10 @@ EditorUserSettings:
       flags: 0
     RecentlyUsedSceneGuid-8:
       value: 53045607065708580e57582345760c44434f1c7c7b702065282a4530e3b63169
+=======
+    RecentlyUsedSceneGuid-8:
+      value: 53520407570651095a580f7212270e44451648797d7920317b2c4860e1b2643e
+>>>>>>> Stashed changes
       flags: 0
     UnityEditor.ShaderGraph.Blackboard:
       value: 18135939215a0a5004000b0e15254b524c030a3f2964643d120d1230e9e93a3fd6e826abbd2e2d293c4ead313b08042de6030a0afa240c0d020be94c4baf5e435d8715fa32c70d15d11612dacc11fee5d3c5d1fe9ab1bf968e93e2ffcbc3e7e2f0b3ffe0e8b0be9af8ffaeffff8e85dd8390e3949c8899daa7
@@ -70,6 +98,7 @@ EditorUserSettings:
       flags: 0
     UnityEditor.ShaderGraph.InspectorWindow:
       value: 18135939215a0a5004000b0e15254b524c1119263f2d6a722016393ce1eb3d36e5d339f9a5602b2e2c07a37e0901373ae01e0008f707250d171df81a53a5405d41895ac825e0100ec20313c0d91cddccd3d0c7efcca9bd80908fecb0f9cfddf1eff4e7a1b1eae482f0fcaee1e1928b86d888ed969b938796e38b888bef858a8a8d83d687c49a
+<<<<<<< Updated upstream
 =======
     RecentlyUsedSceneGuid-6:
       value: 0609070001050f020f570e7416205a444e154b2e7b7d72337f2d4c66b5b63239
@@ -82,6 +111,8 @@ EditorUserSettings:
     RecentlyUsedSceneGuid-6:
       value: 0609070001050f020f570e7416205a444e154b2e7b7d72337f2d4c66b5b63239
 >>>>>>> Nanami
+=======
+>>>>>>> Stashed changes
       flags: 0
     vcSharedLogLevel:
       value: 0d5e400f0650
