@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class Die : MonoBehaviour
 {
-    private GameObject p1;
-    private GameObject p2;
+    public GameObject p1;
+    public GameObject p2;
 
     Vector3 p1Pos;
     Vector3 p2Pos;
@@ -19,12 +19,18 @@ public class Die : MonoBehaviour
         p1Pos = p1.transform.position;
         p2Pos = p2.transform.position;
     }
+    private void Update()
+    {
 
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            move_late.isR = true;
+            //两个物体回到p1Pos，p2Pos的位置
+            p1.transform.position = p1Pos;
+            p2.transform.position = p2Pos;
+
         }
     }
 }

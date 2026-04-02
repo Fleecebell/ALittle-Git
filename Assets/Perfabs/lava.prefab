@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8540312190225071226}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -296,20 +296,20 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 6760015687590700479}
     m_ColliderPaths:
-    - - X: 5000000
-        Y: 5000000
-      - X: -5000000
-        Y: 5000000
-      - X: -5000000
-        Y: -5000000
-      - X: 5000000
-        Y: -5000000
+    - - X: -20000000
+        Y: 10000000
+      - X: -30000000
+        Y: 10000000
+      - X: -30000000
+        Y: 0
+      - X: -20000000
+        Y: 0
   m_CompositePaths:
     m_Paths:
-    - - {x: 0.4999707, y: -0.5}
-      - {x: 0.4999707, y: 0.5}
-      - {x: -0.5, y: 0.4999707}
-      - {x: -0.4999707, y: -0.5}
+    - - {x: -2.0000293, y: 0}
+      - {x: -2.0000293, y: 1}
+      - {x: -3, y: 0.99997073}
+      - {x: -2.999971, y: 0}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -326,3 +326,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5570702a1d0fc26408858e73b637a2a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  p1: {fileID: 0}
+  p2: {fileID: 0}

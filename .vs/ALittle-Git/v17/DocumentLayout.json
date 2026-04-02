@@ -1,8 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\ALittle-Git\\",
+  "WorkspaceRootPath": "E:\\unity\\UnityProgram\\ALittle-Git\\",
   "Documents": [
     {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -22,23 +23,23 @@
     },
     {
 <<<<<<< Updated upstream
+=======
+>>>>>>> parent of 9f6d1ef (备份4.1)
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\player\\move_late.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_late.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-=======
-      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\alittle-git\\assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\player\\ladder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\ladder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\ALittle-Git\\assets\\scripts\\level\\next_level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\next_level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\ALittle-Git\\assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+<<<<<<< HEAD
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+<<<<<<< HEAD
     },
     {
 =======
@@ -83,6 +84,30 @@
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\ALittle-Git\\assets\\scripts\\level\\button_twice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\level\\button_twice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
 >>>>>>> Nanami
+=======
+>>>>>>> parent of 9f6d1ef (备份4.1)
+=======
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
     }
   ],
   "DocumentGroupContainers": [
@@ -94,7 +119,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           "DockedWidth": 200,
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
           "DockedWidth": 326,
@@ -110,16 +139,30 @@
 =======
           "SelectedChildIndex": 2,
 >>>>>>> Stashed changes
+=======
+          "DockedWidth": 200,
+<<<<<<< HEAD
+          "SelectedChildIndex": 3,
+>>>>>>> parent of 9f6d1ef (备份4.1)
+=======
+          "SelectedChildIndex": 2,
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+          "SelectedChildIndex": 2,
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+          "SelectedChildIndex": 2,
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+          "SelectedChildIndex": 2,
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
+<<<<<<< HEAD
 <<<<<<< HEAD
               "$type": "Document",
               "DocumentIndex": 0,
@@ -136,11 +179,17 @@
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
 >>>>>>> Nanami
+=======
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{131369f2-062d-44a2-8671-91ff31efb4f4}"
+>>>>>>> parent of 9f6d1ef (备份4.1)
             },
             {
-<<<<<<< HEAD
-<<<<<<< HEAD
               "$type": "Document",
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< HEAD
               "DocumentIndex": 0,
@@ -158,8 +207,12 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 2,
 >>>>>>> Stashed changes
+=======
+              "DocumentIndex": 2,
+>>>>>>> parent of 9f6d1ef (备份4.1)
               "Title": "Die.cs",
               "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Level\\Die.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Level\\Die.cs",
@@ -181,40 +234,62 @@
               "WhenOpened": "2026-03-30T08:06:10.608Z",
 >>>>>>> Nanami
               "EditorCaption": ""
-=======
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
->>>>>>> Nanami
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+              "DocumentIndex": 0,
               "Title": "move_late.cs",
               "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\move_late.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\player\\move_late.cs",
               "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\move_late.cs",
               "RelativeToolTip": "Assets\\Scripts\\player\\move_late.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFEAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAJ8AAAAAAAAAAAAswMEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-30T08:25:04.73Z"
-=======
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
->>>>>>> Nanami
+              "WhenOpened": "2026-03-30T08:25:04.73Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
               "DocumentIndex": 2,
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+              "DocumentIndex": 1,
+>>>>>>> parent of 9f6d1ef (备份4.1)
+=======
+              "DocumentIndex": 2,
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+              "DocumentIndex": 2,
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+              "DocumentIndex": 2,
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+              "DocumentIndex": 2,
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
               "Title": "move_first.cs",
               "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\move_first.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\player\\move_first.cs",
               "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\move_first.cs",
               "RelativeToolTip": "Assets\\Scripts\\player\\move_first.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAFwAAAAAAAAAAAAgwHwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2026-03-30T08:21:53.057Z"
 =======
               "Title": "Die.cs",
@@ -354,6 +429,44 @@
 >>>>>>> Nanami
 =======
 >>>>>>> Stashed changes
+=======
+              "WhenOpened": "2026-03-30T08:21:53.057Z",
+              "EditorCaption": ""
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 9f6d1ef (备份4.1)
+=======
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Ladder.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\Ladder.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\player\\Ladder.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\player\\Ladder.cs",
+              "RelativeToolTip": "Assets\\Scripts\\player\\Ladder.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAgwDcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T08:56:42.581Z",
+              "EditorCaption": ""
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
             }
           ]
         },
@@ -363,17 +476,7 @@
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 76,
-          "SelectedChildIndex": -1,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:283709:0:{1a46fd64-28d5-0019-8eb3-17a02d419b53}"
+              "Name": "ST:0:0:{1a46fd64-28d5-0019-8eb3-17a02d419b53}"
             }
           ]
         }

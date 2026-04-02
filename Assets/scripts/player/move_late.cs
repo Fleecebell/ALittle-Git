@@ -1,68 +1,53 @@
-ï»¿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class move_late : MonoBehaviour
 {
-    #region å˜é‡
-    public Animator JumpAnimator;
+    public Animator p2_jump;
+
     public move_first player;
     public float delayTime = 0.5f;
 
-    [Header("å†²åˆº")]
-    public float dashCooldown = 1f;
-
-    [Header("ç¼“é™")]
-    public float fallSpeedLimit = -3f;
-
-    [Header("æ”€çˆ¬")]
-    public float climbSpeed = 5f;
-
     private Rigidbody2D rb;
-    public bool isGrounded;
+    private bool isGrounded;
+
+    private Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
     public float groundAngleThreshold = 45f;
 
     public GameObject p1;
     public GameObject p2;
-    private Vector3 p1Pos, p2Pos;
 
+    Vector3 p1Pos;
+    Vector3 p2Pos;
     public static bool isR = false;
+
+    // ³å´ÌÀäÈ´
+    public float dashCooldown = 1f;
     private float lastDashTime;
-    private bool isSlowFalling;
 
-    private bool isOnLadder;
-    private bool isClimbing;
-    #endregion
+    [Header("»º½µ")]
+    public float fallSpeedLimit = -3f;
 
-    #region é˜Ÿåˆ—ã€ç»“æ„ä½“
-    // è¾“å…¥é˜Ÿåˆ—
-    private Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
+    // ÓÃÀ´¼ÇÂ¼»º½µÊ±¼ä¶Î
     private Queue<ShiftRecord> shiftHistory = new Queue<ShiftRecord>();
-    private Queue<KeyRecord> inputHistory = new Queue<KeyRecord>();
-
-    private struct MovementRecord
-    {
-        public float h;
-        public bool jump;
-        public bool dashL;
-        public bool dashR;
-        public float time;
-    }
-
     private struct ShiftRecord
     {
         public bool isShiftDown;
         public float timeRecorded;
     }
 
-    private struct KeyRecord
-    {
-        public bool space;
-        public bool s;
-        public float time;
-    }
-    #endregion
+    // µ±Ç°P2ÊÇ·ñÓ¦¸Ã»º½µ
+    private bool isSlowFalling = false;
 
-    // åˆå§‹åŒ–ã€æ›´æ–°
+    private struct MovementRecord
+    {
+        public float horizontalInput;
+        public bool jumpInput;
+        public bool isDashingLeft;
+        public bool isDashingRight;
+        public float timeRecorded;
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -74,152 +59,136 @@ public class move_late : MonoBehaviour
     {
         if (player == null) return;
 
-        RecordAllInput();
-        SlowFallDelay();
-        MoveDelay();
-        LadderDelay();
-        Animation();
-        CheckReset();
+        RecordPlayerInput();
+        UpdateSlowFallState(); // ¸üĞÂ»º½µ×´Ì¬£¨ÑÓ³Ù£©
+        ExecuteDelayedActions();
+
+        // Ó¦ÓÃ»º½µ
+        if (!isGrounded && rb.velocity.y < 0 && isSlowFalling)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, fallSpeedLimit));
+        }
+
+        if (isGrounded)
+        {
+            p2_jump.SetBool("p2j", false);
+        }
+        else
+        {
+            p2_jump.SetBool("p2j", true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) || isR)
+        {
+            p1.transform.position = p1Pos;
+            p2.transform.position = p2Pos;
+            isR = false;
+            lastDashTime = -10f;
+            shiftHistory.Clear();
+            isSlowFalling = false;
+        }
     }
 
-    #region è®°å½•æ‰€æœ‰è¾“å…¥
-    void RecordAllInput()
+    // ¼ÇÂ¼Shift°´ÏÂ/ËÉ¿ª
+    private void RecordPlayerInput()
     {
-        float h = Input.GetAxis("Horizontal");
+        float horizontal = Input.GetAxis("Horizontal");
         bool jump = Input.GetKey(KeyCode.Space);
         bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-        bool dashL = Input.GetKey(KeyCode.A) && shift;
-        bool dashR = Input.GetKey(KeyCode.D) && shift;
 
-        movementHistory.Enqueue(new MovementRecord { h = h, jump = jump, dashL = dashL, dashR = dashR, time = Time.time });
+        bool dashLeft = Input.GetKey(KeyCode.A) && shift;
+        bool dashRight = Input.GetKey(KeyCode.D) && shift;
 
-        if (shiftHistory.Count == 0 || shiftHistory.Peek().isShiftDown != shift)
-            shiftHistory.Enqueue(new ShiftRecord { isShiftDown = shift, timeRecorded = Time.time });
-
-        inputHistory.Enqueue(new KeyRecord { space = jump, s = Input.GetKey(KeyCode.S), time = Time.time });
-    }
-    #endregion
-
-    #region å»¶è¿Ÿéƒ¨åˆ†ï¼šç§»åŠ¨ã€è·³è·ƒã€å†²åˆºç¼“é™ï¼›çˆ¬æ¢¯
-    void MoveDelay()
-    {
-        while (movementHistory.Count > 0 && Time.time - movementHistory.Peek().time >= delayTime)
+        movementHistory.Enqueue(new MovementRecord
         {
-            var r = movementHistory.Dequeue();
+            horizontalInput = horizontal,
+            jumpInput = jump,
+            isDashingLeft = dashLeft,
+            isDashingRight = dashRight,
+            timeRecorded = Time.time
+        });
+
+        // ¼ÇÂ¼shift×´Ì¬±ä»¯
+        if (shiftHistory.Count == 0 || shiftHistory.Peek().isShiftDown != shift)
+        {
+            shiftHistory.Enqueue(new ShiftRecord
+            {
+                isShiftDown = shift,
+                timeRecorded = Time.time
+            });
+        }
+    }
+
+    // ¸üĞÂP2µÄ»º½µ×´Ì¬£¨ÑÓ³ÙÖ´ĞĞ£©
+    private void UpdateSlowFallState()
+    {
+        while (shiftHistory.Count > 0 && Time.time - shiftHistory.Peek().timeRecorded >= delayTime)
+        {
+            var rec = shiftHistory.Dequeue();
+            isSlowFalling = rec.isShiftDown;
+        }
+    }
+
+    private void ExecuteDelayedActions()
+    {
+        while (movementHistory.Count > 0 && Time.time - movementHistory.Peek().timeRecorded >= delayTime)
+        {
+            var record = movementHistory.Dequeue();
+
             bool canDash = Time.time >= lastDashTime + dashCooldown;
 
-            if (canDash && r.dashL)
+            if (canDash && record.isDashingLeft)
             {
                 rb.velocity = Vector2.left * player.dashForce * 0.3f;
                 lastDashTime = Time.time;
             }
-            else if (canDash && r.dashR)
+            else if (canDash && record.isDashingRight)
             {
                 rb.velocity = Vector2.right * player.dashForce * 0.3f;
                 lastDashTime = Time.time;
             }
             else
             {
-                rb.velocity = new Vector2(r.h * move_first.moveSpeed, rb.velocity.y);
+                rb.velocity = new Vector2(record.horizontalInput * move_first.moveSpeed, rb.velocity.y);
             }
 
-            if (r.jump && isGrounded && !isClimbing)
+            if (record.jumpInput && isGrounded)
+            {
                 rb.velocity = Vector2.up * move_first.jumpForce;
-        }
-    }
-    void SlowFallDelay()
-    {
-        while (shiftHistory.Count > 0 && Time.time - shiftHistory.Peek().timeRecorded >= delayTime)
-            isSlowFalling = shiftHistory.Dequeue().isShiftDown;
-
-        if (!isGrounded && rb.velocity.y < 0 && isSlowFalling && !isClimbing)
-            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, fallSpeedLimit));
-    }
-
-    void LadderDelay()
-    {
-        while (inputHistory.Count > 0 && Time.time - inputHistory.Peek().time >= delayTime)
-        {
-            var r = inputHistory.Dequeue();
-
-            if (isOnLadder && r.space) isClimbing = true;
-            if (!isOnLadder) isClimbing = false;
-
-            if (isClimbing)
-            {
-                rb.gravityScale = 0;
-                float v = 0;
-                if (r.space) v = climbSpeed;
-                if (r.s) v = -climbSpeed;
-                rb.velocity = new Vector2(rb.velocity.x, v);
-            }
-            else
-            {
-                rb.gravityScale = 9.8f;
             }
         }
     }
-    #endregion
 
-    #region åŠ¨ç”»
-    void Animation()
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        JumpAnimator.SetBool("p2j", !isGrounded);
-    }
-    #endregion
-
-    #region Ré‡ç½®
-    void CheckReset()
-    {
-        if (Input.GetKeyDown(KeyCode.R) || isR)
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            // æ ¸å¿ƒå¤ä½
-            p1.transform.position = p1Pos;
-            p2.transform.position = p2Pos;
-            isR = false;
-
-            // å¿…é¡»æ¸…ï¼ˆP2å»¶è¿Ÿé˜Ÿåˆ—ï¼‰
-            movementHistory.Clear();
-            shiftHistory.Clear();
-            inputHistory.Clear();
-
-            // å»ºè®®æ¸…ï¼ˆé˜²æ­¢æµ®ç©º/å¡çŠ¶æ€ï¼‰
-            isSlowFalling = false;
-            isClimbing = false;
-            isOnLadder = false;
-        }
-    }
-    #endregion
-
-    #region æ£€æµ‹
-    private void OnCollisionStay2D(Collision2D col)
-    {
-        if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
-        {
-            foreach (ContactPoint2D c in col.contacts)
-                if (Vector2.Angle(c.normal, Vector2.up) < groundAngleThreshold) { isGrounded = true; return; }
+            foreach (ContactPoint2D contact in collision.contacts)
+            {
+                float angle = Vector2.Angle(contact.normal, Vector2.up);
+                if (angle < groundAngleThreshold)
+                {
+                    isGrounded = true;
+                    return;
+                }
+            }
             isGrounded = false;
         }
     }
 
-    private void OnCollisionExit2D(Collision2D col)
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
-            isGrounded = false;
-    }
-
-    private void OnTriggerStay2D(Collider2D col)
-    {
-        if (col.CompareTag("Ladder")) isOnLadder = true;
-    }
-
-    private void OnTriggerExit2D(Collider2D col)
-    {
-        if (col.CompareTag("Ladder"))
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            isOnLadder = false;
-            isClimbing = false;
+            isGrounded = false;
         }
     }
-    #endregion
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("red"))
+        {
+            isR = true;
+        }
+    }
 }

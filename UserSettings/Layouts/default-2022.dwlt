@@ -19,22 +19,29 @@ MonoBehaviour:
     width: 1536
     height: 772.8
   m_ShowMode: 4
-<<<<<<< Updated upstream
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   m_Title: "\u9879\u76EE"
 =======
-  m_Title: "\u6E38\u620F"
->>>>>>> Stashed changes
+  m_Title: "\u5C42\u7EA7"
+>>>>>>> parent of 9f6d1ef (备份4.1)
+=======
+  m_Title: "\u573A\u666F"
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+  m_Title: "\u573A\u666F"
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+  m_Title: "\u573A\u666F"
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+  m_Title: "\u573A\u666F"
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
-=======
-=======
->>>>>>> Nanami
-  m_Title: Game
-  m_RootView: {fileID: 5}
-  m_MinSize: {x: 875, y: 321}
->>>>>>> Nanami
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -45,91 +52,6 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
-<<<<<<< HEAD
-=======
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: SceneHierarchyWindow
-  m_EditorClassIdentifier: 
-  m_Children: []
-  m_Position:
-    serializedVersion: 2
-    x: 1878
-    y: 0
-    width: 380
-    height: 1299
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 18}
-  m_Panes:
-  - {fileID: 18}
-  m_Selected: 0
-  m_LastSelected: 0
---- !u!114 &3
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GridPaintPaletteWindow
-  m_EditorClassIdentifier: 
-  m_Children: []
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 517
-    height: 696
-  m_MinSize: {x: 240, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 14}
-  m_Panes:
-  - {fileID: 14}
-  m_Selected: 0
-  m_LastSelected: 0
---- !u!114 &4
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Children:
-  - {fileID: 3}
-  - {fileID: 12}
-  m_Position:
-    serializedVersion: 2
-    x: 1361
-    y: 0
-    width: 517
-    height: 1299
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 8096, y: 16192}
-  vertical: 1
-<<<<<<< HEAD
-  controlID: 57
-=======
-  controlID: 52
->>>>>>> Nanami
-  draggingID: 0
---- !u!114 &5
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
->>>>>>> Nanami
   m_EditorHideFlags: 1
   m_Script: {fileID: 12008, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
@@ -219,23 +141,27 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-<<<<<<< Updated upstream
+<<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   controlID: 126
 =======
-  controlID: 147
->>>>>>> Nanami
+  controlID: 122
+>>>>>>> parent of 9f6d1ef (备份4.1)
 =======
-  controlID: 147
->>>>>>> Nanami
+  controlID: 126
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-  controlID: 130
->>>>>>> Nanami
+  controlID: 126
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-  controlID: 78
->>>>>>> Stashed changes
+  controlID: 126
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+  controlID: 126
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
   draggingID: 0
 --- !u!114 &6
 MonoBehaviour:
@@ -256,37 +182,16 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     width: 772
     height: 722.8
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
+<<<<<<< HEAD
+  controlID: 18
+=======
   controlID: 28
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Nanami
-=======
->>>>>>> Nanami
-    width: 1361
-    height: 1299
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 8096, y: 16192}
-  vertical: 1
-<<<<<<< HEAD
-  controlID: 26
-<<<<<<< HEAD
->>>>>>> Nanami
-=======
->>>>>>> Nanami
-=======
-  controlID: 29
->>>>>>> Nanami
-=======
->>>>>>> Stashed changes
+>>>>>>> parent of 9f6d1ef (备份4.1)
   draggingID: 0
 --- !u!114 &7
 MonoBehaviour:
@@ -305,26 +210,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     width: 772
     height: 412
-<<<<<<< Updated upstream
-=======
-    width: 1361
-    height: 647
->>>>>>> Nanami
-=======
-    width: 1361
-    height: 647
->>>>>>> Nanami
-=======
-    width: 1361
-    height: 647
->>>>>>> Nanami
-=======
->>>>>>> Stashed changes
   m_MinSize: {x: 201, y: 221}
   m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 13}
@@ -349,34 +236,11 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     y: 412
     width: 772
     height: 310.8
-<<<<<<< Updated upstream
-=======
-    y: 647
-    width: 1361
-    height: 652
->>>>>>> Nanami
-=======
-    y: 647
-    width: 1361
-    height: 652
->>>>>>> Nanami
-=======
-    y: 647
-    width: 1361
-    height: 652
->>>>>>> Nanami
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
-=======
   m_MinSize: {x: 201, y: 221}
   m_MaxSize: {x: 4001, y: 4021}
->>>>>>> Stashed changes
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -426,7 +290,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 1013.6
     y: 0
-    width: 260.80005
+    width: 260
     height: 722.8
   m_MinSize: {x: 232, y: 271}
   m_MaxSize: {x: 10002, y: 10021}
@@ -450,9 +314,9 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1274.4
+    x: 1273.6
     y: 0
-    width: 261.59998
+    width: 262.40002
     height: 722.8
   m_MinSize: {x: 276, y: 71}
   m_MaxSize: {x: 4001, y: 4021}
@@ -469,61 +333,6 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
-<<<<<<< HEAD
-=======
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Children: []
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 696
-    width: 517
-    height: 603
-  m_MinSize: {x: 232, y: 271}
-  m_MaxSize: {x: 10002, y: 10021}
-  m_ActualView: {fileID: 19}
-  m_Panes:
-  - {fileID: 19}
-  m_Selected: 0
-  m_LastSelected: 0
---- !u!114 &13
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: InspectorWindow
-  m_EditorClassIdentifier: 
-  m_Children: []
-  m_Position:
-    serializedVersion: 2
-    x: 2258
-    y: 0
-    width: 302
-    height: 1299
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 20}
-  m_Panes:
-  - {fileID: 20}
-  m_Selected: 0
-  m_LastSelected: 0
---- !u!114 &14
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
->>>>>>> Nanami
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 924ffcbe75518854f97b48776d0f1939, type: 3}
   m_Name: 
@@ -531,72 +340,15 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
-<<<<<<< HEAD
-    m_Text: Transition_1 (nothing loaded)
+    m_Text: Transition_1
     m_Image: {fileID: 2800000, guid: 7129268cf102b2f45809905bcb27ce8b, type: 3}
-=======
-    m_Text: Tile Palette
-    m_Image: {fileID: 0}
-    m_Tooltip: 
-  m_Pos:
-    serializedVersion: 2
-    x: 1361
-    y: 73
-    width: 515
-    height: 675
-  m_SerializedDataModeController:
-    m_DataMode: 0
-    m_PreferredDataMode: 0
-    m_SupportedDataModes: 
-    isAutomatic: 1
-  m_ViewDataDictionary: {fileID: 0}
-  m_OverlayCanvas:
-    m_LastAppliedPresetName: Default
-    m_SaveData: []
-    m_OverlaysVisible: 1
---- !u!114 &15
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12015, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_TitleContent:
-    m_Text: Game
-    m_Image: {fileID: -6423792434712278376, guid: 0000000000000000d000000000000000, type: 0}
->>>>>>> Nanami
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
     x: 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     y: 485.6
     width: 771
     height: 289.8
-=======
-    y: 720
-    width: 1360
-    height: 631
->>>>>>> Nanami
-=======
-    y: 720
-    width: 1360
-    height: 631
->>>>>>> Nanami
-=======
-    y: 720
-    width: 1360
-    height: 631
->>>>>>> Nanami
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -607,7 +359,6 @@ MonoBehaviour:
     m_LastAppliedPresetName: Default
     m_SaveData: []
     m_OverlaysVisible: 1
-<<<<<<< HEAD
   m_Selected: 288943f5abe247b468a0e78b08012afc
   m_GraphObject: {fileID: 0}
   m_LastSerializedFileContents: "{\n    \"m_SGVersion\": 3,\n    \"m_Type\": \"UnityEditor.ShaderGraph.GraphData\",\n   
@@ -1208,74 +959,6 @@ MonoBehaviour:
   m_AssetMaybeChangedOnDisk: 1
   m_AssetMaybeDeleted: 0
 --- !u!114 &13
-=======
-  m_SerializedViewNames: []
-  m_SerializedViewValues: []
-  m_PlayModeViewName: GameView
-  m_ShowGizmos: 0
-  m_TargetDisplay: 0
-  m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 1920, y: 1080}
-  m_TextureFilterMode: 0
-  m_TextureHideFlags: 61
-  m_RenderIMGUI: 1
-  m_EnterPlayModeBehavior: 0
-  m_UseMipMap: 0
-  m_VSyncEnabled: 0
-  m_Gizmos: 0
-  m_Stats: 0
-  m_SelectedSizes: 03000000000000000000000000000000000000000000000000000000000000000000000000000000
-  m_ZoomArea:
-    m_HRangeLocked: 0
-    m_VRangeLocked: 0
-    hZoomLockedByDefault: 0
-    vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -960
-    m_HBaseRangeMax: 960
-    m_VBaseRangeMin: -540
-    m_VBaseRangeMax: 540
-    m_HAllowExceedBaseRangeMin: 1
-    m_HAllowExceedBaseRangeMax: 1
-    m_VAllowExceedBaseRangeMin: 1
-    m_VAllowExceedBaseRangeMax: 1
-    m_ScaleWithWindow: 0
-    m_HSlider: 0
-    m_VSlider: 0
-    m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
-    m_EnableSliderZoomHorizontal: 0
-    m_EnableSliderZoomVertical: 0
-    m_UniformScale: 1
-    m_UpDirection: 1
-    m_DrawArea:
-      serializedVersion: 2
-      x: 0
-      y: 21
-      width: 1360
-      height: 610
-    m_Scale: {x: 0.5648148, y: 0.5648148}
-    m_Translation: {x: 680, y: 305}
-    m_MarginLeft: 0
-    m_MarginRight: 0
-    m_MarginTop: 0
-    m_MarginBottom: 0
-    m_LastShownAreaInsideMargins:
-      serializedVersion: 2
-      x: -1203.9344
-      y: -540
-      width: 2407.869
-      height: 1080
-    m_MinimalGUI: 1
-  m_defaultScale: 0.5648148
-  m_LastWindowPixelSize: {x: 1360, y: 631}
-  m_ClearInEditMode: 1
-  m_NoCameraWarning: 1
-  m_LowResolutionForAspectRatios: 01000000000000000000
-  m_XRRenderMode: 0
-  m_RenderTexture: {fileID: 0}
-  m_showToolbar: 1
---- !u!114 &16
->>>>>>> Nanami
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1296,21 +979,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-<<<<<<< HEAD
     y: 73.6
     width: 771
     height: 391
-=======
-    y: 73
-    width: 1360
-    height: 626
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> Nanami
-=======
->>>>>>> Nanami
-=======
->>>>>>> Nanami
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1708,33 +1379,39 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    m_Target: {x: 0, y: 0, z: 0}
+    speed: 2
+    m_Value: {x: 0, y: 0, z: 0}
+=======
     m_Target: {x: -0.8644472, y: -0.6217054, z: 0.7098287}
     speed: 2
     m_Value: {x: -0.8644472, y: -0.6217054, z: 0.7098287}
+>>>>>>> parent of 9f6d1ef (备份4.1)
 =======
-    m_Target: {x: -2.5729508, y: -3.272022, z: 0.12387195}
+    m_Target: {x: -0.41510615, y: 1.1525635, z: -0.022882394}
     speed: 2
-    m_Value: {x: -2.5729508, y: -3.272022, z: 0.12387195}
->>>>>>> Nanami
+    m_Value: {x: -0.41510615, y: 1.1525635, z: -0.022882394}
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_Target: {x: -2.5729508, y: -3.272022, z: 0.12387195}
+    m_Target: {x: -0.41510615, y: 1.1525635, z: -0.022882394}
     speed: 2
-    m_Value: {x: -2.5729508, y: -3.272022, z: 0.12387195}
->>>>>>> Nanami
+    m_Value: {x: -0.41510615, y: 1.1525635, z: -0.022882394}
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_Target: {x: -3.5439625, y: -3.5512314, z: 0.18301322}
+    m_Target: {x: -0.41510615, y: 1.1525635, z: -0.022882394}
     speed: 2
-    m_Value: {x: -3.5439625, y: -3.5512314, z: 0.18301322}
->>>>>>> Nanami
+    m_Value: {x: -0.41510615, y: 1.1525635, z: -0.022882394}
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_Target: {x: 0.33031988, y: -1.7249329, z: -0.0073286584}
+    m_Target: {x: -0.41510615, y: 1.1525635, z: -0.022882394}
     speed: 2
-    m_Value: {x: 0.33031988, y: -1.7249329, z: -0.0073286584}
->>>>>>> Stashed changes
+    m_Value: {x: -0.41510615, y: 1.1525635, z: -0.022882394}
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1784,33 +1461,39 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    m_Target: 10
+    speed: 2
+    m_Value: 10
+=======
     m_Target: 10.411155
     speed: 2
     m_Value: 10.411155
+>>>>>>> parent of 9f6d1ef (备份4.1)
 =======
-    m_Target: 8.282787
+    m_Target: 7.479756
     speed: 2
-    m_Value: 8.282787
->>>>>>> Nanami
+    m_Value: 7.479756
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_Target: 8.282787
+    m_Target: 7.479756
     speed: 2
-    m_Value: 8.282787
->>>>>>> Nanami
+    m_Value: 7.479756
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_Target: 2.3686178
+    m_Target: 7.479756
     speed: 2
-    m_Value: 2.3686178
->>>>>>> Nanami
+    m_Value: 7.479756
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_Target: 5.924421
+    m_Target: 7.479756
     speed: 2
-    m_Value: 5.924421
->>>>>>> Stashed changes
+    m_Value: 7.479756
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1924,9 +1607,9 @@ MonoBehaviour:
       e32: 0
       e33: 1
   m_PreviewAnimator: {fileID: 0}
-  m_AnimatorController: {fileID: 9100000, guid: c08c9441c46d4cb4e84bf7865b8f8954, type: 2}
+  m_AnimatorController: {fileID: 9100000, guid: 30199ec9690e55049bb8e0f66bd1d600, type: 2}
   m_BreadCrumbs:
-  - m_Target: {fileID: -2749027468158207621, guid: c08c9441c46d4cb4e84bf7865b8f8954, type: 2}
+  - m_Target: {fileID: -1706800789508875356, guid: 30199ec9690e55049bb8e0f66bd1d600, type: 2}
     m_ScrollPosition: {x: 0, y: 0}
   stateMachineGraph: {fileID: 0}
   stateMachineGraphGUI: {fileID: 0}
@@ -2058,23 +1741,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     x: 772
     y: 73.6
     width: 239.59998
     height: 701.8
-=======
-=======
->>>>>>> Nanami
-=======
->>>>>>> Nanami
-    x: 1878
-    y: 73
-    width: 378
-    height: 1278
->>>>>>> Nanami
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -2091,28 +1761,36 @@ MonoBehaviour:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-      m_SelectedIDs: 
+<<<<<<< HEAD
+<<<<<<< HEAD
+      m_SelectedIDs: 7e750000
       m_LastClickedID: 0
-<<<<<<< Updated upstream
-      m_ExpandedIDs: 16fbffff
+      m_ExpandedIDs: f8ebffff1aedffff18eeffffbaeeffffceeffffff6f0ffff94f1ffff36f2ffff62f3ffff72f4ffff90f5ffff30f6ffff58f7fffff6f7ffffa0f8ffff16fbffff
 =======
-      m_SelectedIDs: 4c630000
-      m_LastClickedID: 25420
-      m_ExpandedIDs: 1afbffff70630000
->>>>>>> Nanami
+      m_SelectedIDs: 422effff
+      m_LastClickedID: -53694
+      m_ExpandedIDs: 462efffff693ffff5296ffff5496ffff6c97ffff9e97fffff699fffffe99ffff169bffff3c9bffffdc9effffee9effffe0abffff34baffff56baffff86baffff98baffff9abaffff1cbcffff82bcfffff8bdffff2ebeffffc0bfffffd4bfffffa0c4ffffb4c4ffff16fbffff0a7100007685000084850000aa900000
+>>>>>>> parent of 9f6d1ef (备份4.1)
 =======
-      m_SelectedIDs: 4c630000
-      m_LastClickedID: 25420
-      m_ExpandedIDs: 1afbffff70630000
->>>>>>> Nanami
+      m_SelectedIDs: d838ffff
+      m_LastClickedID: -50984
+      m_ExpandedIDs: e039ffff18bfffff16fbffff54700000f2700000
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-      m_SelectedIDs: f2690000
-      m_LastClickedID: 0
-      m_ExpandedIDs: e4faffff1afbffff
->>>>>>> Nanami
+      m_SelectedIDs: d838ffff
+      m_LastClickedID: -50984
+      m_ExpandedIDs: e039ffff18bfffff16fbffff54700000f2700000
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-      m_ExpandedIDs: 2ef0ffff46f0ffffeef0ffff6ef2ffff0ef3ffff1cf4ffff34f5ffffecf5ffff22f7ffff22f8ffffc2f8ffff16fbffff
->>>>>>> Stashed changes
+      m_SelectedIDs: d838ffff
+      m_LastClickedID: -50984
+      m_ExpandedIDs: e039ffff18bfffff16fbffff54700000f2700000
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+      m_SelectedIDs: d838ffff
+      m_LastClickedID: -50984
+      m_ExpandedIDs: e039ffff18bfffff16fbffff54700000f2700000
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -2128,19 +1806,7 @@ MonoBehaviour:
         m_IsRenaming: 0
         m_OriginalEventType: 11
         m_IsRenamingFilename: 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         m_ClientGUIView: {fileID: 9}
-=======
-        m_ClientGUIView: {fileID: 2}
->>>>>>> Nanami
-=======
-        m_ClientGUIView: {fileID: 2}
->>>>>>> Nanami
-=======
-        m_ClientGUIView: {fileID: 2}
->>>>>>> Nanami
       m_SearchString: 
     m_ExpandedScenes: []
     m_CurrenRootInstanceID: 0
@@ -2168,23 +1834,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     x: 1013.60004
     y: 73.6
-    width: 258.80005
+    width: 258
     height: 701.8
-=======
-=======
->>>>>>> Nanami
-=======
->>>>>>> Nanami
-    x: 1361
-    y: 769
-    width: 515
-    height: 582
->>>>>>> Nanami
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -2206,23 +1859,27 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-    - Assets/Scripts/Level
-=======
-    - Assets/Perfabs
->>>>>>> Nanami
-=======
-    - Assets/Perfabs
->>>>>>> Nanami
-=======
+<<<<<<< HEAD
+<<<<<<< HEAD
     - Assets/Scenes
->>>>>>> Nanami
 =======
     - Assets/Scripts/player
->>>>>>> Stashed changes
+>>>>>>> parent of 9f6d1ef (备份4.1)
+=======
+    - Assets/Perfabs
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+    - Assets/Perfabs
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+    - Assets/Perfabs
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+    - Assets/Perfabs
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -2230,56 +1887,66 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-  - Assets/Scripts/Level
-=======
-  - Assets/Perfabs
->>>>>>> Nanami
-=======
-  - Assets/Perfabs
->>>>>>> Nanami
-=======
+<<<<<<< HEAD
+<<<<<<< HEAD
   - Assets/Scenes
->>>>>>> Nanami
 =======
   - Assets/Scripts/player
->>>>>>> Stashed changes
+>>>>>>> parent of 9f6d1ef (备份4.1)
+=======
+  - Assets/Perfabs
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+  - Assets/Perfabs
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+  - Assets/Perfabs
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+  - Assets/Perfabs
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
   m_LastFoldersGridSize: 16
   m_LastProjectPath: E:\unity\UnityProgram\ALittle-Git
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-    m_SelectedIDs: 74750000
-    m_LastClickedID: 30068
-    m_ExpandedIDs: 00000000487200004a7200004c7200004e7200005072000000ca9a3b
+<<<<<<< HEAD
+<<<<<<< HEAD
+    m_SelectedIDs: 70750000
+    m_LastClickedID: 30064
+    m_ExpandedIDs: 0000000046720000487200004a7200004c7200004e72000000ca9a3b
 =======
-    m_SelectedIDs: 92660000
-    m_LastClickedID: 26258
-    m_ExpandedIDs: 0000000072650000
->>>>>>> Nanami
+    m_SelectedIDs: ce730000
+    m_LastClickedID: 29646
+    m_ExpandedIDs: 000000003472000036720000387200003a7200003c72000000ca9a3b
+>>>>>>> parent of 9f6d1ef (备份4.1)
 =======
-    m_SelectedIDs: 92660000
-    m_LastClickedID: 26258
-    m_ExpandedIDs: 0000000072650000
->>>>>>> Nanami
+    m_SelectedIDs: 58750000
+    m_LastClickedID: 30040
+    m_ExpandedIDs: 00000000527200005472000056720000587200005a72000000ca9a3b
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_SelectedIDs: 82660000
-    m_LastClickedID: 26242
-    m_ExpandedIDs: 000000007265000084660000
->>>>>>> Nanami
+    m_SelectedIDs: 58750000
+    m_LastClickedID: 30040
+    m_ExpandedIDs: 00000000527200005472000056720000587200005a72000000ca9a3b
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_SelectedIDs: 28750000
-    m_LastClickedID: 29992
-    m_ExpandedIDs: 000000001a7200001c7200001e720000207200002272000000ca9a3b
->>>>>>> Stashed changes
+    m_SelectedIDs: 58750000
+    m_LastClickedID: 30040
+    m_ExpandedIDs: 00000000527200005472000056720000587200005a72000000ca9a3b
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+    m_SelectedIDs: 58750000
+    m_LastClickedID: 30040
+    m_ExpandedIDs: 00000000527200005472000056720000587200005a72000000ca9a3b
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2307,23 +1974,27 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-    m_ExpandedIDs: 00000000487200004a7200004c7200004e72000050720000
+<<<<<<< HEAD
+<<<<<<< HEAD
+    m_ExpandedIDs: 0000000046720000487200004a7200004c7200004e720000
 =======
-    m_ExpandedIDs: 0000000072650000
->>>>>>> Nanami
+    m_ExpandedIDs: 000000003472000036720000387200003a7200003c720000
+>>>>>>> parent of 9f6d1ef (备份4.1)
 =======
-    m_ExpandedIDs: 0000000072650000
->>>>>>> Nanami
+    m_ExpandedIDs: 00000000527200005472000056720000587200005a720000
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_ExpandedIDs: 0000000072650000
->>>>>>> Nanami
+    m_ExpandedIDs: 00000000527200005472000056720000587200005a720000
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
 =======
-    m_ExpandedIDs: 000000001a7200001c7200001e7200002072000022720000
->>>>>>> Stashed changes
+    m_ExpandedIDs: 00000000527200005472000056720000587200005a720000
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
+=======
+    m_ExpandedIDs: 00000000527200005472000056720000587200005a720000
+>>>>>>> parent of 6b2f96b (4.1.整合主角代码，修复部分bug)
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2351,11 +2022,7 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
-<<<<<<< HEAD
     m_ExpandedInstanceIDs: 205d0000545d0000985c0000ce6e0000d46e0000da6e0000445e0000e66500008af80100806a0000ce940000f8640000de940000d2640000d6640000ca660000c8660000c8630000f2b200000000000080c30000
-=======
-    m_ExpandedInstanceIDs: 205d0000545d0000985c0000ce6e0000d46e0000da6e0000445e0000e66500008af80100806a0000ce940000f8640000de94000000000000d2640000d6640000ca660000c8660000ea640000e46400008a650000
->>>>>>> Nanami
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2382,19 +2049,8 @@ MonoBehaviour:
     m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 16
   m_SkipHiddenPackages: 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   m_DirectoriesAreaWidth: 149.59998
 --- !u!114 &18
-=======
-=======
->>>>>>> Nanami
-=======
->>>>>>> Nanami
-  m_DirectoriesAreaWidth: 105.99997
---- !u!114 &20
->>>>>>> Nanami
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2414,23 +2070,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    x: 1274.4
+    x: 1273.6
     y: 73.6
-    width: 260.59998
+    width: 261.40002
     height: 701.8
-=======
-=======
->>>>>>> Nanami
-=======
->>>>>>> Nanami
-    x: 2258
-    y: 73
-    width: 301
-    height: 1278
->>>>>>> Nanami
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -2448,7 +2091,7 @@ MonoBehaviour:
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 1176.4
+  m_LastVerticalScrollValue: 1338.4
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:

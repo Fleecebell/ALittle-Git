@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7977779924686991533}
   - component: {fileID: 292710770983256072}
   - component: {fileID: 7974045361490470370}
+  - component: {fileID: 8169035538084484009}
   - component: {fileID: 9194768901541431613}
   m_Layer: 0
   m_Name: Player2
@@ -172,16 +173,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 140c7f48cc22f8e48888aab6a465628f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JumpAnimator: {fileID: 9194768901541431613}
+  p2_jump: {fileID: 9194768901541431613}
   player: {fileID: 3995165709704891020}
   delayTime: 1
-  dashCooldown: 1
-  fallSpeedLimit: -3
-  climbSpeed: 5
-  isGrounded: 0
   groundAngleThreshold: 45
   p1: {fileID: 6455782588203100808}
   p2: {fileID: 1423621427724842012}
+--- !u!114 &8169035538084484009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423621427724842012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c334f0d118cdb44d8cf245ac8173fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  climbSpeed: 5
+  rb: {fileID: 7977779924686991533}
 --- !u!95 &9194768901541431613
 Animator:
   serializedVersion: 5
@@ -249,6 +260,7 @@ GameObject:
   - component: {fileID: 35034224458218996}
   - component: {fileID: 8477577269707381791}
   - component: {fileID: 3995165709704891020}
+  - component: {fileID: 8616513836307537447}
   - component: {fileID: 3882868352637421675}
   m_Layer: 0
   m_Name: Player
@@ -408,13 +420,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c457abc5c458b4099ced11164be173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JumpAnimator: {fileID: 3882868352637421675}
-  dashForce: 20
-  dashDuration: 0.1
-  dashCooldown: 1
-  climbSpeed: 5
-  isGrounded: 0
+  p1_jump: {fileID: 3882868352637421675}
+  dashTime: 0.5
+  canDash: 1
   groundAngleThreshold: 45
+--- !u!114 &8616513836307537447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6455782588203100808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c334f0d118cdb44d8cf245ac8173fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  climbSpeed: 5
+  rb: {fileID: 35034224458218996}
 --- !u!95 &3882868352637421675
 Animator:
   serializedVersion: 5
