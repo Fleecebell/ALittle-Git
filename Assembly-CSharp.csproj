@@ -69,7 +69,6 @@
     <Compile Include="Assets\Scripts\player\move_first.cs" />
     <Compile Include="Assets\Scripts\player\move_late.cs" />
     <Compile Include="Assets\Scripts\Level\Button_once.cs" />
-    <Compile Include="Assets\Scripts\player\Ladder.cs" />
     <Compile Include="Assets\Scripts\start\tutorial.cs" />
     <Compile Include="Assets\Scripts\start\music.cs" />
     <Compile Include="Assets\Scripts\start\playToChoose.cs" />

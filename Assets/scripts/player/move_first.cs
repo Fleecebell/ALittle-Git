@@ -1,25 +1,35 @@
 using UnityEngine;
+using System.Collections;
 
 public class move_first : MonoBehaviour
 {
-    public Animator p1_jump;
-
+    #region 变量
+    public Animator JumpAnimator;
     public static float moveSpeed = 10f;
     public static float jumpForce = 20f;
     public float dashForce = 20f;
 
-    [Header("冲刺设置")]
+    [Header("冲刺")]
     public float dashDuration = 0.1f;
     public float dashCooldown = 1f;
+
+    [Header("攀爬")]
+    public float climbSpeed = 5f;
+
+    private Rigidbody2D rb;
+    public bool isGrounded;
+    public float groundAngleThreshold = 45f;
+
+    // 状态
     private bool canDash = true;
     private float dashCooldownTimer;
     private bool isDashing;
 
-    private Rigidbody2D rb;
-    public bool isGrounded;
+    private bool isOnLadder;
+    private bool isClimbing;
+    #endregion
 
-    public float groundAngleThreshold = 45f;
-
+    // 初始化、更新
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -27,49 +37,49 @@ public class move_first : MonoBehaviour
 
     void Update()
     {
-        // 冷却计时
-        if (!canDash)
-        {
-            dashCooldownTimer -= Time.deltaTime;
-            if (dashCooldownTimer <= 0)
-            {
-                canDash = true;
-            }
-        }
+        MoveInput();
+        LadderInput();
+        DashInput();
+        Animation();
+    }
+
+    private void FixedUpdate()
+    {
+        LadderPhysics();
+    }
+
+    #region 移动
+    void MoveInput()
+    {
+        if (isDashing) return;
 
         float moveInput = Input.GetAxis("Horizontal");
+        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
-        // 正常移动（冲刺时不覆盖速度）
-        if (!isDashing)
-        {
-            rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
-        }
-
-        // ========== 长按空格连续跳（只有在地面才跳） ==========
-        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        if (Input.GetKey(KeyCode.Space) && isGrounded && !isClimbing)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
+    }
+    #endregion
 
-        // 动画
-        if (isGrounded)
+    #region 冲刺
+    void DashInput()
+    {
+        // 冷却时间
+        if (!canDash)
         {
-            p1_jump.SetBool("p1j", false);
-        }
-        else
-        {
-            p1_jump.SetBool("p1j", true);
+            dashCooldownTimer -= Time.deltaTime;
+            if (dashCooldownTimer <= 0) canDash = true;
         }
 
-        // 冲刺（支持空中）
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
             StartCoroutine(Dash());
         }
     }
 
-    // 冲刺协程
-    private System.Collections.IEnumerator Dash()
+    private IEnumerator Dash()
     {
         canDash = false;
         isDashing = true;
@@ -88,7 +98,42 @@ public class move_first : MonoBehaviour
         isDashing = false;
         dashCooldownTimer = dashCooldown;
     }
+    #endregion
 
+    #region 爬梯
+    void LadderInput()
+    {
+        if (isOnLadder && Input.GetKey(KeyCode.Space))
+        {
+            isClimbing = true;
+        }
+    }
+
+    void LadderPhysics()
+    {
+        if (isClimbing)
+        {
+            rb.gravityScale = 0f;
+            float v = 0;
+            if (Input.GetKey(KeyCode.Space)) v = climbSpeed;
+            if (Input.GetKey(KeyCode.S)) v = -climbSpeed;
+            rb.velocity = new Vector2(rb.velocity.x, v);
+        }
+        else if (!isDashing)
+        {
+            rb.gravityScale = 9.8f;
+        }
+    }
+    #endregion
+
+    #region 动画
+    void Animation()
+    {
+        JumpAnimator.SetBool("p1j", !isGrounded);
+    }
+    #endregion
+
+    #region 检测
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
@@ -114,12 +159,20 @@ public class move_first : MonoBehaviour
             isGrounded = false;
         }
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("red"))
+        if (collision.CompareTag("Ladder"))
+            isOnLadder = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Ladder"))
         {
-            move_late.isR = true;
+            isOnLadder = false;
+            isClimbing = false;
         }
     }
+    #endregion
+
 }
