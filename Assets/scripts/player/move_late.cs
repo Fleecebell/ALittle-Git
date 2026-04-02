@@ -1,43 +1,68 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System;
-
 
 public class move_late : MonoBehaviour
 {
-    public Animator p2_jump;
-
-    // 主角的引用，需要在Inspector中手动赋值
+    #region 变量
+    public Animator JumpAnimator;
     public move_first player;
-    // 延迟时间（秒）
     public float delayTime = 0.5f;
 
-    private Rigidbody2D rb;
-    private bool isGrounded;
+    [Header("冲刺")]
+    public float dashCooldown = 1f;
 
-    // 存储主角的动作历史（包含冲刺状态）
-    private Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
-    
-    // 用于判断地面的角度阈值，小于这个角度认为是地面
+    [Header("缓降")]
+    public float fallSpeedLimit = -3f;
+
+    [Header("攀爬")]
+    public float climbSpeed = 5f;
+
+    private Rigidbody2D rb;
+    public bool isGrounded;
     public float groundAngleThreshold = 45f;
 
     public GameObject p1;
     public GameObject p2;
+    private Vector3 p1Pos, p2Pos;
 
-    Vector3 p1Pos;
-    Vector3 p2Pos;
     public static bool isR = false;
+    private float lastDashTime;
+    private bool isSlowFalling;
 
-    // 扩展记录结构，增加冲刺相关信息
+    private bool isOnLadder;
+    private bool isClimbing;
+    #endregion
+
+    #region 队列、结构体
+    // 输入队列
+    private Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
+    private Queue<ShiftRecord> shiftHistory = new Queue<ShiftRecord>();
+    private Queue<KeyRecord> inputHistory = new Queue<KeyRecord>();
+
     private struct MovementRecord
     {
-        public float horizontalInput;
-        public bool jumpInput;
-        public bool isDashingLeft;  // 是否向左冲刺
-        public bool isDashingRight; // 是否向右冲刺
+        public float h;
+        public bool jump;
+        public bool dashL;
+        public bool dashR;
+        public float time;
+    }
+
+    private struct ShiftRecord
+    {
+        public bool isShiftDown;
         public float timeRecorded;
     }
 
+    private struct KeyRecord
+    {
+        public bool space;
+        public bool s;
+        public float time;
+    }
+    #endregion
+
+    // 初始化、更新
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -49,117 +74,152 @@ public class move_late : MonoBehaviour
     {
         if (player == null) return;
 
-        // 记录主角当前的输入（包括冲刺）
-        RecordPlayerInput();
-
-        // 执行延迟后的动作
-        ExecuteDelayedActions();
-
-        if (isGrounded)
-        {
-            p2_jump.SetBool("p2j", false);
-        }
-        else
-        {
-            p2_jump.SetBool("p2j", true);
-        }
-
-        if (Input.GetKeyDown(KeyCode.R) || isR)
-        {
-            p1.transform.position = p1Pos;
-            p2.transform.position = p2Pos;
-            
-            isR = false;
-        }
-
+        RecordAllInput();
+        SlowFallDelay();
+        MoveDelay();
+        LadderDelay();
+        Animation();
+        CheckReset();
     }
 
-    // 记录主角的输入（增加冲刺状态记录）
-    private void RecordPlayerInput()
+    #region 记录所有输入
+    void RecordAllInput()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        bool jump = Input.GetKey(KeyCode.Space);// && move_first.isGrounded;
-        // 记录冲刺状态
-        bool dashLeft = Input.GetKey(KeyCode.A) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
-        bool dashRight = Input.GetKey(KeyCode.D) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+        float h = Input.GetAxis("Horizontal");
+        bool jump = Input.GetKey(KeyCode.Space);
+        bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        bool dashL = Input.GetKey(KeyCode.A) && shift;
+        bool dashR = Input.GetKey(KeyCode.D) && shift;
 
-        movementHistory.Enqueue(new MovementRecord
-        {
-            horizontalInput = horizontal,
-            jumpInput = jump,
-            isDashingLeft = dashLeft,
-            isDashingRight = dashRight,
-            timeRecorded = Time.time
-        });
+        movementHistory.Enqueue(new MovementRecord { h = h, jump = jump, dashL = dashL, dashR = dashR, time = Time.time });
+
+        if (shiftHistory.Count == 0 || shiftHistory.Peek().isShiftDown != shift)
+            shiftHistory.Enqueue(new ShiftRecord { isShiftDown = shift, timeRecorded = Time.time });
+
+        inputHistory.Enqueue(new KeyRecord { space = jump, s = Input.GetKey(KeyCode.S), time = Time.time });
     }
+    #endregion
 
-    // 执行延迟后的动作（增加冲刺动作执行）
-    private void ExecuteDelayedActions()
+    #region 延迟部分：移动、跳跃、冲刺缓降；爬梯
+    void MoveDelay()
     {
-        // 移除过期的记录
-        while (movementHistory.Count > 0 &&
-               Time.time - movementHistory.Peek().timeRecorded >= delayTime)
+        while (movementHistory.Count > 0 && Time.time - movementHistory.Peek().time >= delayTime)
         {
-            var record = movementHistory.Dequeue();
+            var r = movementHistory.Dequeue();
+            bool canDash = Time.time >= lastDashTime + dashCooldown;
 
-            // 优先处理冲刺动作
-            if (record.isDashingLeft)
+            if (canDash && r.dashL)
             {
-                rb.velocity = Vector2.left * move_first.dashForce * 0.3f;
+                rb.velocity = Vector2.left * player.dashForce * 0.3f;
+                lastDashTime = Time.time;
             }
-            else if (record.isDashingRight)
+            else if (canDash && r.dashR)
             {
-                rb.velocity = -Vector2.left * move_first.dashForce * 0.3f;
+                rb.velocity = Vector2.right * player.dashForce * 0.3f;
+                lastDashTime = Time.time;
             }
-            // 常规移动
             else
             {
-                rb.velocity = new Vector2(record.horizontalInput * move_first.moveSpeed, rb.velocity.y);
+                rb.velocity = new Vector2(r.h * move_first.moveSpeed, rb.velocity.y);
             }
 
-            // 跳跃动作
-            if (record.jumpInput && isGrounded)
-            {
+            if (r.jump && isGrounded && !isClimbing)
                 rb.velocity = Vector2.up * move_first.jumpForce;
-                Debug.Log("jump");
-            }
         }
     }
-
-    private void OnCollisionStay2D(Collision2D collision)
+    void SlowFallDelay()
     {
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
+        while (shiftHistory.Count > 0 && Time.time - shiftHistory.Peek().timeRecorded >= delayTime)
+            isSlowFalling = shiftHistory.Dequeue().isShiftDown;
+
+        if (!isGrounded && rb.velocity.y < 0 && isSlowFalling && !isClimbing)
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, fallSpeedLimit));
+    }
+
+    void LadderDelay()
+    {
+        while (inputHistory.Count > 0 && Time.time - inputHistory.Peek().time >= delayTime)
         {
-            // 检查是否有碰撞点的法线接近垂直（地面）
-            foreach (ContactPoint2D contact in collision.contacts)
+            var r = inputHistory.Dequeue();
+
+            if (isOnLadder && r.space) isClimbing = true;
+            if (!isOnLadder) isClimbing = false;
+
+            if (isClimbing)
             {
-                // 计算法线与竖直方向的夹角
-                float angle = Vector2.Angle(contact.normal, Vector2.up);
-
-                // 如果角度小于阈值，认为是在地面上
-                if (angle < groundAngleThreshold)
-                {
-                    isGrounded = true;
-                    return; // 找到一个有效地面接触点就可以返回了
-                }
+                rb.gravityScale = 0;
+                float v = 0;
+                if (r.space) v = climbSpeed;
+                if (r.s) v = -climbSpeed;
+                rb.velocity = new Vector2(rb.velocity.x, v);
             }
-            // 如果所有接触点都不满足地面条件，则不是在地面上
+            else
+            {
+                rb.gravityScale = 9.8f;
+            }
+        }
+    }
+    #endregion
+
+    #region 动画
+    void Animation()
+    {
+        JumpAnimator.SetBool("p2j", !isGrounded);
+    }
+    #endregion
+
+    #region R重置
+    void CheckReset()
+    {
+        if (Input.GetKeyDown(KeyCode.R) || isR)
+        {
+            // 核心复位
+            p1.transform.position = p1Pos;
+            p2.transform.position = p2Pos;
+            isR = false;
+
+            // 必须清（P2延迟队列）
+            movementHistory.Clear();
+            shiftHistory.Clear();
+            inputHistory.Clear();
+
+            // 建议清（防止浮空/卡状态）
+            isSlowFalling = false;
+            isClimbing = false;
+            isOnLadder = false;
+        }
+    }
+    #endregion
+
+    #region 检测
+    private void OnCollisionStay2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
+        {
+            foreach (ContactPoint2D c in col.contacts)
+                if (Vector2.Angle(c.normal, Vector2.up) < groundAngleThreshold) { isGrounded = true; return; }
             isGrounded = false;
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnCollisionExit2D(Collision2D col)
     {
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
-        {
+        if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
             isGrounded = false;
-        }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    private void OnTriggerStay2D(Collider2D col)
     {
-        if (collision.gameObject.CompareTag("red"))
+        if (col.CompareTag("Ladder")) isOnLadder = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.CompareTag("Ladder"))
         {
-            isR = true;
+            isOnLadder = false;
+            isClimbing = false;
         }
     }
+    #endregion
 }

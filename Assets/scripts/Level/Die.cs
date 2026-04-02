@@ -27,10 +27,7 @@ public class Die : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            //两个物体回到p1Pos，p2Pos的位置
-            p1.transform.position = p1Pos;
-            p2.transform.position = p2Pos;
-
+            move_late.isR = true;
         }
     }
 }

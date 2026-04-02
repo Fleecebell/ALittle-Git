@@ -1,20 +1,35 @@
 using UnityEngine;
+using System.Collections;
 
 public class move_first : MonoBehaviour
 {
-    public Animator p1_jump;
-
+    #region 变量
+    public Animator JumpAnimator;
     public static float moveSpeed = 10f;
     public static float jumpForce = 20f;
-    public static float dashForce = 20f;//
-    public float dashTime = 0.1f;//
-    public bool canDash = true;
-    private Rigidbody2D rb;
-    public static bool isGrounded;
+    public float dashForce = 20f;
 
-    // 用于判断地面的角度阈值，小于这个角度认为是地面
+    [Header("冲刺")]
+    public float dashDuration = 0.1f;
+    public float dashCooldown = 1f;
+
+    [Header("攀爬")]
+    public float climbSpeed = 5f;
+
+    private Rigidbody2D rb;
+    public bool isGrounded;
     public float groundAngleThreshold = 45f;
 
+    // 状态
+    private bool canDash = true;
+    private float dashCooldownTimer;
+    private bool isDashing;
+
+    private bool isOnLadder;
+    private bool isClimbing;
+    #endregion
+
+    // 初始化、更新
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -22,80 +37,117 @@ public class move_first : MonoBehaviour
 
     void Update()
     {
+        MoveInput();
+        LadderInput();
+        DashInput();
+        Animation();
+    }
+
+    private void FixedUpdate()
+    {
+        LadderPhysics();
+    }
+
+    #region 移动
+    void MoveInput()
+    {
+        if (isDashing) return;
+
         float moveInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
-        if(isGrounded)
+        if (Input.GetKey(KeyCode.Space) && isGrounded && !isClimbing)
         {
-            p1_jump.SetBool("p1j", false);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
-        else
+    }
+    #endregion
+
+    #region 冲刺
+    void DashInput()
+    {
+        // 冷却时间
+        if (!canDash)
         {
-            p1_jump.SetBool("p1j", true);
+            dashCooldownTimer -= Time.deltaTime;
+            if (dashCooldownTimer <= 0) canDash = true;
         }
 
-        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
-            rb.velocity = Vector2.up * jumpForce;
-            isGrounded = false; // 跳跃后立即设为未落地
-        }
-
-        if(Input.GetKey(KeyCode.A) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && canDash)
-        {
-            dashTime -= Time.deltaTime;
-            if (dashTime <= 0)
-            {
-                canDash = false;
-            }
-            else
-            {
-                rb.velocity = Vector2.left * dashForce;
-            }
-        }
-
-        if (Input.GetKey(KeyCode.D) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && canDash)
-        {
-            dashTime -= Time.deltaTime;
-            if (dashTime <= 0)
-            {
-                canDash = false;
-            }
-            else
-            {
-                rb.velocity = Vector2.right * dashForce;
-            }
-        }
-
-        if(isGrounded)
-        {
-            dashForce = 10f;
-        }
-        else
-        {
-            dashForce = 20f;
+            StartCoroutine(Dash());
         }
     }
 
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0;
+
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        if (horizontal != 0)
+        {
+            rb.velocity = new Vector2(horizontal * dashForce, 0);
+        }
+
+        yield return new WaitForSeconds(dashDuration);
+
+        rb.gravityScale = originalGravity;
+        isDashing = false;
+        dashCooldownTimer = dashCooldown;
+    }
+    #endregion
+
+    #region 爬梯
+    void LadderInput()
+    {
+        if (isOnLadder && Input.GetKey(KeyCode.Space))
+        {
+            isClimbing = true;
+        }
+    }
+
+    void LadderPhysics()
+    {
+        if (isClimbing)
+        {
+            rb.gravityScale = 0f;
+            float v = 0;
+            if (Input.GetKey(KeyCode.Space)) v = climbSpeed;
+            if (Input.GetKey(KeyCode.S)) v = -climbSpeed;
+            rb.velocity = new Vector2(rb.velocity.x, v);
+        }
+        else if (!isDashing)
+        {
+            rb.gravityScale = 9.8f;
+        }
+    }
+    #endregion
+
+    #region 动画
+    void Animation()
+    {
+        JumpAnimator.SetBool("p1j", !isGrounded);
+    }
+    #endregion
+
+    #region 检测
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            // 检查是否有碰撞点的法线接近垂直（地面）
             foreach (ContactPoint2D contact in collision.contacts)
             {
-                // 计算法线与竖直方向的夹角
                 float angle = Vector2.Angle(contact.normal, Vector2.up);
-
-                // 如果角度小于阈值，认为是在地面上
                 if (angle < groundAngleThreshold)
                 {
                     isGrounded = true;
                     canDash = true;
-                    dashTime = 0.1f;
-                    return; // 找到一个有效地面接触点就可以返回了
+                    return;
                 }
             }
-            // 如果所有接触点都不满足地面条件，则不是在地面上
             isGrounded = false;
         }
     }
@@ -107,18 +159,20 @@ public class move_first : MonoBehaviour
             isGrounded = false;
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("red"))
+        if (collision.CompareTag("Ladder"))
+            isOnLadder = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Ladder"))
         {
-            move_late.isR = true;
+            isOnLadder = false;
+            isClimbing = false;
         }
     }
-    //private void OnTriggerStay2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Finish"))
-    //    {
-    //        isGrounded = true;
-    //    }
-    //}
+    #endregion
+
 }
