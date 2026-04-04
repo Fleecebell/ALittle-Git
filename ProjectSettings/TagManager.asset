@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Ladder
   - Player2
+  - Button
   layers:
   - Default
   - TransparentFX

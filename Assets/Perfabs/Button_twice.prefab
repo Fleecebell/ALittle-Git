@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 8309330350900862841}
   m_Layer: 0
   m_Name: Button_twice
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

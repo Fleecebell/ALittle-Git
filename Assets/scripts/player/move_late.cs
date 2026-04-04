@@ -1,20 +1,18 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class move_late : MonoBehaviour
 {
-    #region ±äÁ¿
+    #region å˜é‡
     public Animator JumpAnimator;
     public move_first player;
     public float delayTime = 0.5f;
 
-    [Header("³å´Ì")]
+    [Header("å†²åˆº")]
     public float dashCooldown = 1f;
 
-    [Header("»º½µ")]
-    public float fallSpeedLimit = -3f;
-
-    [Header("ÅÊÅÀ")]
+    [Header("æ”€çˆ¬")]
     public float climbSpeed = 5f;
 
     private Rigidbody2D rb;
@@ -26,32 +24,26 @@ public class move_late : MonoBehaviour
     private Vector3 p1Pos, p2Pos;
 
     public static bool isR = false;
-    private float lastDashTime;
-    private bool isSlowFalling;
+
+    private bool canDash = true;
+    private float dashCooldownTimer;
+    private bool isDashing;
 
     private bool isOnLadder;
     private bool isClimbing;
     #endregion
 
-    #region ¶ÓÁĞ¡¢½á¹¹Ìå
-    // ÊäÈë¶ÓÁĞ
+    #region é˜Ÿåˆ—
     private Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
-    private Queue<ShiftRecord> shiftHistory = new Queue<ShiftRecord>();
     private Queue<KeyRecord> inputHistory = new Queue<KeyRecord>();
 
     private struct MovementRecord
     {
-        public float h;
-        public bool jump;
-        public bool dashL;
-        public bool dashR;
+        public float h;           // æ°´å¹³è½´ï¼ˆæŒç»­ï¼‰
+        public bool jump;         // è·³è·ƒï¼ˆæŒç»­ï¼Œé•¿æŒ‰è¿ç»­è·³ï¼‰
+        public bool dash;         // å†²åˆºï¼ˆæŒ‰ä¸‹ç¬é—´ï¼‰
+        public float dashDir;     // å†²åˆºæ–¹å‘
         public float time;
-    }
-
-    private struct ShiftRecord
-    {
-        public bool isShiftDown;
-        public float timeRecorded;
     }
 
     private struct KeyRecord
@@ -62,7 +54,6 @@ public class move_late : MonoBehaviour
     }
     #endregion
 
-    // ³õÊ¼»¯¡¢¸üĞÂ
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -75,65 +66,100 @@ public class move_late : MonoBehaviour
         if (player == null) return;
 
         RecordAllInput();
-        SlowFallDelay();
+
+        if (!canDash)
+        {
+            dashCooldownTimer -= Time.deltaTime;
+            if (dashCooldownTimer <= 0) canDash = true;
+        }
+
         MoveDelay();
         LadderDelay();
         Animation();
         CheckReset();
     }
 
-    #region ¼ÇÂ¼ËùÓĞÊäÈë
     void RecordAllInput()
     {
+        // æ°´å¹³ç§»åŠ¨ï¼ˆæŒç»­ï¼‰
         float h = Input.GetAxis("Horizontal");
+
+        // è·³è·ƒï¼ˆæŒç»­ï¼Œé•¿æŒ‰å¯è¿ç»­è·³ï¼‰
         bool jump = Input.GetKey(KeyCode.Space);
-        bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-        bool dashL = Input.GetKey(KeyCode.A) && shift;
-        bool dashR = Input.GetKey(KeyCode.D) && shift;
 
-        movementHistory.Enqueue(new MovementRecord { h = h, jump = jump, dashL = dashL, dashR = dashR, time = Time.time });
+        // å†²åˆºï¼ˆæŒ‰ä¸‹ç¬é—´ï¼‰
+        bool shiftDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
+        bool dash = false;
+        float dashDir = 0f;
+        if (shiftDown)
+        {
+            if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+            {
+                dash = true;
+                dashDir = -1f;
+            }
+            else if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+            {
+                dash = true;
+                dashDir = 1f;
+            }
+        }
 
-        if (shiftHistory.Count == 0 || shiftHistory.Peek().isShiftDown != shift)
-            shiftHistory.Enqueue(new ShiftRecord { isShiftDown = shift, timeRecorded = Time.time });
+        movementHistory.Enqueue(new MovementRecord
+        {
+            h = h,
+            jump = jump,
+            dash = dash,
+            dashDir = dashDir,
+            time = Time.time
+        });
 
-        inputHistory.Enqueue(new KeyRecord { space = jump, s = Input.GetKey(KeyCode.S), time = Time.time });
+        // çˆ¬æ¢¯è®°å½•ï¼ˆæŒç»­ï¼‰
+        inputHistory.Enqueue(new KeyRecord
+        {
+            space = Input.GetKey(KeyCode.Space),
+            s = Input.GetKey(KeyCode.S),
+            time = Time.time
+        });
     }
-    #endregion
 
-    #region ÑÓ³Ù²¿·Ö£ºÒÆ¶¯¡¢ÌøÔ¾¡¢³å´Ì»º½µ£»ÅÀÌİ
     void MoveDelay()
     {
         while (movementHistory.Count > 0 && Time.time - movementHistory.Peek().time >= delayTime)
         {
             var r = movementHistory.Dequeue();
-            bool canDash = Time.time >= lastDashTime + dashCooldown;
 
-            if (canDash && r.dashL)
+            if (isDashing) continue;
+
+            // å†²åˆºï¼ˆæŒ‰ä¸‹ç¬é—´è§¦å‘ä¸€æ¬¡ï¼‰
+            if (canDash && r.dash)
             {
-                rb.velocity = Vector2.left * player.dashForce * 0.3f;
-                lastDashTime = Time.time;
-            }
-            else if (canDash && r.dashR)
-            {
-                rb.velocity = Vector2.right * player.dashForce * 0.3f;
-                lastDashTime = Time.time;
-            }
-            else
-            {
-                rb.velocity = new Vector2(r.h * move_first.moveSpeed, rb.velocity.y);
+                StartCoroutine(DashCoroutine(r.dashDir, player.dashDuration, player.dashForce));
+                canDash = false;
+                continue; // æœ¬æ¬¡ä¸å¤„ç†ç§»åŠ¨/è·³è·ƒ
             }
 
+            // ç§»åŠ¨
+            rb.velocity = new Vector2(r.h * move_first.moveSpeed, rb.velocity.y);
+
+            // è·³è·ƒï¼ˆé•¿æŒ‰è¿ç»­è·³ï¼‰
             if (r.jump && isGrounded && !isClimbing)
-                rb.velocity = Vector2.up * move_first.jumpForce;
+            {
+                rb.velocity = new Vector2(rb.velocity.x, move_first.jumpForce);
+            }
         }
     }
-    void SlowFallDelay()
-    {
-        while (shiftHistory.Count > 0 && Time.time - shiftHistory.Peek().timeRecorded >= delayTime)
-            isSlowFalling = shiftHistory.Dequeue().isShiftDown;
 
-        if (!isGrounded && rb.velocity.y < 0 && isSlowFalling && !isClimbing)
-            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, fallSpeedLimit));
+    private IEnumerator DashCoroutine(float direction, float duration, float force)
+    {
+        isDashing = true;
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0;
+        rb.velocity = new Vector2(direction * force, 0);
+        yield return new WaitForSeconds(duration);
+        rb.gravityScale = originalGravity;
+        isDashing = false;
+        dashCooldownTimer = dashCooldown;
     }
 
     void LadderDelay()
@@ -145,7 +171,7 @@ public class move_late : MonoBehaviour
             if (isOnLadder && r.space) isClimbing = true;
             if (!isOnLadder) isClimbing = false;
 
-            if (isClimbing)
+            if (isClimbing && !isDashing)
             {
                 rb.gravityScale = 0;
                 float v = 0;
@@ -153,51 +179,46 @@ public class move_late : MonoBehaviour
                 if (r.s) v = -climbSpeed;
                 rb.velocity = new Vector2(rb.velocity.x, v);
             }
-            else
+            else if (!isDashing)
             {
                 rb.gravityScale = 9.8f;
             }
         }
     }
-    #endregion
 
-    #region ¶¯»­
     void Animation()
     {
         JumpAnimator.SetBool("p2j", !isGrounded);
     }
-    #endregion
 
-    #region RÖØÖÃ
     void CheckReset()
     {
         if (Input.GetKeyDown(KeyCode.R) || isR)
         {
-            // ºËĞÄ¸´Î»
             p1.transform.position = p1Pos;
             p2.transform.position = p2Pos;
             isR = false;
-
-            // ±ØĞëÇå£¨P2ÑÓ³Ù¶ÓÁĞ£©
             movementHistory.Clear();
-            shiftHistory.Clear();
             inputHistory.Clear();
-
-            // ½¨ÒéÇå£¨·ÀÖ¹¸¡¿Õ/¿¨×´Ì¬£©
-            isSlowFalling = false;
+            isDashing = false;
             isClimbing = false;
             isOnLadder = false;
+            canDash = true;
+            dashCooldownTimer = 0f;
         }
     }
-    #endregion
 
-    #region ¼ì²â
     private void OnCollisionStay2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
         {
             foreach (ContactPoint2D c in col.contacts)
-                if (Vector2.Angle(c.normal, Vector2.up) < groundAngleThreshold) { isGrounded = true; return; }
+                if (Vector2.Angle(c.normal, Vector2.up) < groundAngleThreshold)
+                {
+                    isGrounded = true;
+                    canDash = true;
+                    return;
+                }
             isGrounded = false;
         }
     }
@@ -221,5 +242,4 @@ public class move_late : MonoBehaviour
             isClimbing = false;
         }
     }
-    #endregion
 }

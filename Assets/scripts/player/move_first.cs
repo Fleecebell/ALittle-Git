@@ -27,9 +27,11 @@ public class move_first : MonoBehaviour
 
     private bool isOnLadder;
     private bool isClimbing;
+
+    // 用于 P2 同步冲刺方向
+    public static float lastDashDirection = 0f;
     #endregion
 
-    // 初始化、更新
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -66,7 +68,6 @@ public class move_first : MonoBehaviour
     #region 冲刺
     void DashInput()
     {
-        // 冷却时间
         if (!canDash)
         {
             dashCooldownTimer -= Time.deltaTime;
@@ -87,6 +88,8 @@ public class move_first : MonoBehaviour
         rb.gravityScale = 0;
 
         float horizontal = Input.GetAxisRaw("Horizontal");
+        lastDashDirection = horizontal;   // 记录方向供 P2 使用
+
         if (horizontal != 0)
         {
             rb.velocity = new Vector2(horizontal * dashForce, 0);
@@ -159,6 +162,7 @@ public class move_first : MonoBehaviour
             isGrounded = false;
         }
     }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Ladder"))
@@ -174,5 +178,4 @@ public class move_first : MonoBehaviour
         }
     }
     #endregion
-
 }
