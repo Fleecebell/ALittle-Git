@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Die : MonoBehaviour
 {
@@ -11,23 +8,33 @@ public class Die : MonoBehaviour
     Vector3 p1Pos;
     Vector3 p2Pos;
 
-    private void Start()
+    public static bool touch_lava;
+
+    void Start()
     {
         p1 = GameObject.Find("Player");
         p2 = GameObject.Find("Player2");
-        //记录两个物体的世界位置
         p1Pos = p1.transform.position;
         p2Pos = p2.transform.position;
     }
-    private void Update()
+    void Update()
     {
-
+        Debug.Log(touch_lava);
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            move_late.isR = true;
+            Move_late.isR = true;
+            touch_lava = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
+        {
+            touch_lava = false;
         }
     }
 }

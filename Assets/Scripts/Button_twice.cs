@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Button_once : MonoBehaviour
+public class Button_twice : MonoBehaviour
 {
     GameObject big_button;
 
@@ -18,13 +16,12 @@ public class Button_once : MonoBehaviour
 
     void Start()
     {
+        big_button = transform.Find("big").gameObject;
         if (wall0 != null && wall0_pos != null)
         {
             wall0_pos = wall0.transform.position;
         }
         else Debug.Log("未正确挂载移动物体");
-        big_button = transform.Find("big").gameObject;
-        //wall0_pos = wall0.transform.position;
         wall_isgone = false;
     }
 
@@ -34,7 +31,11 @@ public class Button_once : MonoBehaviour
         {
             big_button.SetActive(false);
             wall0.transform.position = Vector3.Lerp(wall0.transform.position, wall1_pos.position, Mathf.Min(speed * Time.deltaTime, 1f));
-
+        }
+        else
+        {
+            big_button.SetActive(true);
+            wall0.transform.position = Vector3.Lerp(wall0.transform.position, wall0_pos, Mathf.Min(speed * Time.deltaTime, 1f));
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
@@ -42,6 +43,13 @@ public class Button_once : MonoBehaviour
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
             wall_isgone = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
+        {
+            wall_isgone = false;
         }
     }
 }

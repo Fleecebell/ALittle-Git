@@ -7011,6 +7011,10 @@ PrefabInstance:
       propertyPath: wall1_pos
       value: 
       objectReference: {fileID: 908361841}
+    - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
+      propertyPath: wall_isgone
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3867112823025872513, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.4879

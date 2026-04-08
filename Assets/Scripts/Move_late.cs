@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public class move_late : MonoBehaviour
+public class Move_late : MonoBehaviour
 {
     #region 变量
     public Animator JumpAnimator;
-    public move_first player;
+    public Move_first player;
     public float delayTime = 0.5f;
 
     [Header("冲刺")]
@@ -79,15 +79,11 @@ public class move_late : MonoBehaviour
         CheckReset();
     }
 
+    # region 记录输入
     void RecordAllInput()
     {
-        // 水平移动（持续）
         float h = Input.GetAxis("Horizontal");
-
-        // 跳跃（持续，长按可连续跳）
         bool jump = Input.GetKey(KeyCode.Space);
-
-        // 冲刺（按下瞬间）
         bool shiftDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
         bool dash = false;
         float dashDir = 0f;
@@ -122,7 +118,9 @@ public class move_late : MonoBehaviour
             time = Time.time
         });
     }
+    #endregion
 
+    #region 延迟行为：移动/冲刺/爬梯
     void MoveDelay()
     {
         while (movementHistory.Count > 0 && Time.time - movementHistory.Peek().time >= delayTime)
@@ -140,12 +138,12 @@ public class move_late : MonoBehaviour
             }
 
             // 移动
-            rb.velocity = new Vector2(r.h * move_first.moveSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(r.h * Move_first.moveSpeed, rb.velocity.y);
 
             // 跳跃（长按连续跳）
             if (r.jump && isGrounded && !isClimbing)
             {
-                rb.velocity = new Vector2(rb.velocity.x, move_first.jumpForce);
+                rb.velocity = new Vector2(rb.velocity.x, Move_first.jumpForce);
             }
         }
     }
@@ -185,12 +183,16 @@ public class move_late : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region 动画
     void Animation()
     {
         JumpAnimator.SetBool("p2j", !isGrounded);
     }
+    #endregion
 
+    #region R重置
     void CheckReset()
     {
         if (Input.GetKeyDown(KeyCode.R) || isR)
@@ -207,7 +209,9 @@ public class move_late : MonoBehaviour
             dashCooldownTimer = 0f;
         }
     }
+    #endregion
 
+    #region 检测
     private void OnCollisionStay2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
@@ -242,4 +246,5 @@ public class move_late : MonoBehaviour
             isClimbing = false;
         }
     }
+    #endregion
 }

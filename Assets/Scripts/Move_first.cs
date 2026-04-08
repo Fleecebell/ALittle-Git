@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class move_first : MonoBehaviour
+public class Move_first : MonoBehaviour
 {
     #region ±‰¡ø
     public Animator JumpAnimator;
