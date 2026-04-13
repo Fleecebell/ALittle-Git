@@ -11,12 +11,21 @@ public class Next_Level : MonoBehaviour
         currentScene = SceneManager.GetActiveScene().buildIndex;
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
             int nextScene = currentScene + 1;
-            SceneManager.LoadScene(nextScene);
+
+            // 只加这一句判断
+            if (nextScene < SceneManager.sceneCountInBuildSettings)
+            {
+                SceneManager.LoadScene(nextScene);
+            }
+            else
+            {
+                Debug.Log("已是最后一关");
+            }
         }
     }
 }

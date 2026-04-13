@@ -172,11 +172,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 140c7f48cc22f8e48888aab6a465628f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JumpAnimator: {fileID: 9194768901541431613}
+  jumpAnimator: {fileID: 9194768901541431613}
   player: {fileID: 3995165709704891020}
   delayTime: 1
   dashCooldown: 1
-  fallSpeedLimit: -3
   climbSpeed: 5
   isGrounded: 0
   groundAngleThreshold: 45
@@ -408,7 +407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c457abc5c458b4099ced11164be173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JumpAnimator: {fileID: 3882868352637421675}
+  jumpAnimator: {fileID: 3882868352637421675}
   dashForce: 20
   dashDuration: 0.1
   dashCooldown: 1

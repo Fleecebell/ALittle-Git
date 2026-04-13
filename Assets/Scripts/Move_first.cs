@@ -4,7 +4,7 @@ using System.Collections;
 public class Move_first : MonoBehaviour
 {
     #region 变量
-    public Animator JumpAnimator;
+    public Animator jumpAnimator;
     public static float moveSpeed = 10f;
     public static float jumpForce = 20f;
     public float dashForce = 20f;
@@ -28,7 +28,7 @@ public class Move_first : MonoBehaviour
     private bool isOnLadder;
     private bool isClimbing;
 
-    // 用于 P2 同步冲刺方向
+    // 用于P2同步冲刺方向
     public static float lastDashDirection = 0f;
     #endregion
 
@@ -76,7 +76,7 @@ public class Move_first : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
-            StartCoroutine(Dash());
+            StartCoroutine(Dash()); 
         }
     }
 
@@ -132,7 +132,7 @@ public class Move_first : MonoBehaviour
     #region 动画
     void Animation()
     {
-        JumpAnimator.SetBool("p1j", !isGrounded);
+        jumpAnimator.SetBool("p1j", !isGrounded);
     }
     #endregion
 

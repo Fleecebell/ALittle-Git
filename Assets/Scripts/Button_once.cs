@@ -6,13 +6,13 @@ public class Button_once : MonoBehaviour
 
     [Header("要移动的物体")]
     public GameObject wall0;
+    private Vector3 wall0_pos;
     [Header("移动到的位置")]
     public Transform wall1_pos;
-    private Vector3 wall0_pos;
     [Header("移动速度")]
     public float speed = 10f;
 
-    public bool wall_isgone = false;
+    bool wall_isgone = false;
 
     void Start()
     {

@@ -5,7 +5,7 @@ using System.Collections;
 public class Move_late : MonoBehaviour
 {
     #region 变量
-    public Animator JumpAnimator;
+    public Animator jumpAnimator;
     public Move_first player;
     public float delayTime = 0.5f;
 
@@ -19,8 +19,7 @@ public class Move_late : MonoBehaviour
     public bool isGrounded;
     public float groundAngleThreshold = 45f;
 
-    public GameObject p1;
-    public GameObject p2;
+    public GameObject p1, p2;
     private Vector3 p1Pos, p2Pos;
 
     public static bool isR = false;
@@ -188,7 +187,7 @@ public class Move_late : MonoBehaviour
     #region 动画
     void Animation()
     {
-        JumpAnimator.SetBool("p2j", !isGrounded);
+        jumpAnimator.SetBool("p2j", !isGrounded);
     }
     #endregion
 

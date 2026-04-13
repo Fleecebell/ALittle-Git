@@ -3,16 +3,28 @@
   "WorkspaceRootPath": "E:\\unity\\UnityProgram\\ALittle-Git\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\auto_moving.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\auto_moving.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\die.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\move_late.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\move_late.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|E:\\unity\\UnityProgram\\ALittle-Git\\assets\\scripts\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\move_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\button_once.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\button_once.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\move_late.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\move_late.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|e:\\unity\\unityprogram\\alittle-git\\assets\\scripts\\button_twice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3D02B11-0F22-00D0-2626-912FFF9DC38D}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\button_twice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -35,27 +47,66 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Die.cs",
-              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Die.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Die.cs",
-              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Die.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Die.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAIwB0AAAAdAAAAAAAAAA==",
+              "Title": "Auto_moving.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Auto_moving.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Auto_moving.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Auto_moving.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Auto_moving.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADMAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T12:51:40.616Z",
+              "WhenOpened": "2026-04-13T06:56:52.583Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "Die.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Die.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Die.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Die.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Die.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T08:13:47.946Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Button_once.cs",
               "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Button_once.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Button_once.cs",
               "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Button_once.cs",
               "RelativeToolTip": "Assets\\Scripts\\Button_once.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAADwvyoAAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-08T12:40:32.54Z",
+              "WhenOpened": "2026-04-13T08:14:01.993Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Button_twice.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Button_twice.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Button_twice.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Button_twice.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Button_twice.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T08:13:36.45Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Move_first.cs",
+              "DocumentMoniker": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Move_first.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Move_first.cs",
+              "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Move_first.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Move_first.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAuwIMAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-09T08:25:35.116Z",
               "EditorCaption": ""
             },
             {
@@ -66,7 +117,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\Move_late.cs",
               "ToolTip": "E:\\unity\\UnityProgram\\ALittle-Git\\Assets\\Scripts\\Move_late.cs",
               "RelativeToolTip": "Assets\\Scripts\\Move_late.cs",
-              "ViewState": "AgIAAEwAAAAAAAAAAAAiwNAAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAIwBgAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-08T12:38:59.582Z",
               "EditorCaption": ""
