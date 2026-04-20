@@ -1,26 +1,29 @@
 using UnityEngine;
 using System.Collections;
 
-public class Move_first : MonoBehaviour
+public class MoveFirst : MonoBehaviour
 {
-    #region ±‰¡ø
+    #region ÂèÇÊï∞
     public Animator jumpAnimator;
     public static float moveSpeed = 10f;
     public static float jumpForce = 20f;
     public float dashForce = 20f;
 
-    [Header("≥Â¥Ã")]
+    public static float lastPositionX;
+    public static float traveledDistance;
+
+    [Header("ÂÜ≤Âà∫")]
     public float dashDuration = 0.1f;
     public float dashCooldown = 1f;
 
-    [Header("≈ ≈¿")]
+    [Header("Áà¨Ê¢Ø")]
     public float climbSpeed = 5f;
 
     private Rigidbody2D rb;
     public bool isGrounded;
     public float groundAngleThreshold = 45f;
 
-    // ◊¥Ã¨
+    // Áä∂ÊÄÅ
     private bool canDash = true;
     private float dashCooldownTimer;
     private bool isDashing;
@@ -28,8 +31,10 @@ public class Move_first : MonoBehaviour
     private bool isOnLadder;
     private bool isClimbing;
 
-    // ”√”⁄P2Õ¨≤Ω≥Â¥Ã∑ΩœÚ
+    // ËÆ∞ÂΩï‰∏ä‰∏ÄÊ¨° P2 ÂêåÊ≠•ÂÜ≤Âà∫ÊñπÂêë
     public static float lastDashDirection = 0f;
+    public static float moveDir; // ÊñπÂêëÔºö-1=Â∑¶  0=‰∏çÂä®  1=Âè≥
+    public static bool isMoving; // ÊòØÂê¶Âú®ÁßªÂä® 
     #endregion
 
     void Start()
@@ -50,22 +55,30 @@ public class Move_first : MonoBehaviour
         LadderPhysics();
     }
 
-    #region “∆∂Ø
+    #region ÁßªÂä®
     void MoveInput()
     {
         if (isDashing) return;
 
         float moveInput = Input.GetAxis("Horizontal");
+
+        moveDir = moveInput;
+        isMoving = Mathf.Abs(moveInput) > 0.1f;
+
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
         if (Input.GetKey(KeyCode.Space) && isGrounded && !isClimbing)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
+
+        float deltaX = transform.position.x - lastPositionX;
+        traveledDistance += deltaX;
+        lastPositionX = transform.position.x;
     }
     #endregion
 
-    #region ≥Â¥Ã
+    #region ÂÜ≤Âà∫
     void DashInput()
     {
         if (!canDash)
@@ -88,7 +101,7 @@ public class Move_first : MonoBehaviour
         rb.gravityScale = 0;
 
         float horizontal = Input.GetAxisRaw("Horizontal");
-        lastDashDirection = horizontal;   // º«¬º∑ΩœÚπ© P2  π”√
+        lastDashDirection = horizontal;   // ËÆ∞ÂΩïÂÜ≤Âà∫ÊñπÂêë P2 ‰ΩøÁî®
 
         if (horizontal != 0)
         {
@@ -103,7 +116,7 @@ public class Move_first : MonoBehaviour
     }
     #endregion
 
-    #region ≈¿Ã›
+    #region Áà¨Ê¢Ø
     void LadderInput()
     {
         if (isOnLadder && Input.GetKey(KeyCode.Space))
@@ -129,14 +142,14 @@ public class Move_first : MonoBehaviour
     }
     #endregion
 
-    #region ∂Øª≠
+    #region Âä®Áîª
     void Animation()
     {
         jumpAnimator.SetBool("p1j", !isGrounded);
     }
     #endregion
 
-    #region ºÏ≤‚
+    #region Á¢∞Êíû
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))

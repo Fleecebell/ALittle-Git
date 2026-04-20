@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Next_Level : MonoBehaviour
+public class NextLevel : MonoBehaviour
 {
     private int currentScene;
 
     void Start()
     {
-        // ≥ı ºªØµ±«∞≥°æ∞À˜“˝
         currentScene = SceneManager.GetActiveScene().buildIndex;
     }
 
@@ -17,14 +16,13 @@ public class Next_Level : MonoBehaviour
         {
             int nextScene = currentScene + 1;
 
-            // ÷ªº”’‚“ªæ‰≈–∂œ
             if (nextScene < SceneManager.sceneCountInBuildSettings)
             {
                 SceneManager.LoadScene(nextScene);
             }
             else
             {
-                Debug.Log("“— «◊Ó∫Û“ªπÿ");
+                Debug.Log("Ê≤°ÊúâÊõ¥Â§öÁöÑÂÖ≥Âç°‰∫ÜÔºÅ");
             }
         }
     }

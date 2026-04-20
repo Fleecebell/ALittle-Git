@@ -50,7 +50,7 @@ public class tutorial : MonoBehaviour
             p12.SetActive(false);
             p13.SetActive(false);
             p14.SetActive(false);
-            Move_late.isR = true;
+            MoveLate.isR = true;
             main_1.SetActive(true);
             main_2.SetActive(false);
             main_3.SetActive(false);
@@ -64,7 +64,7 @@ public class tutorial : MonoBehaviour
         if (!isTutorial)
         {
             isTutorial = true;
-            Move_late.isR = false;
+            MoveLate.isR = false;
             xx.SetActive(true);
             jj.SetActive(false);
             //main_camera.SetActive(false);
@@ -73,7 +73,7 @@ public class tutorial : MonoBehaviour
         else
         {
             isTutorial = false;
-            Move_late.isR = true;
+            MoveLate.isR = true;
             xx.SetActive(false);
             jj.SetActive(true);
             main_camera.SetActive(true);

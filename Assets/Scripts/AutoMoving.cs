@@ -1,13 +1,12 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Auto_moving : MonoBehaviour
+public class AutoMoving : MonoBehaviour
 {
-    [Header("移动平台")]
+    [Header("绉诲姩鐗╀綋")]
     public Transform pointA;
-    [Header("往返位置")]
+    [Header("鐩爣浣嶇疆")]
     public Transform pointB;
-    [Header("移动速度")]
+    [Header("绉诲姩閫熷害")]
     public float moveSpeed = 2f;
 
     private Vector2 targetPos, p1Pos, p2Pos;
