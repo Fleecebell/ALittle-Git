@@ -2,12 +2,21 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public class Move_late : MonoBehaviour
+public class MoveLate : MonoBehaviour
 {
     #region 变量
     public Animator jumpAnimator;
-    public Move_first player;
+    public MoveFirst player;
+
+    public static float moveSpeed = 10f;
+    public static float jumpForce = 20f;
+    public static float moveDir; // 方向：-1=左  0=不动  1=右
+    public static bool isMoving; // 是否在移动 
+    
     public float delayTime = 0.5f;
+
+    public static float lastPositionX;
+    public static float traveledDistance;
 
     [Header("冲刺")]
     public float dashCooldown = 1f;
@@ -137,14 +146,20 @@ public class Move_late : MonoBehaviour
             }
 
             // 移动
-            rb.velocity = new Vector2(r.h * Move_first.moveSpeed, rb.velocity.y);
+            moveDir = r.h;
+            isMoving = Mathf.Abs(moveDir) > 0.1f;
+            rb.velocity = new Vector2(r.h * moveSpeed, rb.velocity.y);
 
             // 跳跃（长按连续跳）
             if (r.jump && isGrounded && !isClimbing)
             {
-                rb.velocity = new Vector2(rb.velocity.x, Move_first.jumpForce);
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             }
         }
+        
+        float deltaX = transform.position.x - lastPositionX;
+        traveledDistance += deltaX;
+        lastPositionX = transform.position.x;
     }
 
     private IEnumerator DashCoroutine(float direction, float duration, float force)

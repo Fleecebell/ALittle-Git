@@ -8,7 +8,7 @@ public class Die : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            Move_late.isR = true;
+            MoveLate.isR = true;
             touch_lava = true;
         }
     }

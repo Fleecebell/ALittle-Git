@@ -4,12 +4,12 @@ public class Button_twice : MonoBehaviour
 {
     GameObject big_button;
 
-    [Header("ÒªÒÆ¶¯µÄÎïÌå")]
+    [Header("ç§»åŠ¨ç‰©ä½“")]
     public GameObject wall0;
-    [Header("ÒÆ¶¯µ½µÄÎ»ÖÃ")]
+    [Header("ç›®æ ‡ä½ç½®")]
     public Transform wall1_pos;
     private Vector3 wall0_pos;
-    [Header("ÒÆ¶¯ËÙ¶È")]
+    [Header("ç§»åŠ¨é€Ÿåº¦")]
     public float speed = 10f;
 
     bool wall_isgone = false;
@@ -21,7 +21,7 @@ public class Button_twice : MonoBehaviour
         {
             wall0_pos = wall0.transform.position;
         }
-        else Debug.Log("Î´ÕıÈ·¹ÒÔØÒÆ¶¯ÎïÌå");
+        else Debug.Log("æœªæ­£ç¡®è®¾ç½®ç§»åŠ¨ç‰©ä½“");
         wall_isgone = false;
     }
 

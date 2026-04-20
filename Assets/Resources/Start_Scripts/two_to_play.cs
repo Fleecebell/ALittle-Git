@@ -23,7 +23,7 @@ public class two_to_play : MonoBehaviour
             p0.SetActive(false);
             p1.SetActive(true);
             tutorial.isTutorial = false;
-            Move_late.isR = true;
+            MoveLate.isR = true;
         }
         if(other.gameObject.CompareTag("Player2"))
         {
