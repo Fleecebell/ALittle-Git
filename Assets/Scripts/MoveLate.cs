@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 public class MoveLate : MonoBehaviour
 {
@@ -9,9 +10,12 @@ public class MoveLate : MonoBehaviour
     public MoveFirst player;
 
     public static float moveSpeed = 10f;
+    public float minMoveSpeed = 0f;
+
+    public float maxMoveSpeed = 50f;
     public static float jumpForce = 20f;
-    public static float moveDir; // 方向：-1=左  0=不动  1=右
-    public static bool isMoving; // 是否在移动 
+    public static float moveDir;
+    public static bool isMoving;
     
     public float delayTime = 0.5f;
 
@@ -42,19 +46,20 @@ public class MoveLate : MonoBehaviour
     #endregion
 
     #region 队列
-    private Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
-    private Queue<KeyRecord> inputHistory = new Queue<KeyRecord>();
+    public Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
+    public Queue<KeyRecord> inputHistory = new Queue<KeyRecord>();
 
-    private struct MovementRecord
+    public struct MovementRecord
     {
-        public float h;           // 水平轴（持续）
-        public bool jump;         // 跳跃（持续，长按连续跳）
-        public bool dash;         // 冲刺（按下瞬间）
-        public float dashDir;     // 冲刺方向
+        public float h;
+        public bool jump;
+        public bool dash;
+        public float dashDir;
+        public bool climbDown;   // 新增：向下爬梯
         public float time;
     }
 
-    private struct KeyRecord
+    public struct KeyRecord
     {
         public bool space;
         public bool s;
@@ -85,9 +90,11 @@ public class MoveLate : MonoBehaviour
         LadderDelay();
         Animation();
         CheckReset();
+
+        UpdateCurrentActionClear(Time.deltaTime);
     }
 
-    # region 记录输入
+    #region 记录输入
     void RecordAllInput()
     {
         float h = Input.GetAxis("Horizontal");
@@ -115,10 +122,10 @@ public class MoveLate : MonoBehaviour
             jump = jump,
             dash = dash,
             dashDir = dashDir,
+            climbDown = Input.GetKey(KeyCode.S),
             time = Time.time
         });
 
-        // 爬梯记录（持续）
         inputHistory.Enqueue(new KeyRecord
         {
             space = Input.GetKey(KeyCode.Space),
@@ -128,7 +135,7 @@ public class MoveLate : MonoBehaviour
     }
     #endregion
 
-    #region 延迟行为：移动/冲刺/爬梯
+    #region 延迟行为
     void MoveDelay()
     {
         while (movementHistory.Count > 0 && Time.time - movementHistory.Peek().time >= delayTime)
@@ -137,20 +144,21 @@ public class MoveLate : MonoBehaviour
 
             if (isDashing) continue;
 
-            // 冲刺（按下瞬间触发一次）
+            SetCurrentActionFromRecord(r);
+
             if (canDash && r.dash)
             {
                 StartCoroutine(DashCoroutine(r.dashDir, player.dashDuration, player.dashForce));
                 canDash = false;
-                continue; // 本次不处理移动/跳跃
+                continue;
             }
 
-            // 移动
+            moveSpeed = Mathf.Clamp(moveSpeed, minMoveSpeed, maxMoveSpeed);
+
             moveDir = r.h;
             isMoving = Mathf.Abs(moveDir) > 0.1f;
             rb.velocity = new Vector2(r.h * moveSpeed, rb.velocity.y);
 
-            // 跳跃（长按连续跳）
             if (r.jump && isGrounded && !isClimbing)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
@@ -258,6 +266,87 @@ public class MoveLate : MonoBehaviour
         {
             isOnLadder = false;
             isClimbing = false;
+        }
+    }
+    #endregion
+
+    #region 行为显示UI
+    public enum ActionType
+    {
+        None,
+        MoveLeft,
+        MoveRight,
+        Jump,
+        DashLeft,
+        DashRight,
+        ClimbUp,
+        ClimbDown
+    }
+
+    private ActionType currentReplayingAction = ActionType.None;
+    private float currentActionClearTimer = 0f;
+
+    public ActionType GetCurrentAction() => currentReplayingAction;
+
+    public List<ActionType> GetPendingActions()
+    {
+        List<ActionType> rawList = new List<ActionType>();
+        foreach (var record in movementHistory)
+        {
+            ActionType act = GetActionTypeFromRecord(record);
+            if (act != ActionType.None)
+                rawList.Add(act);
+        }
+        List<ActionType> compressed = new List<ActionType>();
+        ActionType last = ActionType.None;
+        foreach (var act in rawList)
+        {
+            if (act != last)
+            {
+                compressed.Add(act);
+                last = act;
+            }
+        }
+        return compressed.Take(6).ToList();
+    }
+
+    public ActionType GetActionTypeFromRecord(MovementRecord r)
+    {
+        if (r.dash)
+            return r.dashDir > 0 ? ActionType.DashRight : ActionType.DashLeft;
+        if (r.jump)
+            return ActionType.Jump;
+        if (r.climbDown)                     // 新增
+            return ActionType.ClimbDown;
+        if (r.h < 0)
+            return ActionType.MoveLeft;
+        if (r.h > 0)
+            return ActionType.MoveRight;
+        return ActionType.None;
+    }
+
+    public void SetCurrentActionFromRecord(MovementRecord r)
+    {
+        currentReplayingAction = GetActionTypeFromRecord(r);
+        if (currentReplayingAction == ActionType.Jump ||
+            currentReplayingAction == ActionType.DashLeft ||
+            currentReplayingAction == ActionType.DashRight)
+        {
+            currentActionClearTimer = 0.2f;
+        }
+        else
+        {
+            currentActionClearTimer = -1f;
+        }
+    }
+
+    public void UpdateCurrentActionClear(float deltaTime)
+    {
+        if (currentActionClearTimer > 0)
+        {
+            currentActionClearTimer -= deltaTime;
+            if (currentActionClearTimer <= 0)
+                currentReplayingAction = ActionType.None;
         }
     }
     #endregion
