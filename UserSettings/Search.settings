@@ -9,7 +9,7 @@ onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
-	"last_search.66F56946" = "footrest_move_1st"
+	"last_search.66F56946" = "package"
 	"OpenInspectorPreview.66F56946" = "0"
 	"currentGroup.66F56946" = "all"
 }
@@ -63,8 +63,11 @@ providers = {
 objectSelectors = {
 }
 recentSearches = [
-	"footrest_move_1st"
+	".unitypackage"
 	""
+	"_move_1"
+	"_move_1stmove_1st"
+	"footrest_move_1st"
 	"h: t=MeshFilter vertices>=1024"
 	"h: ref=<$object:none$>"
 ]
