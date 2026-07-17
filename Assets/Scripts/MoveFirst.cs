@@ -6,6 +6,9 @@ public class MoveFirst : MonoBehaviour
     #region 参数
     public Animator jumpAnimator;
     public static float moveSpeed = 10f;
+    public float minMoveSpeed = 0f;
+
+    public float maxMoveSpeed = 50f;
     public static float jumpForce = 20f;
     public float dashForce = 20f;
 
@@ -71,6 +74,8 @@ public class MoveFirst : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
+
+        moveSpeed = Mathf.Clamp(moveSpeed, minMoveSpeed, maxMoveSpeed);
 
         float deltaX = transform.position.x - lastPositionX;
         traveledDistance += deltaX;

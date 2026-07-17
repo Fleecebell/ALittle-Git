@@ -55,11 +55,18 @@
     <UnityVersion>2022.3.55f1c1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="D:\aaaaaa\2022.3.55f1c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="D:\aaaaaa\2022.3.55f1c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
+=======
+    <Analyzer Include="C:\Users\21264\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.2.2\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="E:\unity\Hub\Editor\2022.3.55f1c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
+    <Analyzer Include="E:\unity\Hub\Editor\2022.3.55f1c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
+>>>>>>> df912ab0da9d46c2229e1fb5859e3e94127c493f
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Fruit_Delay.cs" />
     <Compile Include="Assets\Scripts\Die.cs" />
     <Compile Include="Assets\Scripts\SpeedBand.cs" />
     <Compile Include="Assets\resources\2DWater\WaterShapeController.cs" />
@@ -75,6 +82,7 @@
     <Compile Include="Assets\resources\Start_Scripts\playToChoose.cs" />
     <Compile Include="Assets\resources\2DWater\WaterSpring.cs" />
     <Compile Include="Assets\Scripts\MoveLate.cs" />
+<<<<<<< HEAD
     <Compile Include="Assets\resources\Start_Scripts\two_to_play.cs" />
     <Compile Include="Assets\Scripts\Button_once.cs" />
   </ItemGroup>
@@ -101,6 +109,35 @@
     <None Include="Assets\resources\文字\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\resources\文字\TextMesh Pro\Shaders\TMP_Sprite.shader" />
+=======
+    <Compile Include="Assets\Scripts\ActionUI.cs" />
+    <Compile Include="Assets\Resources\Start_Scripts\one_to_two.cs" />
+    <Compile Include="Assets\Scripts\Button_once.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMPro.cginc" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Resources\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Resources\TextMesh Pro\Fonts\7000汉字+符号+英文字符集.txt" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\Resources\TextMesh Pro\Shaders\TMP_Sprite.shader" />
+>>>>>>> df912ab0da9d46c2229e1fb5859e3e94127c493f
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
