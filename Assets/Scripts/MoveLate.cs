@@ -11,7 +11,6 @@ public class MoveLate : MonoBehaviour
 
     public static float moveSpeed = 10f;
     public float minMoveSpeed = 0f;
-
     public float maxMoveSpeed = 50f;
     public static float jumpForce = 20f;
     public static float moveDir;
@@ -43,6 +42,9 @@ public class MoveLate : MonoBehaviour
 
     private bool isOnLadder;
     private bool isClimbing;
+
+    // 引用战斗组件（用于重放攻击段数）
+    private Combatant combatant;
     #endregion
 
     #region 队列
@@ -55,7 +57,8 @@ public class MoveLate : MonoBehaviour
         public bool jump;
         public bool dash;
         public float dashDir;
-        public bool climbDown;   // 新增：向下爬梯
+        public bool climbDown;
+        public int attackStage;   // 新增：攻击段数 (0=无,1=向前,2=向上,3=向下)
         public float time;
     }
 
@@ -72,6 +75,9 @@ public class MoveLate : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         p1Pos = p1.transform.position;
         p2Pos = p2.transform.position;
+        combatant = GetComponent<Combatant>();
+        if (combatant == null)
+            Debug.LogWarning("MoveLate: 未找到 Combatant 组件，攻击段数重放将无效");
     }
 
     void Update()
@@ -116,6 +122,15 @@ public class MoveLate : MonoBehaviour
             }
         }
 
+        // 获取主角当前的攻击段数（从 Combatant 组件）
+        int currentAttackStage = 0;
+        if (player != null)
+        {
+            Combatant playerCombat = player.GetComponent<Combatant>();
+            if (playerCombat != null)
+                currentAttackStage = playerCombat.CurrentAttackStage;
+        }
+
         movementHistory.Enqueue(new MovementRecord
         {
             h = h,
@@ -123,6 +138,7 @@ public class MoveLate : MonoBehaviour
             dash = dash,
             dashDir = dashDir,
             climbDown = Input.GetKey(KeyCode.S),
+            attackStage = currentAttackStage,
             time = Time.time
         });
 
@@ -145,6 +161,10 @@ public class MoveLate : MonoBehaviour
             if (isDashing) continue;
 
             SetCurrentActionFromRecord(r);
+
+            // 重放攻击段数（需要 Combatant 组件实现 SetAttackStageFromReplay 方法）
+            if (combatant != null)
+                combatant.SetAttackStageFromReplay(r.attackStage);
 
             if (canDash && r.dash)
             {
@@ -316,7 +336,7 @@ public class MoveLate : MonoBehaviour
             return r.dashDir > 0 ? ActionType.DashRight : ActionType.DashLeft;
         if (r.jump)
             return ActionType.Jump;
-        if (r.climbDown)                     // 新增
+        if (r.climbDown)
             return ActionType.ClimbDown;
         if (r.h < 0)
             return ActionType.MoveLeft;
