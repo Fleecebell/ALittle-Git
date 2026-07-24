@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -47,7 +47,6 @@ public class MoveLate : MonoBehaviour
 
     #region 队列
     public Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
-    public Queue<KeyRecord> inputHistory = new Queue<KeyRecord>();
 
     public struct MovementRecord
     {
@@ -55,14 +54,7 @@ public class MoveLate : MonoBehaviour
         public bool jump;
         public bool dash;
         public float dashDir;
-        public bool climbDown;   // 新增：向下爬梯
-        public float time;
-    }
-
-    public struct KeyRecord
-    {
-        public bool space;
-        public bool s;
+        public bool climbDown;
         public float time;
     }
     #endregion
@@ -87,7 +79,6 @@ public class MoveLate : MonoBehaviour
         }
 
         MoveDelay();
-        LadderDelay();
         Animation();
         CheckReset();
 
@@ -125,13 +116,7 @@ public class MoveLate : MonoBehaviour
             climbDown = Input.GetKey(KeyCode.S),
             time = Time.time
         });
-
-        inputHistory.Enqueue(new KeyRecord
-        {
-            space = Input.GetKey(KeyCode.Space),
-            s = Input.GetKey(KeyCode.S),
-            time = Time.time
-        });
+        if (movementHistory.Count > 1200) movementHistory.Dequeue();
     }
     #endregion
 
@@ -157,8 +142,30 @@ public class MoveLate : MonoBehaviour
 
             moveDir = r.h;
             isMoving = Mathf.Abs(moveDir) > 0.1f;
-            rb.velocity = new Vector2(r.h * moveSpeed, rb.velocity.y);
 
+            float vx = r.h * moveSpeed;
+            float vy = rb.velocity.y;
+
+            // 梯子状态
+            if (isOnLadder && r.jump) isClimbing = true;
+            if (!isOnLadder) isClimbing = false;
+
+            // 梯子移动 / 重力
+            if (isClimbing && !isDashing)
+            {
+                rb.gravityScale = 0;
+                vy = 0;
+                if (r.jump) vy = climbSpeed;
+                if (r.climbDown) vy = -climbSpeed;
+            }
+            else if (!isDashing)
+            {
+                rb.gravityScale = 9.8f;
+            }
+
+            rb.velocity = new Vector2(vx, vy);
+
+            // 地面跳跃
             if (r.jump && isGrounded && !isClimbing)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
@@ -181,30 +188,6 @@ public class MoveLate : MonoBehaviour
         isDashing = false;
         dashCooldownTimer = dashCooldown;
     }
-
-    void LadderDelay()
-    {
-        while (inputHistory.Count > 0 && Time.time - inputHistory.Peek().time >= delayTime)
-        {
-            var r = inputHistory.Dequeue();
-
-            if (isOnLadder && r.space) isClimbing = true;
-            if (!isOnLadder) isClimbing = false;
-
-            if (isClimbing && !isDashing)
-            {
-                rb.gravityScale = 0;
-                float v = 0;
-                if (r.space) v = climbSpeed;
-                if (r.s) v = -climbSpeed;
-                rb.velocity = new Vector2(rb.velocity.x, v);
-            }
-            else if (!isDashing)
-            {
-                rb.gravityScale = 9.8f;
-            }
-        }
-    }
     #endregion
 
     #region 动画
@@ -223,7 +206,7 @@ public class MoveLate : MonoBehaviour
             p2.transform.position = p2Pos;
             isR = false;
             movementHistory.Clear();
-            inputHistory.Clear();
+            rb.velocity = Vector2.zero;
             isDashing = false;
             isClimbing = false;
             isOnLadder = false;
