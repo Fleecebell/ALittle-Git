@@ -55,6 +55,11 @@ public class MoveFirst : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // 每帧物理更新开始时先把着地状态重置为 false，
+        // 然后由 OnCollisionStay2D 在真正踩到地面（法线朝上）时重新设为 true。
+        // 注意：不能在 OnCollisionStay2D / OnCollisionExit2D 里设 false，
+        // 否则两个角色贴在一起时，水平碰撞的法线不满足地面条件，会把 isGrounded 错误覆盖为 false，导致跳不起来。
+        isGrounded = false;
         LadderPhysics();
     }
 
@@ -70,7 +75,9 @@ public class MoveFirst : MonoBehaviour
 
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
-        if (Input.GetKey(KeyCode.Space) && isGrounded && !isClimbing)
+        // 跳跃：空格 或 W 都可以触发
+        // 必须同时满足：在地面(isGrounded) + 没在爬梯(!isClimbing)
+        if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W)) && isGrounded && !isClimbing)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
@@ -124,7 +131,8 @@ public class MoveFirst : MonoBehaviour
     #region 爬梯
     void LadderInput()
     {
-        if (isOnLadder && Input.GetKey(KeyCode.Space))
+        // 爬梯触发：空格 或 W 都可以
+        if (isOnLadder && (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W)))
         {
             isClimbing = true;
         }
@@ -136,7 +144,8 @@ public class MoveFirst : MonoBehaviour
         {
             rb.gravityScale = 0f;
             float v = 0;
-            if (Input.GetKey(KeyCode.Space)) v = climbSpeed;
+            // 向上爬：空格 或 W 都可以
+            if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W)) v = climbSpeed;
             if (Input.GetKey(KeyCode.S)) v = -climbSpeed;
             rb.velocity = new Vector2(rb.velocity.x, v);
         }
@@ -169,16 +178,15 @@ public class MoveFirst : MonoBehaviour
                     return;
                 }
             }
-            isGrounded = false;
+            // 不在这里设 isGrounded = false，交给 FixedUpdate 重置
+            // 否则两个角色贴在一起时，水平碰撞法线不满足地面条件，会把 isGrounded 错误覆盖为 false
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
-        {
-            isGrounded = false;
-        }
+        // 不在这里设 isGrounded = false，交给 FixedUpdate 重置
+        // 否则离开与另一个角色的接触时（即使还站在地上）会把 isGrounded 错误设为 false
     }
 
     private void OnTriggerStay2D(Collider2D collision)

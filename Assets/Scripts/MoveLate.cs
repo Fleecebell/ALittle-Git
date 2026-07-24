@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -94,11 +94,21 @@ public class MoveLate : MonoBehaviour
         UpdateCurrentActionClear(Time.deltaTime);
     }
 
+    private void FixedUpdate()
+    {
+        // 每帧物理更新开始时先把着地状态重置为 false，
+        // 然后由 OnCollisionStay2D 在真正踩到地面（法线朝上）时重新设为 true。
+        // 注意：不能在 OnCollisionStay2D / OnCollisionExit2D 里设 false，
+        // 否则两个角色贴在一起时，水平碰撞的法线不满足地面条件，会把 isGrounded 错误覆盖为 false，导致跳不起来。
+        isGrounded = false;
+    }
+
     #region 记录输入
     void RecordAllInput()
     {
         float h = Input.GetAxis("Horizontal");
-        bool jump = Input.GetKey(KeyCode.Space);
+        // 跳跃输入：空格 或 W 都算作跳跃（P2 会延迟重放这个记录）
+        bool jump = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W);
         bool shiftDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
         bool dash = false;
         float dashDir = 0f;
@@ -128,7 +138,8 @@ public class MoveLate : MonoBehaviour
 
         inputHistory.Enqueue(new KeyRecord
         {
-            space = Input.GetKey(KeyCode.Space),
+            // 记录爬梯输入：空格 或 W 都算（P2 延迟重放时用）
+            space = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W),
             s = Input.GetKey(KeyCode.S),
             time = Time.time
         });
@@ -245,14 +256,15 @@ public class MoveLate : MonoBehaviour
                     canDash = true;
                     return;
                 }
-            isGrounded = false;
+            // 不在这里设 isGrounded = false，交给 FixedUpdate 重置
+            // 否则两个角色贴在一起时，水平碰撞法线不满足地面条件，会把 isGrounded 错误覆盖为 false
         }
     }
 
     private void OnCollisionExit2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
-            isGrounded = false;
+        // 不在这里设 isGrounded = false，交给 FixedUpdate 重置
+        // 否则离开与另一个角色的接触时（即使还站在地上）会把 isGrounded 错误设为 false
     }
 
     private void OnTriggerStay2D(Collider2D col)
