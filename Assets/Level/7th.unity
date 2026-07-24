@@ -2848,11 +2848,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4495793572342896930, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.18
+      value: -11.07
       objectReference: {fileID: 0}
     - target: {fileID: 4495793572342896930, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.91
+      value: 2.96
       objectReference: {fileID: 0}
     - target: {fileID: 4495793572342896930, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2886,25 +2886,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5810796102276131323, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -9.295
-      objectReference: {fileID: 0}
-    - target: {fileID: 5810796102276131323, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -7.344
-      objectReference: {fileID: 0}
     - target: {fileID: 5838006495232178213, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: m_Name
       value: player control
       objectReference: {fileID: 0}
-    - target: {fileID: 8516146198222847846, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -10.35
+    - target: {fileID: 6741749584995359337, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 2519.3022
       objectReference: {fileID: 0}
     - target: {fileID: 8516146198222847846, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -7.34
+      propertyPath: m_LocalPosition.x
+      value: 10.68
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
