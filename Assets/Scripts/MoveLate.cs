@@ -47,6 +47,7 @@ public class MoveLate : MonoBehaviour
 
     #region 队列
     public Queue<MovementRecord> movementHistory = new Queue<MovementRecord>();
+    public Queue<KeyRecord> inputHistory = new Queue<KeyRecord>();
 
     public struct MovementRecord
     {
@@ -54,7 +55,14 @@ public class MoveLate : MonoBehaviour
         public bool jump;
         public bool dash;
         public float dashDir;
-        public bool climbDown;
+        public bool climbDown;   // 新增：向下爬梯
+        public float time;
+    }
+
+    public struct KeyRecord
+    {
+        public bool space;
+        public bool s;
         public float time;
     }
     #endregion
@@ -79,17 +87,28 @@ public class MoveLate : MonoBehaviour
         }
 
         MoveDelay();
+        LadderDelay();
         Animation();
         CheckReset();
 
         UpdateCurrentActionClear(Time.deltaTime);
     }
 
+    private void FixedUpdate()
+    {
+        // 每帧物理更新开始时先把着地状态重置为 false，
+        // 然后由 OnCollisionStay2D 在真正踩到地面（法线朝上）时重新设为 true。
+        // 注意：不能在 OnCollisionStay2D / OnCollisionExit2D 里设 false，
+        // 否则两个角色贴在一起时，水平碰撞的法线不满足地面条件，会把 isGrounded 错误覆盖为 false，导致跳不起来。
+        isGrounded = false;
+    }
+
     #region 记录输入
     void RecordAllInput()
     {
         float h = Input.GetAxis("Horizontal");
-        bool jump = Input.GetKey(KeyCode.Space);
+        // 跳跃输入：空格 或 W 都算作跳跃（P2 会延迟重放这个记录）
+        bool jump = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W);
         bool shiftDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
         bool dash = false;
         float dashDir = 0f;
@@ -116,7 +135,14 @@ public class MoveLate : MonoBehaviour
             climbDown = Input.GetKey(KeyCode.S),
             time = Time.time
         });
-        if (movementHistory.Count > 1200) movementHistory.Dequeue();
+
+        inputHistory.Enqueue(new KeyRecord
+        {
+            // 记录爬梯输入：空格 或 W 都算（P2 延迟重放时用）
+            space = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W),
+            s = Input.GetKey(KeyCode.S),
+            time = Time.time
+        });
     }
     #endregion
 
@@ -142,30 +168,8 @@ public class MoveLate : MonoBehaviour
 
             moveDir = r.h;
             isMoving = Mathf.Abs(moveDir) > 0.1f;
+            rb.velocity = new Vector2(r.h * moveSpeed, rb.velocity.y);
 
-            float vx = r.h * moveSpeed;
-            float vy = rb.velocity.y;
-
-            // 梯子状态
-            if (isOnLadder && r.jump) isClimbing = true;
-            if (!isOnLadder) isClimbing = false;
-
-            // 梯子移动 / 重力
-            if (isClimbing && !isDashing)
-            {
-                rb.gravityScale = 0;
-                vy = 0;
-                if (r.jump) vy = climbSpeed;
-                if (r.climbDown) vy = -climbSpeed;
-            }
-            else if (!isDashing)
-            {
-                rb.gravityScale = 9.8f;
-            }
-
-            rb.velocity = new Vector2(vx, vy);
-
-            // 地面跳跃
             if (r.jump && isGrounded && !isClimbing)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
@@ -188,6 +192,30 @@ public class MoveLate : MonoBehaviour
         isDashing = false;
         dashCooldownTimer = dashCooldown;
     }
+
+    void LadderDelay()
+    {
+        while (inputHistory.Count > 0 && Time.time - inputHistory.Peek().time >= delayTime)
+        {
+            var r = inputHistory.Dequeue();
+
+            if (isOnLadder && r.space) isClimbing = true;
+            if (!isOnLadder) isClimbing = false;
+
+            if (isClimbing && !isDashing)
+            {
+                rb.gravityScale = 0;
+                float v = 0;
+                if (r.space) v = climbSpeed;
+                if (r.s) v = -climbSpeed;
+                rb.velocity = new Vector2(rb.velocity.x, v);
+            }
+            else if (!isDashing)
+            {
+                rb.gravityScale = 9.8f;
+            }
+        }
+    }
     #endregion
 
     #region 动画
@@ -206,7 +234,7 @@ public class MoveLate : MonoBehaviour
             p2.transform.position = p2Pos;
             isR = false;
             movementHistory.Clear();
-            rb.velocity = Vector2.zero;
+            inputHistory.Clear();
             isDashing = false;
             isClimbing = false;
             isOnLadder = false;
@@ -228,14 +256,15 @@ public class MoveLate : MonoBehaviour
                     canDash = true;
                     return;
                 }
-            isGrounded = false;
+            // 不在这里设 isGrounded = false，交给 FixedUpdate 重置
+            // 否则两个角色贴在一起时，水平碰撞法线不满足地面条件，会把 isGrounded 错误覆盖为 false
         }
     }
 
     private void OnCollisionExit2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
-            isGrounded = false;
+        // 不在这里设 isGrounded = false，交给 FixedUpdate 重置
+        // 否则离开与另一个角色的接触时（即使还站在地上）会把 isGrounded 错误设为 false
     }
 
     private void OnTriggerStay2D(Collider2D col)
