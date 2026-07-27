@@ -18,7 +18,18 @@ public class NextLevel : MonoBehaviour
 
             if (nextScene < SceneManager.sceneCountInBuildSettings)
             {
-                SceneManager.LoadScene(nextScene);
+                // 在当前场景中查找 LevelLoader 组件
+                LevelLoader loader = FindObjectOfType<LevelLoader>();
+                if (loader != null)
+                {
+                    loader.LoadNextLevel();
+                }
+                else
+                {
+                    // 容错：如果没找到，直接加载
+                    Debug.LogWarning("未找到 LevelLoader，直接加载场景");
+                    SceneManager.LoadScene(nextScene);
+                }
             }
             else
             {
