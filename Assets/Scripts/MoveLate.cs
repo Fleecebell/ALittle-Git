@@ -41,6 +41,10 @@ public class MoveLate : MonoBehaviour
     private float dashCooldownTimer;
     private bool isDashing;
 
+    [Header("P1 踩住时固定 P2")]
+    public bool preventWhenSteppedOn = false;
+    private bool isSteppedOn;
+
     private bool isOnLadder;
     private bool isClimbing;
     #endregion
@@ -89,9 +93,8 @@ public class MoveLate : MonoBehaviour
     {
         // 每帧物理更新开始时先把着地状态重置为 false，
         // 然后由 OnCollisionStay2D 在真正踩到地面（法线朝上）时重新设为 true。
-        // 注意：不能在 OnCollisionStay2D / OnCollisionExit2D 里设 false，
-        // 否则两个角色贴在一起时，水平碰撞的法线不满足地面条件，会把 isGrounded 错误覆盖为 false，导致跳不起来。
         isGrounded = false;
+        isSteppedOn = false;
     }
 
     #region 记录输入
@@ -138,6 +141,13 @@ public class MoveLate : MonoBehaviour
             var r = movementHistory.Dequeue();
 
             if (isDashing) continue;
+
+            // P1 踩着 P2：跳过移动，只清队列
+            if (preventWhenSteppedOn && isSteppedOn)
+            {
+                SetCurrentActionFromRecord(r);
+                continue;
+            }
 
             SetCurrentActionFromRecord(r);
 
@@ -229,17 +239,37 @@ public class MoveLate : MonoBehaviour
     #region 检测
     private void OnCollisionStay2D(Collision2D col)
     {
+        // 检测是否站在移动平台上，自动跟随（无需配置）
+        if (Button_once.PlatformDeltas.TryGetValue(col.gameObject, out var getDelta))
+        {
+            Vector3 d = getDelta();
+            if (d != Vector3.zero)
+                transform.position += d;
+        }
+
         if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
         {
             foreach (ContactPoint2D c in col.contacts)
+            {
                 if (Vector2.Angle(c.normal, Vector2.up) < groundAngleThreshold)
                 {
                     isGrounded = true;
                     canDash = true;
-                    return;
                 }
-            // 不在这里设 isGrounded = false，交给 FixedUpdate 重置
-            // 否则两个角色贴在一起时，水平碰撞法线不满足地面条件，会把 isGrounded 错误覆盖为 false
+            }
+
+            // P1 从上方踩住 P2：接触点在 P2 的上半身
+            if (preventWhenSteppedOn && col.gameObject.CompareTag("Player"))
+            {
+                foreach (ContactPoint2D c in col.contacts)
+                {
+                    if (c.point.y > transform.position.y)
+                    {
+                        isSteppedOn = true;
+                        break;
+                    }
+                }
+            }
         }
     }
 

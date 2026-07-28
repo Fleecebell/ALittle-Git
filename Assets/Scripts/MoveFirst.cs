@@ -166,6 +166,14 @@ public class MoveFirst : MonoBehaviour
     #region 碰撞
     private void OnCollisionStay2D(Collision2D collision)
     {
+        // 检测是否站在移动平台上，自动跟随（无需配置）
+        if (Button_once.PlatformDeltas.TryGetValue(collision.gameObject, out var getDelta))
+        {
+            Vector3 d = getDelta();
+            if (d != Vector3.zero)
+                transform.position += d;
+        }
+
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
             foreach (ContactPoint2D contact in collision.contacts)
