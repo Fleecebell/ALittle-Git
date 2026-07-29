@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 [System.Serializable]
 public class PedalInfo
@@ -24,24 +25,30 @@ public class Button_Multi : MonoBehaviour
     private bool[] pedalPressed;
     private bool allPressed;
 
+    // 平台移动增量（Button_Multi 自身就是移动平台）
+    private Vector3 previousPos;
+    public Vector3 PlatformDelta { get; private set; }
+
     void Start()
     {
         originPosition = transform.position;
+        previousPos = transform.position;
+        PlatformDelta = Vector3.zero;
         pedalPressed = new bool[pedals.Length];
+
+        // 将自身注册为移动平台
+        Button_once.PlatformDeltas[this.gameObject] = () => PlatformDelta;
 
         for (int i = 0; i < pedals.Length; i++)
         {
             if (pedals[i].pedal == null) continue;
 
-            // 移除旧的 PedalTrigger 避免重复添加
             var oldTriggers = pedals[i].pedal.GetComponents<PedalTrigger>();
             foreach (var t in oldTriggers) Destroy(t);
 
-            // 添加触发器监听组件
             var trigger = pedals[i].pedal.AddComponent<PedalTrigger>();
             trigger.Init(this, i, pedals[i].isOneTime);
 
-            // 初始状态：big 显示（踏板弹起）
             var big = pedals[i].pedal.transform.Find("big");
             if (big != null) big.gameObject.SetActive(true);
         }
@@ -49,7 +56,6 @@ public class Button_Multi : MonoBehaviour
 
     void Update()
     {
-        // 检查是否所有踏板都被按下
         allPressed = true;
         for (int i = 0; i < pedals.Length; i++)
         {
@@ -60,10 +66,11 @@ public class Button_Multi : MonoBehaviour
             }
         }
 
-        // 更新 big 显示状态
         UpdateBigs();
 
-        // 移动物体
+        // 记录移动前位置
+        previousPos = transform.position;
+
         if (allPressed)
         {
             transform.position = Vector3.Lerp(transform.position, targetPosition.position, Mathf.Min(speed * Time.deltaTime, 1f));
@@ -73,10 +80,13 @@ public class Button_Multi : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, originPosition, Mathf.Min(speed * Time.deltaTime, 1f));
         }
 
-        // 按 R 或碰到岩浆 → 全部重置
+        PlatformDelta = transform.position - previousPos;
+
         if (Input.GetKeyDown(KeyCode.R) || Die.touch_lava)
         {
             ResetAll();
+            previousPos = transform.position;
+            PlatformDelta = Vector3.zero;
         }
     }
 
@@ -90,28 +100,21 @@ public class Button_Multi : MonoBehaviour
 
             if (allPressed)
             {
-                // 全部按下 → 所有 big 隐藏
                 big.gameObject.SetActive(false);
             }
             else
             {
-                // 未全部按下 → 根据踏板类型决定 big 显示
-                // 一次性：被踩过后 big 永久隐藏；非一次性：按当前状态显示
                 big.gameObject.SetActive(!pedalPressed[i]);
             }
         }
     }
 
-    /// <summary>
-    /// 由 PedalTrigger 调用来更新某个踏板的按下状态
-    /// </summary>
     public void SetPedalPressed(int index, bool pressed)
     {
         if (index < 0 || index >= pedalPressed.Length) return;
 
         if (pedals[index].isOneTime)
         {
-            // 一次性踏板：只能从 false → true，不会弹起
             if (pressed) pedalPressed[index] = true;
         }
         else
@@ -132,11 +135,14 @@ public class Button_Multi : MonoBehaviour
             }
         }
     }
+
+    private void OnDestroy()
+    {
+        if (Button_once.PlatformDeltas.ContainsKey(this.gameObject))
+            Button_once.PlatformDeltas.Remove(this.gameObject);
+    }
 }
 
-/// <summary>
-/// 自动附着在每个踏板上的触发器监听组件
-/// </summary>
 public class PedalTrigger : MonoBehaviour
 {
     private Button_Multi controller;
@@ -162,7 +168,6 @@ public class PedalTrigger : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
-            // 一次性踏板不受离开影响
             if (!isOneTime)
             {
                 controller.SetPedalPressed(index, false);
