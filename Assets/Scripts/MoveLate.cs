@@ -74,16 +74,22 @@ public class MoveLate : MonoBehaviour
     {
         if (player == null) return;
 
-        RecordAllInput();
-
-        if (!canDash)
+        // 死亡动画播放期间, 禁用 P2 的所有输入和移动 (但仍要重置着地状态)
+        // 注意: 不能直接 return, 否则 FixedUpdate 里 isGrounded 重置逻辑会受影响
+        if (!DeathRespawnVFX.isDead)
         {
-            dashCooldownTimer -= Time.deltaTime;
-            if (dashCooldownTimer <= 0) canDash = true;
+            RecordAllInput();
+
+            if (!canDash)
+            {
+                dashCooldownTimer -= Time.deltaTime;
+                if (dashCooldownTimer <= 0) canDash = true;
+            }
+
+            MoveDelay();
+            Animation();
         }
 
-        MoveDelay();
-        Animation();
         CheckReset();
 
         UpdateCurrentActionClear(Time.deltaTime);
@@ -220,19 +226,31 @@ public class MoveLate : MonoBehaviour
     #region R重置
     void CheckReset()
     {
+        // 按 R 或 被 Die.cs 设了 isR 标志, 都触发死亡重生动画流程
+        // 不再直接传送, 而是交给 DeathRespawnVFX 播放动画, 动画结束后由 DoReset() 做实际传送
         if (Input.GetKeyDown(KeyCode.R) || isR)
         {
-            p1.transform.position = p1Pos;
-            p2.transform.position = p2Pos;
-            isR = false;
-            movementHistory.Clear();
-            rb.velocity = Vector2.zero;
-            isDashing = false;
-            isClimbing = false;
-            isOnLadder = false;
-            canDash = true;
-            dashCooldownTimer = 0f;
+            isR = false; // 清掉标志, 防止下一帧重复触发
+            DeathRespawnVFX.TriggerDeath();
         }
+    }
+
+    /// <summary>
+    /// 执行实际的位置重置 (传送 P1/P2 到初始点, 清空状态).
+    /// 由 DeathRespawnVFX 在死亡动画播放完毕后调用.
+    /// 原来这段逻辑在 CheckReset 里, 现在抽出来供动画流程调用.
+    /// </summary>
+    public void DoReset()
+    {
+        p1.transform.position = p1Pos;
+        p2.transform.position = p2Pos;
+        movementHistory.Clear();
+        rb.velocity = Vector2.zero;
+        isDashing = false;
+        isClimbing = false;
+        isOnLadder = false;
+        canDash = true;
+        dashCooldownTimer = 0f;
     }
     #endregion
 
