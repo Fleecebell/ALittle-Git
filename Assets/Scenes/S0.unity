@@ -1545,7 +1545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pedals:
   - pedal: {fileID: 1142773980}
-    isOneTime: 0
+    isOneTime: 1
   - pedal: {fileID: 935952693}
     isOneTime: 1
   targetPosition: {fileID: 1464785893}

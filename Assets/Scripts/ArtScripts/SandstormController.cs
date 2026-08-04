@@ -45,7 +45,9 @@ public class SandstormController : MonoBehaviour
     [Header("=== 粒子: 日常状态 ===")]
     [Tooltip("日常每秒发射粒子数(稀疏, 表现沙漠微风)")]
     [SerializeField] private float baseEmission = 8f;
-    [Tooltip("日常粒子大小(单一值, 没有随机)")]
+    [Tooltip("日常粒子最小大小(和 baseSize 组成随机区间, 大小都有不单调)")]
+    [SerializeField] private float baseMinSize = 0.15f;
+    [Tooltip("日常粒子最大大小(和 baseMinSize 组成随机区间)")]
     [SerializeField] private float baseSize = 0.25f;
     [Tooltip("日常粒子初始飞行速度(发射时给的速度)")]
     [SerializeField] private float baseSpeed = 2f;
@@ -115,6 +117,10 @@ public class SandstormController : MonoBehaviour
     // 对外只读属性, 方便别的脚本查询状态
     public bool IsStorming => isStorming;
     public float CurrentIntensity => currentIntensity;
+
+    // 外部(AmbientDustController)用它控制日常粒子显隐:
+    // 0=隐藏日常粒子(只显示悬浮灰尘), 1=正常显示. 沙尘暴期间(t>0)此值不影响暴风粒子, 只影响日常部分.
+    [HideInInspector] public float ambientScale = 1f;
 
     void Awake()
     {
@@ -206,14 +212,16 @@ public class SandstormController : MonoBehaviour
     // -------- 根据 intensity 下发所有参数 --------
     void ApplyIntensity(float t)
     {
-        // 粒子发射量: rateOverTime 支持 lerp, 过渡平滑
-        emissionModule.rateOverTime = Mathf.Lerp(baseEmission, stormEmission, t);
+        // 粒子发射量: 日常部分乘以 ambientScale(外部控制显隐), 暴风部分不受影响
+        emissionModule.rateOverTime = Mathf.Lerp(baseEmission * ambientScale, stormEmission, t);
 
         // 粒子大小: 用 MinMaxCurve 实现"沙尘暴时大小随机, 日常单一值".
         // t=0 时 min=max=baseSize(无随机); t=1 时 min=stormMinSize, max=stormSize(大小都有).
         // 注意 startSize 只对"新发射"的粒子生效, 老粒子不变,
         // 过渡期新老粒子大小不一的混叠可接受(反而显得自然)
-        float minSize = Mathf.Lerp(baseSize, stormMinSize, t);
+        // 日常(t=0): min=baseMinSize, max=baseSize (大小随机, 不单调)
+        // 暴风(t=1): min=stormMinSize, max=stormSize
+        float minSize = Mathf.Lerp(baseMinSize, stormMinSize, t);
         float maxSize = Mathf.Lerp(baseSize, stormSize, t);
         mainModule.startSize = new ParticleSystem.MinMaxCurve(minSize, maxSize);
 
