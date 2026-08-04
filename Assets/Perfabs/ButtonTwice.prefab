@@ -186,7 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wall0: {fileID: 0}
   wall1_pos: {fileID: 0}
-  speed: 10
+  speed: 2
 --- !u!61 &4030182921088657803
 BoxCollider2D:
   m_ObjectHideFlags: 0

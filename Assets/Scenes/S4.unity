@@ -361,7 +361,7 @@ MonoBehaviour:
   - pedal: {fileID: 842618998}
     isOneTime: 1
   targetPosition: {fileID: 1133341724}
-  speed: 10
+  speed: 2
 --- !u!66 &724839114
 CompositeCollider2D:
   m_ObjectHideFlags: 0
@@ -1003,7 +1003,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: speed
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: wall0
@@ -4714,7 +4714,7 @@ Transform:
   m_GameObject: {fileID: 1721994981}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4778,10 +4778,18 @@ CompositeCollider2D:
   m_ColliderPaths: []
   m_CompositePaths:
     m_Paths:
-    - - {x: 0.99997073, y: -6}
-      - {x: 0.99997073, y: -5}
-      - {x: -2, y: -5.000029}
-      - {x: -1.9999708, y: -6}
+    - - {x: 0.74997073, y: -5.75}
+      - {x: 0.74997073, y: -5.25}
+      - {x: 0.25, y: -5.250029}
+      - {x: 0.2500293, y: -5.75}
+    - - {x: -0.2500293, y: -5.75}
+      - {x: -0.2500293, y: -5.25}
+      - {x: -0.75, y: -5.250029}
+      - {x: -0.74997073, y: -5.75}
+    - - {x: -1.2500293, y: -5.75}
+      - {x: -1.2500293, y: -5.25}
+      - {x: -1.75, y: -5.250029}
+      - {x: -1.7499708, y: -5.75}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0

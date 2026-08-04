@@ -188,6 +188,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: wall0
       value: 
       objectReference: {fileID: 1685551596}
@@ -7787,6 +7791,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: wall0
       value: 
       objectReference: {fileID: 1607135273}
@@ -10501,6 +10509,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 718544854, guid: d96b4871c87be584e8da2139216c568a, type: 3}
+    - target: {fileID: 4046653757422577176, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4046653757422577176, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: wall0
       value: 

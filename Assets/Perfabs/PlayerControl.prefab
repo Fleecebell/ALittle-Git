@@ -277,6 +277,7 @@ GameObject:
   - component: {fileID: 292710770983256072}
   - component: {fileID: 7974045361490470370}
   - component: {fileID: 9194768901541431613}
+  - component: {fileID: 4345305474887362748}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Player2
@@ -468,6 +469,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4345305474887362748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423621427724842012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49332e7fb9ac4d409e99fbdf72ab6fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crushThreshold: 0.6
+  rayLength: 2
+  wallTag: Ground
+  showDebug: 0
 --- !u!1 &1432470134872957120
 GameObject:
   m_ObjectHideFlags: 0
@@ -6140,6 +6157,7 @@ GameObject:
   - component: {fileID: 3995165709704891020}
   - component: {fileID: 3882868352637421675}
   - component: {fileID: 7986580613515408769}
+  - component: {fileID: 1859878618269332383}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -6352,6 +6370,22 @@ MonoBehaviour:
   "\u843D\u5730\u51B7\u5374\u65F6\u95F4": 1.5
   "\u6700\u5C0F\u89E6\u53D1\u8DF3\u8DC3\u9AD8\u5EA6": 1.8
   "\u9ED8\u8BA4\u5730\u9762\u989C\u8272": {r: 0.18039216, g: 0.18431373, b: 0.2784314, a: 1}
+--- !u!114 &1859878618269332383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6455782588203100808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49332e7fb9ac4d409e99fbdf72ab6fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crushThreshold: 0.6
+  rayLength: 2
+  wallTag: Ground
+  showDebug: 0
 --- !u!1 &6839736805835571447
 GameObject:
   m_ObjectHideFlags: 0
