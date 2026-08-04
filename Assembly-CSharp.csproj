@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\ArtScripts\PlayerVFX.cs" />
     <Compile Include="Assets\Scripts\Button_twice.cs" />
     <Compile Include="Assets\Scripts\AutoMoving.cs" />
+    <Compile Include="Assets\Scripts\Key.cs" />
     <Compile Include="Assets\2DWater\WaterShapeController.cs" />
     <Compile Include="Assets\Scripts\Button_Multi.cs" />
     <Compile Include="Assets\2DWater\WaterSpring.cs" />
