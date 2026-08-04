@@ -47,6 +47,15 @@ public class MoveFirst : MonoBehaviour
 
     void Update()
     {
+        // 死亡动画播放期间, 禁用 P1 (主玩家) 的所有输入
+        // 否则死亡瞬间还能按方向键/跳跃, 会导致动画结束后状态错乱
+        if (DeathRespawnVFX.isDead)
+        {
+            // 死亡时停止移动 (防止惯性)
+            if (rb != null) rb.velocity = Vector2.zero;
+            return;
+        }
+
         MoveInput();
         LadderInput();
         DashInput();
