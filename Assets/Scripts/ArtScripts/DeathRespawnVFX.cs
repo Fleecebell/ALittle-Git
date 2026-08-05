@@ -32,15 +32,18 @@ public class DeathRespawnVFX : MonoBehaviour
     [Tooltip("死亡阶段时长: sprite 从 1 缩到 0 的时间. 越小越快. 0.12 = 极快消失")]
     [SerializeField] private float deathDuration = 0.12f;
 
-    [Tooltip("重生阶段时长: sprite 从 0 放回 1 的时间. 越小越快. 0.18 = 快速弹出")]
-    [SerializeField] private float respawnDuration = 0.18f;
+    [Tooltip("重生阶段时长: sprite 从 0 放回 1 的时间. Q弹效果需要稍长一点, 0.4~0.6 最佳")]
+    [SerializeField] private float respawnDuration = 0.5f;
 
     [Header("=== 缓动曲线 ===")]
     [Tooltip("死亡缩小曲线. 推荐保持 InQuad (开始慢结束快, 像被吸走)")]
     [SerializeField] private Ease deathEase = Ease.InQuad;
 
-    [Tooltip("重生放大曲线. 推荐 OutBack (有轻微回弹, 像弹出来) 或 OutQuad (平滑)")]
-    [SerializeField] private Ease respawnEase = Ease.OutBack;
+    [Tooltip("重生放大曲线. OutElastic = Q弹 (先冲过头再回弹几次, 像果冻). 如果觉得太弹可换 OutBack (只回弹一次)")]
+    [SerializeField] private Ease respawnEase = Ease.OutElastic;
+
+    [Tooltip("重生弹跳幅度. 1=正常弹性, 1.5=更Q弹(冲过头更多), 0.5=轻微弹. 仅对 OutElastic/OutBack 有效")]
+    [SerializeField, Range(0.1f, 2f)] private float respawnOvershoot = 1.2f;
 
     [Header("=== 粒子 (可选, 留空则只有缩放) ===")]
     [Tooltip("死亡时爆发的粒子系统 (向四周飞散). 留空则不播, 只有缩放效果")]
@@ -136,6 +139,17 @@ public class DeathRespawnVFX : MonoBehaviour
             Debug.LogWarning("[DeathVFX] 找不到 MoveLate, 无法重置位置");
         }
 
+        // 重置钥匙系统: 钥匙放回原位 + 重新激活 + 清除 hasKey; 禁用所有灵光球
+        // (死亡重生后, 钥匙应该回到原来的位置让玩家重新收集)
+        Key.ResetAllKeys();
+        KeyOrb.DisableAllOrbs();
+
+        // 重置锁和黑暗覆盖层: 恢复位置 + 恢复透明度 + 重新激活
+        // (死亡重生后, 锁和罩子应该回到未解锁状态)
+        LockAnimator.ResetAllLocks();
+        // 重置门的解锁状态: 有锁的门回到锁定状态
+        NextLevel.ResetAllDoors();
+
         // 瞬移后停一帧让物理稳定 (防止刚传送就触发碰撞导致状态错乱)
         yield return null;
 
@@ -198,7 +212,8 @@ public class DeathRespawnVFX : MonoBehaviour
 
         transform.DOKill();
         // DOScale 到原始大小 (不是 Vector3.one, 因为角色可能有基础缩放)
-        transform.DOScale(originalScale, respawnDuration).SetEase(respawnEase);
+        // SetEase 传 overshhoot 参数, 让 OutElastic/OutBack 的弹跳幅度可调 (Q弹感的来源)
+        transform.DOScale(originalScale, respawnDuration).SetEase(respawnEase, respawnOvershoot);
 
         // 重生粒子爆发 (在重生点位置 = 角色当前位置)
         if (respawnParticles != null)
