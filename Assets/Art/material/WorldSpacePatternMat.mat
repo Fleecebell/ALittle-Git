@@ -52,7 +52,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _PatternColor: {r: 0.85495913, g: 0.87169814, b: 0.5838733, a: 1}
+    - _PatternColor: {r: 0.7283019, g: 0.63202405, b: 0.62524027, a: 1}
     - _PatternScrollSpeed: {r: 1, g: 1, b: 0.5, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
