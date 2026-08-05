@@ -19,7 +19,7 @@ public class Button_Multi : MonoBehaviour
     public Transform targetPosition;
 
     [Header("移动速度")]
-    public float speed = 10f;
+    public float speed = 2f;
 
     private Vector3 originPosition;
     private bool[] pedalPressed;
@@ -28,6 +28,10 @@ public class Button_Multi : MonoBehaviour
     // 平台移动增量（Button_Multi 自身就是移动平台）
     private Vector3 previousPos;
     public Vector3 PlatformDelta { get; private set; }
+
+    // SmoothStep 进度（0=起点，1=目标），direction 表示方向（+1前进，-1返回），用于慢快慢曲线
+    private float moveProgress = 0f;
+    private int direction = 1;
 
     void Start()
     {
@@ -73,12 +77,17 @@ public class Button_Multi : MonoBehaviour
 
         if (allPressed)
         {
-            transform.position = Vector3.Lerp(transform.position, targetPosition.position, Mathf.Min(speed * Time.deltaTime, 1f));
+            direction = 1;
         }
         else
         {
-            transform.position = Vector3.Lerp(transform.position, originPosition, Mathf.Min(speed * Time.deltaTime, 1f));
+            direction = -1;
         }
+
+        // 基于单个进度变量移动，保证方向切换时不会瞬移
+        moveProgress = Mathf.Clamp01(moveProgress + direction * speed * Time.deltaTime);
+        float t = Mathf.SmoothStep(0f, 1f, moveProgress);
+        transform.position = Vector3.Lerp(originPosition, targetPosition.position, t);
 
         PlatformDelta = transform.position - previousPos;
 

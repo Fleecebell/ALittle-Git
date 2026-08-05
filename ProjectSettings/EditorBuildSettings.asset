@@ -29,4 +29,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CUSoon.unity
     guid: c6dd5426225305e4cbf870114199d6db
+  - enabled: 1
+    path: Assets/Scenes/S0.unity
+    guid: 74f61c2070b214a45bc436ce29e6f96e
+  - enabled: 1
+    path: Assets/Scenes/S1.unity
+    guid: 4a049c6e0b7aae940aa14ae38c6c73f6
+  - enabled: 1
+    path: Assets/Scenes/S2.unity
+    guid: bd68c6f6d0bbad445953be7b9bc5f774
+  - enabled: 1
+    path: Assets/Scenes/S3.unity
+    guid: 639429ba8d213764091c9fa656b56c39
+  - enabled: 1
+    path: Assets/Scenes/S4.unity
+    guid: acb23bf6df82abf40b9a845dc232b36a
   m_configObjects: {}
