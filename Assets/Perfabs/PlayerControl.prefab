@@ -482,7 +482,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crushThreshold: 0.6
-  rayLength: 2
+  rayLength: -0.1
   wallTag: Ground
   showDebug: 0
 --- !u!1 &1432470134872957120
@@ -6383,7 +6383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crushThreshold: 0.6
-  rayLength: 2
+  rayLength: -0.1
   wallTag: Ground
   showDebug: 0
 --- !u!1 &6839736805835571447
