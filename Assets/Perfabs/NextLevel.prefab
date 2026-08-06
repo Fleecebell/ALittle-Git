@@ -133,7 +133,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 6545afe7a203e6344a2cb1b752ed00ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -294,3 +294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ddf64bfcd1f8ce42b148b19aeb7c23e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lockAnimator: {fileID: 0}
+  showDebug: 1
+  isUnlocked: 0
