@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\Die.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\tutorial.cs" />
     <Compile Include="Assets\Scripts\SpeedBand.cs" />
+    <Compile Include="Assets\Scripts\ArtScripts\DeathRespawnVFX.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\menu.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\playToChoose.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\choose.cs" />
@@ -75,18 +76,23 @@
     <Compile Include="Assets\Scripts\Start_Scripts\music.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\SandstormController.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\Tumbleweed.cs" />
+    <Compile Include="Assets\Scripts\ArtScripts\AmbientDustController.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\PlayerVFX.cs" />
     <Compile Include="Assets\Scripts\Button_twice.cs" />
     <Compile Include="Assets\Scripts\AutoMoving.cs" />
     <Compile Include="Assets\Scripts\Key.cs" />
     <Compile Include="Assets\2DWater\WaterShapeController.cs" />
+    <Compile Include="Assets\Scripts\ArtScripts\DeadGrassSway.cs" />
     <Compile Include="Assets\Scripts\Button_Multi.cs" />
     <Compile Include="Assets\2DWater\WaterSpring.cs" />
     <Compile Include="Assets\Scripts\Undecided\Weapon.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\two_to_play.cs" />
     <Compile Include="Assets\Scripts\WindArea.cs" />
     <Compile Include="Assets\Scripts\MoveLate.cs" />
+    <Compile Include="Assets\Scripts\ArtScripts\PlantSway.cs" />
     <Compile Include="Assets\Scripts\ActionUI.cs" />
+    <Compile Include="Assets\Scripts\ArtScripts\ParallaxLayer.cs" />
+    <Compile Include="Assets\Scripts\ArtScripts\RainSystem.cs" />
     <Compile Include="Assets\Scripts\Button_once.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\one_to_two.cs" />
   </ItemGroup>
