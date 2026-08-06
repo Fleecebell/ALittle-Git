@@ -61,7 +61,14 @@ public class WindArea : MonoBehaviour
                 return;
             }
 
-            // 玩家: 直接移动 Transform (玩家用 velocity 控制移动, 改 transform 不冲突)
+            // 玩家: 通过 Rigidbody2D 施加水平速度
+            // 注意: 不能直接改 transform.position!
+            // 直接改 position 会绕过物理碰撞检测, 两个角色被吹到一起时互相穿透,
+            // 物理引擎把它们强行挤开 → 下一帧风又拉回去 → 重叠并交替闪烁.
+            // 用 rb.velocity 让物理引擎统一处理碰撞, 角色会自然被推开并保持在碰撞体之外.
+            Rigidbody2D prb = other.attachedRigidbody;
+            if (prb == null) return;
+
             float speed;
             if (other.CompareTag("Player"))
                 speed = speedP1;
@@ -71,7 +78,9 @@ public class WindArea : MonoBehaviour
                 return;
 
             // 风力乘以沙尘暴强度, 实现平滑过渡(淡入时风逐渐变大, 淡出时逐渐变小)
-            other.transform.position += new Vector3(dir * speed * intensity * Time.fixedDeltaTime, 0, 0);
+            float windVx = dir * speed * intensity;
+            // 保留原有竖直速度(如重力/跳跃), 只覆盖水平速度. 风强的直接把水平速度推满.
+            prb.velocity = new Vector2(windVx, prb.velocity.y);
             return;
         }
 

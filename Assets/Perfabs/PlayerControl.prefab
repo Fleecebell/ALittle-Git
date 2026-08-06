@@ -504,9 +504,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crushThreshold: 0.6
-  rayLength: -0.1
+  rayLength: 1
   wallTag: Ground
-  showDebug: 0
+  showDebug: 1
 --- !u!1 &1432470134872957120
 GameObject:
   m_ObjectHideFlags: 0
@@ -16269,9 +16269,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crushThreshold: 0.6
-  rayLength: -0.1
+  rayLength: 1
   wallTag: Ground
-  showDebug: 0
+  showDebug: 1
 --- !u!1 &6482424533820733904
 GameObject:
   m_ObjectHideFlags: 0
