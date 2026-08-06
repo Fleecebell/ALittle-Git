@@ -5,13 +5,14 @@ using UnityEngine;
 // --------------------------------------------------------------------------
 // 设计思路:
 //   1. 纯物理系统: Dynamic Rigidbody2D + CircleCollider2D, 不用动画.
-//   2. 每帧 FixedUpdate 加往左的力, 自然滚动 (圆形 collider + 摩擦 = 滚动).
+//   2. 不自带滚动. 移动完全由 WindArea 的风幕驱动:
+//      风往左 → 左滚, 风往右 → 右滚, 与玩家同方向. 没风时静止.
 //   3. 限制最大速度, 防止无限加速.
 //   4. 两种销毁方式:
 //      - 滚出屏幕外 (x < destroyX)
 //      - 存活时间到期 (lifetime)
 //   5. 销毁时通过事件通知生成器, 生成器减计数 (保证数量上限有效).
-//   6. 受 WindArea 影响: WindArea 识别 "Tumbleweed" tag, 风暴时加风吹力.
+//   6. 受 WindArea 影响: WindArea 识别 "Tumbleweed" tag, 按风向加力.
 //      风滚草很轻 (Mass=0.1), 同样的力效果比玩家明显得多, 风暴时被吹飞.
 //   7. 主角碰到会自然推开风滚草 (质量比 10:1), 主角几乎不减速.
 // ======================================================================
@@ -20,9 +21,6 @@ using UnityEngine;
 public class Tumbleweed : MonoBehaviour
 {
     [Header("=== 滚动 ===")]
-    [Tooltip("每帧施加的往左推力. 力越大滚得越快, 太小会停, 太大会飞出")]
-    [SerializeField] private float scrollForce = 2f;
-
     [Tooltip("最大水平速度限制, 防止无限加速. 超过此值就钳制")]
     [SerializeField] private float maxSpeed = 5f;
 
@@ -72,8 +70,9 @@ public class Tumbleweed : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 持续往左加力, 让风滚草自然滚动
-        rb.AddForce(Vector2.left * scrollForce, ForceMode2D.Force);
+        // 风滚草不再自带左滚力. 它完全由 WindArea 的风幕驱动:
+        // 风往左 → WindArea 施左力(左滚); 风往右 → WindArea 施右力(右滚).
+        // 没沙尘暴时 WindArea 不施力, 风滚草保持静止.
 
         // 限速: 防止无限加速 (风暴时风力会叠加, 不限制会越滚越快)
         Vector2 v = rb.velocity;

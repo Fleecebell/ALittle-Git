@@ -38,6 +38,10 @@ public class MoveFirst : MonoBehaviour
     public static float lastDashDirection = 0f;
     public static float moveDir; // 方向：-1=左  0=不动  1=右
     public static bool isMoving; // 是否在移动 
+
+    // 外部风力(水平) —— 由 WindArea 每帧写入. 移动时叠加到水平速度上.
+    // 玩家自己输入 = moveInput*moveSpeed, 叠加风 = windVx, 两者共存不冲突.
+    public float externalWindVx = 0f;
     #endregion
 
     void Start()
@@ -82,7 +86,10 @@ public class MoveFirst : MonoBehaviour
         moveDir = moveInput;
         isMoving = Mathf.Abs(moveInput) > 0.1f;
 
-        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        // 读取 WindArea 写入的外部风力, 用完归零 (等 WindArea 下一帧再写)
+        float windVx = externalWindVx;
+        externalWindVx = 0f;
+        rb.velocity = new Vector2(moveInput * moveSpeed + windVx, rb.velocity.y);
 
         // 跳跃：空格 或 W 都可以触发
         // 必须同时满足：在地面(isGrounded) + 没在爬梯(!isClimbing)
