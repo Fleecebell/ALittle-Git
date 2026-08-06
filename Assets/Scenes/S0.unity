@@ -1549,7 +1549,7 @@ MonoBehaviour:
   - pedal: {fileID: 935952693}
     isOneTime: 1
   targetPosition: {fileID: 1464785893}
-  speed: 10
+  speed: 2
 --- !u!1 &519966120
 GameObject:
   m_ObjectHideFlags: 0
@@ -5765,7 +5765,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: speed
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: wall0
@@ -5836,6 +5836,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1987478554}
     m_Modifications:
+    - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: wall0
       value: 

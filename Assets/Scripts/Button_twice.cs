@@ -11,13 +11,17 @@ public class Button_twice : MonoBehaviour
     public Transform wall1_pos;
     private Vector3 wall0_pos;
     [Header("移动速度")]
-    public float speed = 10f;
+    public float speed = 2f;
 
     bool wall_isgone = false;
 
     // 平台移动增量
     private Vector3 previousWall0Pos;
     public Vector3 PlatformDelta { get; private set; }
+
+    // SmoothStep 进度（0=起点，1=目标），direction 表示方向（+1前进，-1返回），用于慢快慢曲线
+    private float moveProgress = 0f;
+    private int direction = 1;
 
     void Start()
     {
@@ -42,13 +46,18 @@ public class Button_twice : MonoBehaviour
         if (wall_isgone)
         {
             big_button.SetActive(false);
-            wall0.transform.position = Vector3.Lerp(wall0.transform.position, wall1_pos.position, Mathf.Min(speed * Time.deltaTime, 1f));
+            direction = 1;
         }
         else
         {
             big_button.SetActive(true);
-            wall0.transform.position = Vector3.Lerp(wall0.transform.position, wall0_pos, Mathf.Min(speed * Time.deltaTime, 1f));
+            direction = -1;
         }
+
+        // 基于单个进度变量移动，保证方向切换时不会瞬移
+        moveProgress = Mathf.Clamp01(moveProgress + direction * speed * Time.deltaTime);
+        float t = Mathf.SmoothStep(0f, 1f, moveProgress);
+        wall0.transform.position = Vector3.Lerp(wall0_pos, wall1_pos.position, t);
 
         PlatformDelta = wall0.transform.position - previousWall0Pos;
     }
