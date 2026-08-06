@@ -321,7 +321,7 @@ MonoBehaviour:
   - pedal: {fileID: 842618998}
     isOneTime: 1
   targetPosition: {fileID: 1133341724}
-  speed: 10
+  speed: 2
 --- !u!66 &724839114
 CompositeCollider2D:
   m_ObjectHideFlags: 0
@@ -958,7 +958,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: speed
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2720905687491776465, guid: 147cd59f173c04a48ae4c3d6870d0b8f, type: 3}
       propertyPath: wall0

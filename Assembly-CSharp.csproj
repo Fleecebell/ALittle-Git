@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scripts\ArtScripts\LevelLoader.cs" />
     <Compile Include="Assets\Scripts\MoveFirst.cs" />
     <Compile Include="Assets\Scripts\NextLevel.cs" />
+    <Compile Include="Assets\Scripts\KeyOrb.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\TumbleweedSpawner.cs" />
     <Compile Include="Assets\Scripts\Undecided\Combatant.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\music.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Assets\Scripts\ArtScripts\Tumbleweed.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\AmbientDustController.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\PlayerVFX.cs" />
+    <Compile Include="Assets\Scripts\LockAnimator.cs" />
     <Compile Include="Assets\Scripts\Button_twice.cs" />
     <Compile Include="Assets\Scripts\AutoMoving.cs" />
     <Compile Include="Assets\Scripts\Key.cs" />
