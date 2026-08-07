@@ -35,19 +35,4 @@ public class AutoMoving : MonoBehaviour
             targetPos = p2Pos;
         }
     }
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.collider.CompareTag("Player") || other.collider.CompareTag("Player2"))
-        {
-            other.transform.SetParent(transform);
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.collider.CompareTag("Player") || other.collider.CompareTag("Player2"))
-        {
-            other.transform.SetParent(null);
-        }
-    }
 }
