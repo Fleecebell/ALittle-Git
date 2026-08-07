@@ -47,6 +47,12 @@ public class MoveLate : MonoBehaviour
 
     private bool isOnLadder;
     private bool isClimbing;
+
+    // 外部风力(水平) —— 由 WindArea 每帧写入. 移动时叠加到水平速度上.
+    // 玩家自己输入 = r.h*moveSpeed, 叠加风 = windVx, 两者共存不冲突.
+    public float externalWindVx = 0f;
+    // 本帧是否处理过移动记录 (用于静止时是否单独应用风力)
+    private bool processedMoveThisFrame = false;
     #endregion
 
     #region 队列
@@ -142,6 +148,13 @@ public class MoveLate : MonoBehaviour
     #region 延迟行为
     void MoveDelay()
     {
+        // 读取 WindArea 写入的外部风力并归零 (等 WindArea 下一帧再写).
+        // 注意: P2 的 velocity 只在有到期移动记录时才被设置.
+        // 若本帧没有到期记录(静止), 循环不执行, 这里单独把风力应用到当前速度,
+        // 保证 P2 静止时也能被风吹动, 而不是一卡一卡.
+        float windVx = externalWindVx;
+        externalWindVx = 0f;
+
         while (movementHistory.Count > 0 && Time.time - movementHistory.Peek().time >= delayTime)
         {
             var r = movementHistory.Dequeue();
@@ -169,7 +182,7 @@ public class MoveLate : MonoBehaviour
             moveDir = r.h;
             isMoving = Mathf.Abs(moveDir) > 0.1f;
 
-            float vx = r.h * moveSpeed;
+            float vx = r.h * moveSpeed + windVx;
             float vy = rb.velocity.y;
 
             // 梯子状态
@@ -196,8 +209,21 @@ public class MoveLate : MonoBehaviour
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             }
+
+            // 标记本帧处理过移动 (循环内已把 windVx 叠加到水平速度)
+            processedMoveThisFrame = true;
         }
-        
+
+        // 静止时 (本帧没有到期移动记录 → 循环没执行):
+        // P2 的 velocity 不被更新, 若还有风力, 单独把风力应用到当前水平速度,
+        // 否则风推不动静止的 P2.
+        if (!processedMoveThisFrame && Mathf.Abs(windVx) > 0.001f)
+        {
+            Vector2 cv = rb.velocity;
+            rb.velocity = new Vector2(cv.x + windVx, cv.y);
+        }
+        processedMoveThisFrame = false;
+
         float deltaX = transform.position.x - lastPositionX;
         traveledDistance += deltaX;
         lastPositionX = transform.position.x;
