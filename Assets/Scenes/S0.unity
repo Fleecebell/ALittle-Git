@@ -4704,7 +4704,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7974045361490470370, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: preventWhenSteppedOn
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8118181567683528689, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: m_AnchorMax.y
