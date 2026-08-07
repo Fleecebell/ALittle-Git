@@ -34,6 +34,10 @@ public class MoveFirst : MonoBehaviour
     private bool isOnLadder;
     private bool isClimbing;
 
+    // 离梯宽限计时：爬梯时短暂离开梯子(爬过头)给予回到梯子的缓冲时间, 防止直接掉落
+    private const float ladderGraceTime = 0.3f;
+    private float ladderGraceTimer;
+
     // 记录上一次 P2 同步冲刺方向
     public static float lastDashDirection = 0f;
     public static float moveDir; // 方向：-1=左  0=不动  1=右
@@ -64,6 +68,18 @@ public class MoveFirst : MonoBehaviour
         LadderInput();
         DashInput();
         Animation();
+
+        // 离梯宽限计时递减；超时仍未回到梯子则彻底放弃攀爬
+        if (ladderGraceTimer > 0)
+        {
+            ladderGraceTimer -= Time.deltaTime;
+            if (ladderGraceTimer <= 0)
+            {
+                ladderGraceTimer = 0;
+                isClimbing = false;
+                isOnLadder = false;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -156,7 +172,8 @@ public class MoveFirst : MonoBehaviour
 
     void LadderPhysics()
     {
-        if (isClimbing)
+        // 只有在梯子上且正在攀爬时才能产生爬梯位移(防止凭空上爬)
+        if (isClimbing && isOnLadder)
         {
             rb.gravityScale = 0f;
             float v = 0;
@@ -165,6 +182,8 @@ public class MoveFirst : MonoBehaviour
             if (Input.GetKey(KeyCode.S)) v = -climbSpeed;
             rb.velocity = new Vector2(rb.velocity.x, v);
         }
+        // 宽限期内离开梯子(爬到顶短暂脱离): 仍保留 isClimbing 防掉落,
+        // 但走重力分支, 让玩家落回梯子顶部. 回到梯子后 OnTriggerStay2D 会恢复攀爬.
         else if (!isDashing)
         {
             rb.gravityScale = 9.8f;
@@ -216,7 +235,15 @@ public class MoveFirst : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Ladder"))
+        {
             isOnLadder = true;
+            // 宽限期内回到梯子则保留攀爬状态
+            if (ladderGraceTimer > 0)
+            {
+                ladderGraceTimer = 0;
+                isClimbing = true;
+            }
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -224,7 +251,11 @@ public class MoveFirst : MonoBehaviour
         if (collision.CompareTag("Ladder"))
         {
             isOnLadder = false;
-            isClimbing = false;
+            // 正在攀爬时离开梯子(如爬过头), 启动宽限计时, 允许在短时间内回到梯子
+            if (isClimbing)
+                ladderGraceTimer = ladderGraceTime;
+            else
+                isClimbing = false;
         }
     }
     #endregion

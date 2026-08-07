@@ -48,6 +48,10 @@ public class MoveLate : MonoBehaviour
     private bool isOnLadder;
     private bool isClimbing;
 
+    // 离梯宽限计时：爬梯时短暂离开梯子(爬过头)给予回到梯子的缓冲时间, 防止直接掉落
+    private const float ladderGraceTime = 0.3f;
+    private float ladderGraceTimer;
+
     // 外部风力(水平) —— 由 WindArea 每帧写入. 移动时叠加到水平速度上.
     // 玩家自己输入 = r.h*moveSpeed, 叠加风 = windVx, 两者共存不冲突.
     public float externalWindVx = 0f;
@@ -99,6 +103,18 @@ public class MoveLate : MonoBehaviour
         CheckReset();
 
         UpdateCurrentActionClear(Time.deltaTime);
+
+        // 离梯宽限计时递减；超时仍未回到梯子则彻底放弃攀爬
+        if (ladderGraceTimer > 0)
+        {
+            ladderGraceTimer -= Time.deltaTime;
+            if (ladderGraceTimer <= 0)
+            {
+                ladderGraceTimer = 0;
+                isClimbing = false;
+                isOnLadder = false;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -187,10 +203,13 @@ public class MoveLate : MonoBehaviour
 
             // 梯子状态
             if (isOnLadder && r.jump) isClimbing = true;
-            if (!isOnLadder) isClimbing = false;
+            // 未在梯子上: 若宽限计时已结束则彻底放弃攀爬, 否则保留(等待回到梯子)
+            if (!isOnLadder && ladderGraceTimer <= 0) isClimbing = false;
 
             // 梯子移动 / 重力
-            if (isClimbing && !isDashing)
+            // 只有确实在梯子上且正在攀爬时才产生爬梯位移(防止凭空上爬);
+            // 宽限期内离开梯子(爬到顶短暂脱离)则走重力分支, 让玩家落回梯子顶部.
+            if (isClimbing && isOnLadder && !isDashing)
             {
                 rb.gravityScale = 0;
                 vy = 0;
@@ -325,7 +344,16 @@ public class MoveLate : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D col)
     {
-        if (col.CompareTag("Ladder")) isOnLadder = true;
+        if (col.CompareTag("Ladder"))
+        {
+            isOnLadder = true;
+            // 宽限期内回到梯子则保留攀爬状态
+            if (ladderGraceTimer > 0)
+            {
+                ladderGraceTimer = 0;
+                isClimbing = true;
+            }
+        }
     }
 
     private void OnTriggerExit2D(Collider2D col)
@@ -333,7 +361,11 @@ public class MoveLate : MonoBehaviour
         if (col.CompareTag("Ladder"))
         {
             isOnLadder = false;
-            isClimbing = false;
+            // 正在攀爬时离开梯子(如爬过头), 启动宽限计时, 允许在短时间内回到梯子
+            if (isClimbing)
+                ladderGraceTimer = ladderGraceTime;
+            else
+                isClimbing = false;
         }
     }
     #endregion

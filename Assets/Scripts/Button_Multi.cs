@@ -21,9 +21,14 @@ public class Button_Multi : MonoBehaviour
     [Header("移动速度")]
     public float speed = 2f;
 
+    [Header("一次性移动")]
+    [Tooltip("勾选后：物体触发后移动到目标位置不再返回，按钮保持被按下（不回弹）。不勾选：往返移动，松开按钮即返回，按钮回弹。")]
+    public bool oneTimeMove = false;
+
     private Vector3 originPosition;
     private bool[] pedalPressed;
     private bool allPressed;
+    private bool triggered;   // 是否已触发过一次性移动
 
     // 平台移动增量（Button_Multi 自身就是移动平台）
     private Vector3 previousPos;
@@ -77,11 +82,21 @@ public class Button_Multi : MonoBehaviour
 
         if (allPressed)
         {
+            if (oneTimeMove) triggered = true;
             direction = 1;
         }
         else
         {
-            direction = -1;
+            // 一次性移动：已触发则继续移动到目标位置，即使玩家中途走开也不停在半路；
+            // 到达目标后保持不回弹；未触发则返回起点
+            if (oneTimeMove && triggered)
+            {
+                direction = moveProgress >= 1f ? 0 : 1;
+            }
+            else
+            {
+                direction = -1;
+            }
         }
 
         // 基于单个进度变量移动，保证方向切换时不会瞬移
@@ -113,7 +128,11 @@ public class Button_Multi : MonoBehaviour
             }
             else
             {
-                big.gameObject.SetActive(!pedalPressed[i]);
+                // 一次性移动已触发：按钮保持按下（不回弹）
+                if (oneTimeMove && triggered)
+                    big.gameObject.SetActive(false);
+                else
+                    big.gameObject.SetActive(!pedalPressed[i]);
             }
         }
     }
@@ -134,6 +153,7 @@ public class Button_Multi : MonoBehaviour
 
     void ResetAll()
     {
+        triggered = false;
         for (int i = 0; i < pedalPressed.Length; i++)
         {
             pedalPressed[i] = false;
