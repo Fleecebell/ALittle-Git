@@ -7456,6 +7456,10 @@ PrefabInstance:
       propertyPath: windAreas.Array.data[0]
       value: 
       objectReference: {fileID: 639008942}
+    - target: {fileID: 1856474396862805501, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
+      propertyPath: lengthInSec
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3460962947543825262, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
       propertyPath: m_Name
       value: SandstormParticles
