@@ -55,6 +55,8 @@ public class MoveLate : MonoBehaviour
     // 外部风力(水平) —— 由 WindArea 每帧写入. 移动时叠加到水平速度上.
     // 玩家自己输入 = r.h*moveSpeed, 叠加风 = windVx, 两者共存不冲突.
     public float externalWindVx = 0f;
+    // 外部风力(垂直) —— 由 WindArea(上下风) 每帧写入. 叠加到垂直速度上.
+    public float externalWindVy = 0f;
     // 本帧是否处理过移动记录 (用于静止时是否单独应用风力)
     private bool processedMoveThisFrame = false;
     #endregion
@@ -170,6 +172,8 @@ public class MoveLate : MonoBehaviour
         // 保证 P2 静止时也能被风吹动, 而不是一卡一卡.
         float windVx = externalWindVx;
         externalWindVx = 0f;
+        float windVy = externalWindVy;
+        externalWindVy = 0f;
 
         while (movementHistory.Count > 0 && Time.time - movementHistory.Peek().time >= delayTime)
         {
@@ -199,7 +203,7 @@ public class MoveLate : MonoBehaviour
             isMoving = Mathf.Abs(moveDir) > 0.1f;
 
             float vx = r.h * moveSpeed + windVx;
-            float vy = rb.velocity.y;
+            float vy = rb.velocity.y + windVy;
 
             // 梯子状态
             if (isOnLadder && r.jump) isClimbing = true;
@@ -234,12 +238,12 @@ public class MoveLate : MonoBehaviour
         }
 
         // 静止时 (本帧没有到期移动记录 → 循环没执行):
-        // P2 的 velocity 不被更新, 若还有风力, 单独把风力应用到当前水平速度,
-        // 否则风推不动静止的 P2.
-        if (!processedMoveThisFrame && Mathf.Abs(windVx) > 0.001f)
+        // P2 的 velocity 不被更新, 若还有风力, 单独把风力应用到当前速度,
+        // 否则风推不动静止的 P2. 水平风改 x, 垂直风改 y.
+        if (!processedMoveThisFrame && (Mathf.Abs(windVx) > 0.001f || Mathf.Abs(windVy) > 0.001f))
         {
             Vector2 cv = rb.velocity;
-            rb.velocity = new Vector2(cv.x + windVx, cv.y);
+            rb.velocity = new Vector2(cv.x + windVx, cv.y + windVy);
         }
         processedMoveThisFrame = false;
 
@@ -302,14 +306,6 @@ public class MoveLate : MonoBehaviour
     #region 检测
     private void OnCollisionStay2D(Collision2D col)
     {
-        // 检测是否站在移动平台上，自动跟随（无需配置）
-        if (Button_once.PlatformDeltas.TryGetValue(col.gameObject, out var getDelta))
-        {
-            Vector3 d = getDelta();
-            if (d != Vector3.zero)
-                transform.position += d;
-        }
-
         if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Player") || col.gameObject.CompareTag("Player2"))
         {
             foreach (ContactPoint2D c in col.contacts)
