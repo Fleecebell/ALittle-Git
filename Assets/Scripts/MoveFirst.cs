@@ -46,6 +46,8 @@ public class MoveFirst : MonoBehaviour
     // 外部风力(水平) —— 由 WindArea 每帧写入. 移动时叠加到水平速度上.
     // 玩家自己输入 = moveInput*moveSpeed, 叠加风 = windVx, 两者共存不冲突.
     public float externalWindVx = 0f;
+    // 外部风力(垂直) —— 由 WindArea(上下风) 每帧写入. 叠加到垂直速度上.
+    public float externalWindVy = 0f;
     #endregion
 
     void Start()
@@ -105,7 +107,9 @@ public class MoveFirst : MonoBehaviour
         // 读取 WindArea 写入的外部风力, 用完归零 (等 WindArea 下一帧再写)
         float windVx = externalWindVx;
         externalWindVx = 0f;
-        rb.velocity = new Vector2(moveInput * moveSpeed + windVx, rb.velocity.y);
+        float windVy = externalWindVy;
+        externalWindVy = 0f;
+        rb.velocity = new Vector2(moveInput * moveSpeed + windVx, rb.velocity.y + windVy);
 
         // 跳跃：空格 或 W 都可以触发
         // 必须同时满足：在地面(isGrounded) + 没在爬梯(!isClimbing)
@@ -201,14 +205,6 @@ public class MoveFirst : MonoBehaviour
     #region 碰撞
     private void OnCollisionStay2D(Collision2D collision)
     {
-        // 检测是否站在移动平台上，自动跟随（无需配置）
-        if (Button_once.PlatformDeltas.TryGetValue(collision.gameObject, out var getDelta))
-        {
-            Vector3 d = getDelta();
-            if (d != Vector3.zero)
-                transform.position += d;
-        }
-
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
             foreach (ContactPoint2D contact in collision.contacts)
