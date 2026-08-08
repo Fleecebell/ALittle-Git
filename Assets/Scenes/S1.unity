@@ -5915,9 +5915,25 @@ PrefabInstance:
       value: 16.9
       objectReference: {fileID: 0}
     - target: {fileID: 308021801544384474, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
+      propertyPath: baseSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 308021801544384474, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
       propertyPath: postVolume
       value: 
       objectReference: {fileID: 1246306880}
+    - target: {fileID: 308021801544384474, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
+      propertyPath: stormSpeed
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 308021801544384474, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
+      propertyPath: baseLifetime
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 308021801544384474, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
+      propertyPath: stormLifetime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 308021801544384474, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
       propertyPath: baseVignetteIntensity
       value: 0.04
@@ -5926,17 +5942,29 @@ PrefabInstance:
       propertyPath: windAreas.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1856474396862805501, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
+      propertyPath: ShapeModule.type
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1856474396862805501, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 15.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 1856474396862805501, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3460962947543825262, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
       propertyPath: m_Name
       value: SandstormParticles
       objectReference: {fileID: 0}
     - target: {fileID: 8077945849716511823, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.6
+      value: -13.9
       objectReference: {fileID: 0}
     - target: {fileID: 8077945849716511823, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.5
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8077945849716511823, guid: 6ca21155604f3d34a8a7b63f59bc17ab, type: 3}
       propertyPath: m_LocalPosition.z
