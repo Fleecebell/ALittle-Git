@@ -49,11 +49,15 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        BindSlider(musicSliderPath, MusicManager.Instance.SetMusicVolume, "音乐");
-        BindSlider(sfxSliderPath, MusicManager.Instance.SetSFXVolume, "音效");
+        // 绑定事件，并把滑条初始位置设置成当前保存的音量，保证跨场景后滑条显示一致
+        BindSlider(musicSliderPath, MusicManager.Instance.SetMusicVolume,
+                   MusicManager.Instance.MusicVolume, "音乐");
+        BindSlider(sfxSliderPath, MusicManager.Instance.SetSFXVolume,
+                   MusicManager.Instance.SFXVolume, "音效");
     }
 
-    private void BindSlider(string path, UnityEngine.Events.UnityAction<float> method, string name)
+    private void BindSlider(string path, UnityEngine.Events.UnityAction<float> method,
+                            float currentValue, string name)
     {
         if (string.IsNullOrEmpty(path)) return;
 
@@ -70,6 +74,9 @@ public class UIManager : MonoBehaviour
             Debug.LogWarning($"UIManager: {path} 上没有 Slider 组件（{name}音量滑条未绑定）");
             return;
         }
+
+        // 先把滑条位置设置成当前音量（此时尚未绑定事件，不会反向触发）
+        slider.value = Mathf.Clamp01(currentValue);
 
         // 移除旧监听（防止重复绑定），再添加
         slider.onValueChanged.RemoveListener(method);
