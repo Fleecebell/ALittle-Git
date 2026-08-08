@@ -29,4 +29,12 @@ public class choose : MonoBehaviour
     {
         SceneManager.LoadScene(5);
     }
+    public void to6()
+    {
+        SceneManager.LoadScene(6);
+    }
+    public void to7()
+    {
+        SceneManager.LoadScene(7);
+    }
 }

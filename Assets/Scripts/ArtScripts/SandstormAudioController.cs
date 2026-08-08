@@ -70,10 +70,15 @@ public class SandstormAudioController : MonoBehaviour
     /// 应用音量到 AudioSource, 并控制播放/停止.
     /// 音量>0.01 时播放(如果没在播), 音量<=0.01 时停止(如果在播).
     /// 这样无沙尘暴时 AudioSource 停止, 省性能.
+    /// 最终音量会乘以 MusicManager 的全局音效音量(若无 MusicManager 则按原音量).
     /// </summary>
     private void ApplyAudio(AudioSource audio, float volume)
     {
         if (audio == null) return;
+
+        // 受全局音效音量控制 (沙尘暴声属于音效)
+        if (MusicManager.Instance != null)
+            volume *= MusicManager.Instance.SFXVolume;
 
         audio.volume = volume;
 

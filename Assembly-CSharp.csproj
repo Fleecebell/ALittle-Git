@@ -79,10 +79,10 @@
     <Compile Include="Assets\Scripts\KeyOrb.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\TumbleweedSpawner.cs" />
     <Compile Include="Assets\Scripts\Undecided\Combatant.cs" />
-    <Compile Include="Assets\Scripts\Start_Scripts\music.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\SandstormController.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\Tumbleweed.cs" />
+    <Compile Include="Assets\Scripts\MusicManager.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\AmbientDustController.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\PlayerVFX.cs" />
     <Compile Include="Assets\Scripts\LockAnimator.cs" />
@@ -97,6 +97,7 @@
     <Compile Include="Assets\Scripts\Undecided\Weapon.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\two_to_play.cs" />
     <Compile Include="Assets\Scripts\WindArea.cs" />
+    <Compile Include="Assets\Scripts\UIButtonAudio.cs" />
     <Compile Include="Assets\Scripts\MoveLate.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\PlantSway.cs" />
     <Compile Include="Assets\Scripts\ActionUI.cs" />

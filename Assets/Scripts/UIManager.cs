@@ -1,11 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public GameObject targetPanel;
     private bool isPanelActive;
+
+    [Header("=== 音量滑条（自动绑定，一般无需手动设置）===")]
+    [Tooltip("音乐滑条路径（相对本物体）。留空则尝试按默认路径查找")]
+    public string musicSliderPath = "SetPanel/Music/Slider";
+    [Tooltip("音效滑条路径（相对本物体）。留空则尝试按默认路径查找")]
+    public string sfxSliderPath = "SetPanel/SFX/Slider";
+
+    void Start()
+    {
+        AutoBindSliders();
+    }
+
     public void TogglePanel()
     {
         isPanelActive = !isPanelActive;
@@ -26,32 +37,49 @@ public class UIManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
-    [Header("=== 音量控制 ===")]
-    [Tooltip("控制全局音乐的 AudioSource（音乐走这条）。可拖入多个")]
-    public List<AudioSource> musicSources;
-
-    [Tooltip("控制音效的 AudioSource（除音乐外的所有声音走这条）。可拖入多个")]
-    public List<AudioSource> sfxSources;
-
-    [Tooltip("音乐滑条：把 Slider 的 On Value Changed 事件接到这里")]
-    public void SetMusicVolume(float value)
+    /// <summary>
+    /// 自动把 Music / SFX 两个滑条的 On Value Changed 绑定到 MusicManager 的音量方法。
+    /// 这样无需在每个场景手动拖滑条事件。
+    /// </summary>
+    private void AutoBindSliders()
     {
-        ApplyVolume(musicSources, value);
-    }
-
-    [Tooltip("音效滑条：把 Slider 的 On Value Changed 事件接到这里")]
-    public void SetSFXVolume(float value)
-    {
-        ApplyVolume(sfxSources, value);
-    }
-
-    private void ApplyVolume(List<AudioSource> sources, float value)
-    {
-        if (sources == null) return;
-        foreach (var src in sources)
+        if (MusicManager.Instance == null)
         {
-            if (src != null)
-                src.volume = value;
+            Debug.LogWarning("UIManager: 找不到 MusicManager 实例，滑条音量控制未绑定");
+            return;
         }
+
+        // 绑定事件，并把滑条初始位置设置成当前保存的音量，保证跨场景后滑条显示一致
+        BindSlider(musicSliderPath, MusicManager.Instance.SetMusicVolume,
+                   MusicManager.Instance.MusicVolume, "音乐");
+        BindSlider(sfxSliderPath, MusicManager.Instance.SetSFXVolume,
+                   MusicManager.Instance.SFXVolume, "音效");
+    }
+
+    private void BindSlider(string path, UnityEngine.Events.UnityAction<float> method,
+                            float currentValue, string name)
+    {
+        if (string.IsNullOrEmpty(path)) return;
+
+        Transform sliderT = transform.Find(path);
+        if (sliderT == null)
+        {
+            Debug.LogWarning($"UIManager: 找不到滑条路径 {path}（{name}音量滑条未绑定）");
+            return;
+        }
+
+        var slider = sliderT.GetComponent<Slider>();
+        if (slider == null)
+        {
+            Debug.LogWarning($"UIManager: {path} 上没有 Slider 组件（{name}音量滑条未绑定）");
+            return;
+        }
+
+        // 先把滑条位置设置成当前音量（此时尚未绑定事件，不会反向触发）
+        slider.value = Mathf.Clamp01(currentValue);
+
+        // 移除旧监听（防止重复绑定），再添加
+        slider.onValueChanged.RemoveListener(method);
+        slider.onValueChanged.AddListener(method);
     }
 }
