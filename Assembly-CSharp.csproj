@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\ArtScripts\DeathRespawnVFX.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\menu.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\playToChoose.cs" />
+    <Compile Include="Assets\Scripts\ArtScripts\SandstormAudioController.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\choose.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\LevelLoader.cs" />
     <Compile Include="Assets\Scripts\MoveFirst.cs" />
