@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\ArtScripts\TumbleweedSpawner.cs" />
     <Compile Include="Assets\Scripts\Undecided\Combatant.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\music.cs" />
+    <Compile Include="Assets\Scripts\UIManager.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\SandstormController.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\Tumbleweed.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\AmbientDustController.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Assets\2DWater\WaterShapeController.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\DeadGrassSway.cs" />
     <Compile Include="Assets\Scripts\Button_Multi.cs" />
+    <Compile Include="Assets\Scripts\ArtScripts\RainAudioController.cs" />
     <Compile Include="Assets\2DWater\WaterSpring.cs" />
     <Compile Include="Assets\Scripts\Undecided\Weapon.cs" />
     <Compile Include="Assets\Scripts\Start_Scripts\two_to_play.cs" />
@@ -117,7 +119,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
-    <None Include="Assets\Art\map\material\WorldSpacePattern.shader" />
+    <None Include="Assets\Art\material\WorldSpacePattern.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\TextMesh Pro\Fonts\7000汉字+符号+英文字符集.txt" />

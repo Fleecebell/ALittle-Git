@@ -24,14 +24,24 @@ public class playToChoose : MonoBehaviour
 
     void Start()
     {
-        c0_pos = c0.transform.position;
+        if (c0 != null)
+            c0_pos = c0.transform.position;
+        else
+            Debug.LogWarning("playToChoose: c0 未赋值");
     }
 
     void Update()
     {
+        if (c0 == null)
+            return;
 
         if (open)
         {
+            if (c1_pos == null)
+            {
+                Debug.LogWarning("playToChoose: c1_pos 未赋值");
+                return;
+            }
             c0.transform.position = Vector3.Lerp(c0.transform.position, c1_pos.position, Mathf.Min(speed * Time.deltaTime, 1f));
         }
         else
