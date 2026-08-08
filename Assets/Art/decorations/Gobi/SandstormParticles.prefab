@@ -224,13 +224,13 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
+        key0: {r: 0.6745098, g: 0.5019608, b: 0.06666667, a: 1}
+        key1: {r: 0.94716984, g: 0.8704745, b: 0.67731583, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -254,13 +254,13 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_ColorSpace: -1
+        m_ColorSpace: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
+        key0: {r: 0.5999999, g: 0.4710604, b: 0.18452823, a: 0.85490197}
+        key1: {r: 0.97735846, g: 0.9370726, b: 0.84642935, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -284,7 +284,7 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_ColorSpace: -1
+        m_ColorSpace: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
     startSize:
@@ -667,7 +667,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 2
+    type: 5
     angle: 23.68
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -675,7 +675,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 4.3, y: 1.29, z: 0}
+    m_Scale: {x: 4.3, y: 15.61, z: 0}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -4847,28 +4847,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   windAreas:
   - {fileID: 0}
-  baseEmission: 8
+  baseEmission: 5
   baseMinSize: 0.15
   baseSize: 0.15
-  baseSpeed: -0.26
-  baseLifetime: 5.24
+  baseSpeed: 3
+  baseLifetime: 7
   stormLevel: 1
   stormEmission: 169.1
   stormSize: 0.38
   stormMinSize: 0.15
-  stormSpeed: -5.1
-  stormLifetime: 8
+  stormSpeed: 28
+  stormLifetime: 2
   baseAlpha: 1
   insideAlpha: 1
   outsideAlpha: 0.02
   alphaTransitionSpeed: 3.64
   postVolume: {fileID: 0}
-  baseVignetteIntensity: 0
+  baseVignetteIntensity: 0.04
   stormVignetteIntensity: 1
   transitionDuration: 4.3
   enableScheduler: 1
-  interval: 7.65
-  duration: 7.12
+  interval: 16.9
+  duration: 8.57
   ambientScale: 1
 --- !u!114 &8463665458715207236
 MonoBehaviour:
