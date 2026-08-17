@@ -477,6 +477,10 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Codely.Newtonsoft.Json">
+      <HintPath>Library\PackageCache\cn.tuanjie.codely.bridge@1.0.75\Plugins\Codely.Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>E:\unity\Hub\Editor\2022.3.55f1c1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
       <Private>False</Private>
@@ -977,6 +981,10 @@
       <HintPath>E:\unity\Hub\Editor\2022.3.55f1c1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Codely.Common">
+      <HintPath>Library\ScriptAssemblies\Codely.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.2D.IK.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.2D.IK.Runtime.dll</HintPath>
       <Private>False</Private>
@@ -1069,6 +1077,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.EditorCoroutines.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.EditorCoroutines.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="PsdPlugin">
       <HintPath>Library\ScriptAssemblies\PsdPlugin.dll</HintPath>
       <Private>False</Private>
@@ -1141,8 +1153,16 @@
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Cn.Tuanjie.Codely.Editor">
+      <HintPath>Library\ScriptAssemblies\Cn.Tuanjie.Codely.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityTcp.Editor">
+      <HintPath>Library\ScriptAssemblies\UnityTcp.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.InternalAPIEditorBridge.001">
@@ -1200,6 +1220,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj" />
+    <ProjectReference Include="tjgenerators.Editor.csproj" />
+    <ProjectReference Include="UnityTcp.CustomTool.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>
