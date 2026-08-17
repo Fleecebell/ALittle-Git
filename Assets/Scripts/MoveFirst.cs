@@ -5,6 +5,11 @@ public class MoveFirst : MonoBehaviour
 {
     #region 参数
     public Animator jumpAnimator;
+
+    [Header("基础移动速度")]
+    [Tooltip("角色初始移动速度（检查器可调）。运行时 moveSpeed 会以该值初始化")]
+    public float baseMoveSpeed = 10f;
+    // 运行时实际移动速度（static，被 SpeedBand 等脚本动态修改，P1/P2 共享）
     public static float moveSpeed = 10f;
     public float minMoveSpeed = 0f;
 
@@ -14,6 +19,14 @@ public class MoveFirst : MonoBehaviour
 
     public static float lastPositionX;
     public static float traveledDistance;
+
+    [Header("移动加速度")]
+    [Tooltip("开关：勾选后移动有加速度（速度渐变到目标值）；不勾选则速度瞬间到位")]
+    public bool useAcceleration = false;
+    [Tooltip("加速度大小（越大加速越快）。仅在 useAcceleration 勾选时生效")]
+    public float acceleration = 30f;
+    // 当前实际水平速度（用于加速度平滑，静止时为 0）
+    private float currentHorizontalSpeed;
 
     [Header("冲刺")]
     public float dashDuration = 0.1f;
@@ -53,6 +66,10 @@ public class MoveFirst : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        // 关闭 Rigidbody2D 插值，避免在 Update 里写 velocity 时产生平滑/渐变观感
+        rb.interpolation = RigidbodyInterpolation2D.None;
+        // 用检查器可调的 baseMoveSpeed 初始化实际移动速度
+        moveSpeed = baseMoveSpeed;
     }
 
     void Update()
@@ -99,7 +116,8 @@ public class MoveFirst : MonoBehaviour
     {
         if (isDashing) return;
 
-        float moveInput = Input.GetAxis("Horizontal");
+        // 用 GetAxisRaw 获得瞬间的 -1/0/1，避免 Horizontal 轴的平滑导致无加速度时仍有渐变
+        float moveInput = Input.GetAxisRaw("Horizontal");
 
         moveDir = moveInput;
         isMoving = Mathf.Abs(moveInput) > 0.1f;
@@ -109,7 +127,23 @@ public class MoveFirst : MonoBehaviour
         externalWindVx = 0f;
         float windVy = externalWindVy;
         externalWindVy = 0f;
-        rb.velocity = new Vector2(moveInput * moveSpeed + windVx, rb.velocity.y + windVy);
+
+        float horizontalVelocity;
+        if (useAcceleration)
+        {
+            // 有加速度：实际水平速度渐变逼近目标速度（加速、减速都平滑）
+            currentHorizontalSpeed = Mathf.MoveTowards(
+                currentHorizontalSpeed, moveInput * moveSpeed, acceleration * Time.deltaTime);
+            horizontalVelocity = currentHorizontalSpeed + windVx;
+        }
+        else
+        {
+            // 无加速度：速度瞬间到位
+            currentHorizontalSpeed = moveInput * moveSpeed;
+            horizontalVelocity = currentHorizontalSpeed + windVx;
+        }
+
+        rb.velocity = new Vector2(horizontalVelocity, rb.velocity.y + windVy);
 
         // 跳跃：空格 或 W 都可以触发
         // 必须同时满足：在地面(isGrounded) + 没在爬梯(!isClimbing)

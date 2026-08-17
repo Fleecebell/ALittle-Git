@@ -9,6 +9,10 @@ public class MoveLate : MonoBehaviour
     public Animator jumpAnimator;
     public MoveFirst player;
 
+    [Header("基础移动速度")]
+    [Tooltip("角色初始移动速度（检查器可调）。运行时 moveSpeed 会以该值初始化")]
+    public float baseMoveSpeed = 10f;
+    // 运行时实际移动速度（static，被 SpeedBand 等脚本动态修改，P1/P2 共享）
     public static float moveSpeed = 10f;
     public float minMoveSpeed = 0f;
 
@@ -18,6 +22,14 @@ public class MoveLate : MonoBehaviour
     public static bool isMoving;
     
     public float delayTime = 0.5f;
+
+    [Header("移动加速度")]
+    [Tooltip("开关：勾选后移动有加速度（速度渐变到目标值）；不勾选则速度瞬间到位")]
+    public bool useAcceleration = false;
+    [Tooltip("加速度大小（越大加速越快）。仅在 useAcceleration 勾选时生效")]
+    public float acceleration = 30f;
+    // 当前实际水平速度（用于加速度平滑，静止时为 0）
+    private float currentHorizontalSpeed;
 
     public static float lastPositionX;
     public static float traveledDistance;
@@ -78,6 +90,10 @@ public class MoveLate : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        // 关闭 Rigidbody2D 插值，避免在 Update 里写 velocity 时产生平滑/渐变观感
+        rb.interpolation = RigidbodyInterpolation2D.None;
+        // 用检查器可调的 baseMoveSpeed 初始化实际移动速度
+        moveSpeed = baseMoveSpeed;
         p1Pos = p1.transform.position;
         p2Pos = p2.transform.position;
     }
@@ -130,7 +146,8 @@ public class MoveLate : MonoBehaviour
     #region 记录输入
     void RecordAllInput()
     {
-        float h = Input.GetAxis("Horizontal");
+        // 用 GetAxisRaw 获得瞬间的 -1/0/1，避免 Horizontal 轴的平滑导致无加速度时仍有渐变
+        float h = Input.GetAxisRaw("Horizontal");
         // 跳跃输入：空格 或 W 都算作跳跃（P2 会延迟重放这个记录）
         bool jump = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W);
         bool shiftDown = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
@@ -202,7 +219,22 @@ public class MoveLate : MonoBehaviour
             moveDir = r.h;
             isMoving = Mathf.Abs(moveDir) > 0.1f;
 
-            float vx = r.h * moveSpeed + windVx;
+            float horizontalVelocity;
+            if (useAcceleration)
+            {
+                // 有加速度：实际水平速度渐变逼近目标速度（加速、减速都平滑）
+                currentHorizontalSpeed = Mathf.MoveTowards(
+                    currentHorizontalSpeed, r.h * moveSpeed, acceleration * Time.deltaTime);
+                horizontalVelocity = currentHorizontalSpeed + windVx;
+            }
+            else
+            {
+                // 无加速度：速度瞬间到位
+                currentHorizontalSpeed = r.h * moveSpeed;
+                horizontalVelocity = currentHorizontalSpeed + windVx;
+            }
+
+            float vx = horizontalVelocity;
             float vy = rb.velocity.y + windVy;
 
             // 梯子状态
