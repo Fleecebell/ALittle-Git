@@ -440,9 +440,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpAnimator: {fileID: 9194768901541431613}
   player: {fileID: 3995165709704891020}
+  baseMoveSpeed: 8
   minMoveSpeed: 0
   maxMoveSpeed: 50
   delayTime: 1
+  useAcceleration: 0
+  acceleration: 30
   dashCooldown: 1
   climbSpeed: 5
   isGrounded: 0
@@ -16187,9 +16190,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpAnimator: {fileID: 3882868352637421675}
+  baseMoveSpeed: 8
   minMoveSpeed: 0
   maxMoveSpeed: 50
   dashForce: 20
+  useAcceleration: 0
+  acceleration: 30
   dashDuration: 0.1
   dashCooldown: 1
   climbSpeed: 5
