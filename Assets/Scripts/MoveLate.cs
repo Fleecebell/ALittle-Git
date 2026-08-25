@@ -17,7 +17,13 @@ public class MoveLate : MonoBehaviour
     public float minMoveSpeed = 0f;
 
     public float maxMoveSpeed = 50f;
+
+    [Header("跳跃")]
+    [Tooltip("角色初始跳跃高度（检查器可调）。运行时 jumpForce 会以该值初始化")]
+    public float baseJumpForce = 20f;
+    // 运行时实际跳跃力（static，被 P1/P2 共享）
     public static float jumpForce = 20f;
+
     public static float moveDir;
     public static bool isMoving;
     
@@ -39,6 +45,10 @@ public class MoveLate : MonoBehaviour
 
     [Header("攀爬")]
     public float climbSpeed = 5f;
+
+    [Header("重力")]
+    [Tooltip("默认重力倍率（检查器可调）。非爬梯/冲刺时角色使用的 gravityScale")]
+    public float defaultGravityScale = 9.8f;
 
     private Rigidbody2D rb;
     public bool isGrounded;
@@ -94,6 +104,10 @@ public class MoveLate : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation2D.None;
         // 用检查器可调的 baseMoveSpeed 初始化实际移动速度
         moveSpeed = baseMoveSpeed;
+        // 用检查器可调的 baseJumpForce 初始化实际跳跃力
+        jumpForce = baseJumpForce;
+        // 用检查器可调的 defaultGravityScale 初始化默认重力（Rigidbody2D.gravityScale）
+        rb.gravityScale = defaultGravityScale;
         p1Pos = p1.transform.position;
         p2Pos = p2.transform.position;
     }
@@ -254,7 +268,7 @@ public class MoveLate : MonoBehaviour
             }
             else if (!isDashing)
             {
-                rb.gravityScale = 9.8f;
+                rb.gravityScale = defaultGravityScale;
             }
 
             rb.velocity = new Vector2(vx, vy);
