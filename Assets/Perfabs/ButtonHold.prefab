@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 4030182921088657803}
   - component: {fileID: 8309330350900862841}
   m_Layer: 0
-  m_Name: ButtonTwice
+  m_Name: ButtonHold
   m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
