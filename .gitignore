@@ -42,3 +42,6 @@ OutPackages/Unity-Skills-main/docs/installation-demo.gif
 
 # CodeBuddy local index / cache (huge db files)
 .codely-cli/UnityInsight/
+
+# CodeBuddy/Unity local runtime state (machine-specific ports & heartbeat)
+.com-unity-codely.json
