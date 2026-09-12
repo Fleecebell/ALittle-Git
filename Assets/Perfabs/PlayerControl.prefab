@@ -443,6 +443,12 @@ MonoBehaviour:
   baseMoveSpeed: 8
   minMoveSpeed: 0
   maxMoveSpeed: 50
+  jumpForce: 20
+  jumpBufferDuration: 0.15
+  jumpLockDuration: 0.25
+  bigScale: 2
+  growShrinkSpeed: 5
+  currentWaterPool: {fileID: 0}
   delayTime: 1
   useAcceleration: 0
   acceleration: 30
@@ -450,11 +456,13 @@ MonoBehaviour:
   climbSpeed: 5
   isGrounded: 0
   groundAngleThreshold: 45
+  oneWayPlatformSurfaceTolerance: 0.1
   p1: {fileID: 6455782588203100808}
   p2: {fileID: 1423621427724842012}
   preventWhenSteppedOn: 0
   externalWindVx: 0
   externalWindVy: 0
+  dropThroughDuration: 0.3
 --- !u!95 &9194768901541431613
 Animator:
   serializedVersion: 5
@@ -503,7 +511,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1423621427724842012}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f49332e7fb9ac4d409e99fbdf72ab6fb, type: 3}
   m_Name: 
@@ -16193,7 +16201,13 @@ MonoBehaviour:
   baseMoveSpeed: 8
   minMoveSpeed: 0
   maxMoveSpeed: 50
+  jumpForce: 20
   dashForce: 20
+  jumpBufferDuration: 0.15
+  jumpLockDuration: 0.25
+  bigScale: 2
+  growShrinkSpeed: 5
+  currentWaterPool: {fileID: 0}
   useAcceleration: 0
   acceleration: 30
   dashDuration: 0.1
@@ -16201,8 +16215,10 @@ MonoBehaviour:
   climbSpeed: 5
   isGrounded: 0
   groundAngleThreshold: 45
+  oneWayPlatformSurfaceTolerance: 0.1
   externalWindVx: 0
   externalWindVy: 0
+  dropThroughDuration: 0.3
 --- !u!95 &3882868352637421675
 Animator:
   serializedVersion: 5
@@ -16273,7 +16289,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6455782588203100808}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f49332e7fb9ac4d409e99fbdf72ab6fb, type: 3}
   m_Name: 
