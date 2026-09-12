@@ -1,10 +1,10 @@
 {
-  "unity_port": -1,
-  "stream_port": 62895,
+  "unity_port": 63937,
+  "stream_port": 63987,
   "created_date": "2026-08-14T10:42:05.573Z",
   "project_path": "D:/game/ALittle-Git/Assets",
   "reloading": false,
-  "reason": "unity_quit",
-  "seq": 19284,
-  "last_heartbeat": "2026-08-25T14:07:20.693Z"
+  "reason": "ready",
+  "seq": 515,
+  "last_heartbeat": "2026-09-12T03:00:11.334Z"
 }
