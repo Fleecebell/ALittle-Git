@@ -39,3 +39,6 @@ logs/
 Tools/codebase-memory-mcp/codebase-memory-mcp.exe
 Assets/Resources/Font/SIMHEI SDF.asset
 OutPackages/Unity-Skills-main/docs/installation-demo.gif
+
+# CodeBuddy local index / cache (huge db files)
+.codely-cli/UnityInsight/

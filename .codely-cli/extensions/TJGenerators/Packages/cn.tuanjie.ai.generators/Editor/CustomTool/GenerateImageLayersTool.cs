@@ -209,14 +209,31 @@ namespace UnityTcp.Editor.Tools
     public static class GenerateImageLayersTool
     {
         public const string GeneratorId = "image-layering";
+        public const string SeedreamGeneratorId = "seedream-image-layering";
         private const string ToolName = "generate_image_layers";
 
+        // Seedream 自动分层：底图 + 最多 16 层 = 17 张；CollectIndexedSiblingPaths 遇缺口自动停止
+        internal const int SeedreamMaxLayerCount = 17;
+
+        /// <summary>provider 参数 → generator id（默认 qwen，保持旧行为不变）</summary>
+        internal static string ResolveGeneratorId(string provider)
+        {
+            return string.Equals(provider, "seedream_pro", StringComparison.OrdinalIgnoreCase)
+                ? SeedreamGeneratorId
+                : GeneratorId;
+        }
+
         [ExecuteCustomTool.CustomTool("generate_image_layers",
-            "Split one image into multiple independent RGBA layers using AI (image-layering). " +
+            "Split one image into multiple independent RGBA layers using AI. " +
+            "Providers: qwen (default, 1-8 layers via num_layers, prompt required) or " +
+            "seedream_pro (Seedream 5.0 Pro layer decomposition: auto base image + up to 16 transparent PNG layers, " +
+            "prompt optional, num_layers ignored, optional size tier 1K/1.5K/2K/auto). " +
             "Output: N PNG textures under Assets/TJGenerators/History/ (layer 0 overwrites placeholder; " +
             "extra layers saved as {basename}_1.png, {basename}_2.png, ...). " +
-            "Parameters: image_path (required), prompt (required — describe the image to guide layering), " +
-            "num_layers (optional int 1-8, default 4), output_path (optional). " +
+            "Parameters: image_path (required), provider (optional qwen|seedream_pro, default qwen), " +
+            "prompt (required for qwen; optional split hint for seedream_pro), " +
+            "num_layers (optional int 1-8, default 4, qwen only), size (optional 1K|1.5K|2K|auto, seedream_pro only), " +
+            "output_path (optional). " +
             "IMPORTANT: Wait for <bg_task_done>. Do NOT poll query_image_layers_status repeatedly.")]
         public static object GenerateImageLayers(JObject parameters)
         {
@@ -225,10 +242,15 @@ namespace UnityTcp.Editor.Tools
             {
                 TJLog.Log($"[GenerateImageLayersTool] Generating layers with parameters: {parameters}");
 
+                string provider = parameters["provider"]?.ToString();
+                string generatorId = ResolveGeneratorId(provider);
+                bool isSeedream = string.Equals(generatorId, SeedreamGeneratorId, StringComparison.OrdinalIgnoreCase);
+
                 string prompt = parameters["prompt"]?.ToString();
                 string imagePath = parameters["image_path"]?.ToString();
                 string outputPath = parameters["output_path"]?.ToString();
                 string sessionId = parameters["session_id"]?.ToString() ?? "";
+                GenerationRequestOrigin.SetWorkspaceName(parameters["workspace_name"]?.ToString());
 
                 if (string.IsNullOrEmpty(imagePath))
                 {
@@ -240,29 +262,36 @@ namespace UnityTcp.Editor.Tools
                     };
                 }
 
-                if (string.IsNullOrEmpty(prompt) || string.IsNullOrWhiteSpace(prompt))
+                // qwen 需要 prompt 描述图片；seedream_pro 的 prompt 是可选的拆分提示词（留空自动拆分）
+                if (!isSeedream && (string.IsNullOrEmpty(prompt) || string.IsNullOrWhiteSpace(prompt)))
                 {
                     return new Dictionary<string, object>
                     {
                         { "success", false },
                         { "error_code", "INVALID_PARAMS" },
-                        { "message", "'prompt' is required for image layering" }
+                        { "message", "'prompt' is required for image layering (provider=qwen). " +
+                                     "For seedream_pro the prompt is optional." }
                     };
                 }
 
-                int maxLen = TJGeneratorsPromptLimits.GetMaxLength(GeneratorId);
-                if (maxLen > 0 && prompt.Length > maxLen)
+                int maxLen = TJGeneratorsPromptLimits.GetMaxLength(generatorId);
+                if (maxLen > 0 && !string.IsNullOrEmpty(prompt) && prompt.Length > maxLen)
                 {
                     return new Dictionary<string, object>
                     {
                         { "success", false },
                         { "error_code", "INVALID_PARAMS" },
                         { "message",
-                            $"Prompt length ({prompt.Length}) exceeds the {maxLen} character limit for '{GeneratorId}'." }
+                            $"Prompt length ({prompt.Length}) exceeds the {maxLen} character limit for '{generatorId}'." }
                     };
                 }
 
                 int numLayers = ParseNumLayers(parameters["num_layers"]);
+                if (isSeedream && parameters["num_layers"] != null)
+                {
+                    TJLog.Log("[GenerateImageLayersTool] seedream_pro auto-splits layers; ignoring num_layers parameter.");
+                }
+                int expectedLayerCount = isSeedream ? SeedreamMaxLayerCount : numLayers;
 
                 string absPath = ResolveImagePath(imagePath);
                 if (string.IsNullOrEmpty(absPath))
@@ -275,11 +304,11 @@ namespace UnityTcp.Editor.Tools
                     };
                 }
 
-                var config = ConfigManager.GetGeneratorConfig(ConfigType.Image, GeneratorId);
+                var config = ConfigManager.GetGeneratorConfig(ConfigType.Image, generatorId);
                 if (config == null)
                 {
                     // Fallback to package config if runtime cache lacks the new model
-                    config = ConfigManager.GetPackageGeneratorConfig(ConfigType.Image, GeneratorId);
+                    config = ConfigManager.GetPackageGeneratorConfig(ConfigType.Image, generatorId);
                 }
 
                 if (config == null)
@@ -288,17 +317,26 @@ namespace UnityTcp.Editor.Tools
                     {
                         { "success", false },
                         { "message",
-                            $"Cannot find image generator config for '{GeneratorId}'. " +
-                            "Ensure GeneratorConfig.json includes image-layering under imageGenerators, then clear config cache." }
+                            $"Cannot find image generator config for '{generatorId}'. " +
+                            "Ensure GeneratorConfig.json includes it under imageGenerators, then clear config cache." }
                     };
                 }
 
                 var generator = new DynamicGenerator(config);
                 generator.SetTextPrompt(prompt);
-                generator.SetHistoryDisplayPrompt(prompt.Trim());
+                generator.SetHistoryDisplayPrompt((prompt ?? "").Trim());
                 generator.SetImagePath(absPath);
-                generator.SetParameter("numLayers", numLayers);
-                generator.SetParameter("outputFormat", "png");
+                if (isSeedream)
+                {
+                    string size = ParseSeedreamSize(parameters["size"]);
+                    if (!string.IsNullOrEmpty(size))
+                        generator.SetParameter("size", size);
+                }
+                else
+                {
+                    generator.SetParameter("numLayers", numLayers);
+                    generator.SetParameter("outputFormat", "png");
+                }
 
                 var submitResult = TJGeneratorsGenerationService.SubmitTaskSync(generator, sessionId);
                 if (!submitResult.Success)
@@ -315,12 +353,12 @@ namespace UnityTcp.Editor.Tools
                 string placeholderPath = CreatePlaceholderTexture(outputPath);
                 string capturedBackendTaskId = submitResult.BackendTaskId;
                 string taskId = ImageLayersTaskTracker.CreateTask(
-                    GeneratorId, prompt, imagePath, numLayers, placeholderPath, capturedBackendTaskId);
+                    generatorId, prompt, imagePath, expectedLayerCount, placeholderPath, capturedBackendTaskId);
 
                 var host = new ImageLayersPipelineHost(
                     placeholderPath,
                     sessionId,
-                    numLayers,
+                    expectedLayerCount,
                     taskId,
                     capturedBackendTaskId,
                     errorMsg =>
@@ -330,7 +368,7 @@ namespace UnityTcp.Editor.Tools
                             new JObject
                             {
                                 ["session_id"] = sessionId,
-                                ["generator_id"] = GeneratorId,
+                                ["generator_id"] = generatorId,
                                 ["prompt"] = prompt ?? "",
                                 ["input_image_path"] = imagePath ?? ""
                             });
@@ -343,7 +381,7 @@ namespace UnityTcp.Editor.Tools
 
                 TJLog.Log($"[GenerateImageLayersTool] 轮询已启动，task_id={taskId}, backend_task_id={submitResult.BackendTaskId}");
 
-                return new Dictionary<string, object>
+                var result = new Dictionary<string, object>
                 {
                     { "success", true },
                     { "submission_success", true },
@@ -357,15 +395,20 @@ namespace UnityTcp.Editor.Tools
                     { "task_id", taskId },
                     { "backend_task_id", submitResult.BackendTaskId },
                     { "status", "submitted" },
-                    { "generator_id", GeneratorId },
+                    { "generator_id", generatorId },
+                    { "provider", isSeedream ? "seedream_pro" : "qwen" },
                     { "prompt", prompt },
                     { "input_image_path", imagePath },
-                    { "num_layers", numLayers },
+                    { "auto_layers", isSeedream },
                     { "placeholder_path", placeholderPath },
                     { "estimated_wait_seconds", 90 },
                     { "notification_mode", "bg_task_done" },
                     { "preview_url", PreviewUrlHelper.BuildFixedPreviewUrl(submitResult.BackendTaskId) }
                 };
+                // num_layers 仅 qwen 有意义；seedream 自动分层省略该键（避免输出字面 null 干扰按字段存在性判分支）
+                if (!isSeedream)
+                    result["num_layers"] = numLayers;
+                return result;
             }
             catch (Exception e)
             {
@@ -577,6 +620,20 @@ namespace UnityTcp.Editor.Tools
             return Mathf.Clamp(defaultValue, 1, 8);
         }
 
+        /// <summary>
+        /// Parse seedream_pro size tier from tool params: 1K / 1.5K / 2K；空或 auto 返回空串（跟随输入图）。
+        /// </summary>
+        internal static string ParseSeedreamSize(JToken token)
+        {
+            string raw = token?.ToString()?.Trim();
+            if (string.IsNullOrEmpty(raw) || string.Equals(raw, "auto", StringComparison.OrdinalIgnoreCase))
+                return "";
+            if (raw == "1K" || raw == "1.5K" || raw == "2K")
+                return raw;
+            TJLog.LogWarning($"[GenerateImageLayersTool] Invalid size '{raw}', using auto.");
+            return "";
+        }
+
         private static string ResolveImagePath(string imagePath)
         {
             if (string.IsNullOrEmpty(imagePath))
@@ -653,7 +710,8 @@ namespace UnityTcp.Editor.Tools
             string sessionId,
             string layer0Path,
             int requestedLayerCount,
-            string previewUrl)
+            string previewUrl,
+            string toolName = null)
         {
             if (string.IsNullOrEmpty(taskId) || string.IsNullOrEmpty(layer0Path))
                 return;
@@ -689,7 +747,7 @@ namespace UnityTcp.Editor.Tools
                 layerPathsToken.Add(p ?? "");
 
             GenerationNotifier.NotifyCompleted(
-                ToolName,
+                string.IsNullOrEmpty(toolName) ? ToolName : toolName,
                 taskId,
                 backendTaskId,
                 new JObject
@@ -729,7 +787,8 @@ namespace UnityTcp.Editor.Tools
             CustomToolDomainReloadRecovery.Resume(
                 "GenerateImageLayersTool",
                 ConfigType.Image,
-                t => t.toolName == "generate_image_layers",
+                // generate_game_ui_kit 的 Step 2（seedream 图层拆分）也走本 tracker/host，一并恢复
+                t => t.toolName == "generate_image_layers" || t.toolName == "generate_game_ui_kit",
                 () => ImageLayersTaskTracker.GetAllTasks(),
                 (interrupted, _, generator) =>
                 {
@@ -767,10 +826,11 @@ namespace UnityTcp.Editor.Tools
                         interrupted.backendTaskId,
                         interrupted.sessionId,
                         layerCount,
-                        generator);
+                        generator,
+                        interrupted.toolName);
                     CustomToolDomainReloadRecovery.StartPolling(
                         "GenerateImageLayersTool", host, ConfigType.Image,
-                        interrupted.sessionId, "generate_image_layers", generator, interrupted.backendTaskId);
+                        interrupted.sessionId, interrupted.toolName, generator, interrupted.backendTaskId);
                 });
         }
     }
@@ -783,6 +843,7 @@ namespace UnityTcp.Editor.Tools
         private readonly string _sessionId;
         private readonly int _layerCount;
         private readonly ModelGeneratorBase _generator;
+        private readonly string _toolName;
         private string _layer0Path;
         private string _previewUrl;
 
@@ -791,7 +852,8 @@ namespace UnityTcp.Editor.Tools
             string backendTaskId,
             string sessionId,
             int layerCount,
-            ModelGeneratorBase generator)
+            ModelGeneratorBase generator,
+            string toolName = null)
         {
             _placeholderPath = placeholderPath ?? "";
             _placeholderRef = string.IsNullOrEmpty(_placeholderPath)
@@ -801,6 +863,7 @@ namespace UnityTcp.Editor.Tools
             _sessionId = sessionId ?? "";
             _layerCount = layerCount > 0 ? layerCount : 4;
             _generator = generator;
+            _toolName = toolName;
         }
 
         protected override string DialogLogTag => "ImageLayersRecovery";
@@ -883,7 +946,8 @@ namespace UnityTcp.Editor.Tools
                 _sessionId,
                 layer0,
                 expected,
-                preview);
+                preview,
+                _toolName);
         }
     }
 
@@ -896,6 +960,7 @@ namespace UnityTcp.Editor.Tools
         private readonly string _taskId;
         private readonly string _backendTaskId;
         private readonly Action<string> _onFailed;
+        private readonly string _toolName;
         private string _layer0Path;
         private string _previewUrl;
 
@@ -905,7 +970,8 @@ namespace UnityTcp.Editor.Tools
             int layerCount,
             string taskId,
             string backendTaskId,
-            Action<string> onFailed)
+            Action<string> onFailed,
+            string toolName = null)
         {
             _placeholderPath = placeholderPath;
             _placeholderRef = TJGeneratorsAssetReference.FromPath(placeholderPath);
@@ -914,6 +980,7 @@ namespace UnityTcp.Editor.Tools
             _taskId = taskId;
             _backendTaskId = backendTaskId;
             _onFailed = onFailed;
+            _toolName = toolName;
         }
 
         protected override string DialogLogTag => "GenerateImageLayersTool";
@@ -954,7 +1021,8 @@ namespace UnityTcp.Editor.Tools
                 _sessionId,
                 layer0,
                 _layerCount,
-                _previewUrl);
+                _previewUrl,
+                _toolName);
         }
     }
 #endif

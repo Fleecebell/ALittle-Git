@@ -41,6 +41,26 @@ namespace TJGenerators
 
         private const string UnityTerrainHeightmapTemplateId = "unity_terrain_heightmap";
 
+        /// <summary>Qwen 图片分层 generator id（numLayers 参数控制层数）</summary>
+        public const string LayeringGeneratorId = "image-layering";
+
+        /// <summary>Seedream 5.0 Pro 图片分层 generator id（自动分层，底图 + 最多 16 层）</summary>
+        public const string SeedreamLayeringGeneratorId = "seedream-image-layering";
+
+        /// <summary>是否为图片分层类 generator（多张 RGBA PNG 输出，走 ImageLayers_ 占位与兄弟图层导入）</summary>
+        public static bool IsLayeringGenerator(string generatorId)
+        {
+            if (string.IsNullOrEmpty(generatorId)) return false;
+            return string.Equals(generatorId, LayeringGeneratorId, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(generatorId, SeedreamLayeringGeneratorId, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>是否为 Seedream 自动分层 generator（无 numLayers 参数，层数由模型决定）</summary>
+        public static bool IsSeedreamLayeringGenerator(string generatorId)
+        {
+            return string.Equals(generatorId, SeedreamLayeringGeneratorId, StringComparison.OrdinalIgnoreCase);
+        }
+
         [SerializeField]
         private bool terrainHeightmapGaussianBlur = true;
 
@@ -780,9 +800,8 @@ namespace TJGenerators
         public override string GetAssetSavePath(PipelineMediaType type, ModelGeneratorBase generator)
         {
             if (type != PipelineMediaType.Texture) return null;
-            // image-layering 输出多张 RGBA PNG；其余模型仍按 jpeg 占位，pipeline 会按实际格式迁移扩展名
-            bool isLayering = generator != null
-                && string.Equals(generator.GeneratorId, "image-layering", StringComparison.OrdinalIgnoreCase);
+            // 图片分层类 generator 输出多张 RGBA PNG；其余模型仍按 jpeg 占位，pipeline 会按实际格式迁移扩展名
+            bool isLayering = generator != null && IsLayeringGenerator(generator.GeneratorId);
             return BuildHistoryTexturePath(isLayering ? "ImageLayers_" : "Image_", isLayering ? ".png" : ".jpg");
         }
 
@@ -810,8 +829,7 @@ namespace TJGenerators
             base.OnGenerationCompleted(assetPath);
 
             // 图片分层：配置其余层 RGBA/标签（第 0 层已在 OnAssetSaved 处理）
-            bool isLayering = _currentGenerator != null
-                && string.Equals(_currentGenerator.GeneratorId, "image-layering", StringComparison.OrdinalIgnoreCase);
+            bool isLayering = _currentGenerator != null && IsLayeringGenerator(_currentGenerator.GeneratorId);
             if (isLayering && !string.IsNullOrEmpty(assetPath))
             {
                 int expected = 4;
@@ -821,6 +839,12 @@ namespace TJGenerators
                     && parsed > 0)
                 {
                     expected = parsed;
+                }
+                else if (_currentGenerator != null && IsSeedreamLayeringGenerator(_currentGenerator.GeneratorId))
+                {
+                    // Seedream 自动分层：底图 + 最多 16 层，无 numLayers 参数；
+                    // 给上限 17，CollectIndexedSiblingPaths 遇到缺口会自动停止
+                    expected = 17;
                 }
 
                 var layerPaths = GeneratedTextureImportUtils.CollectIndexedSiblingPaths(assetPath, expected);

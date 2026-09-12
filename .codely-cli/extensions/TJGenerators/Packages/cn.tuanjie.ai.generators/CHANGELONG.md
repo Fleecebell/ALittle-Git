@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.25] - 2026-09-08
+
+### Added
+
+- 生成请求增加 `X-Workspace-Name` 请求头，上报当前工作区名称
+
+### Fixed
+
+- FBX 贴图解压后先导入再做材质重映射，避免 `SearchAndRemapMaterials` 找不到纹理 GUID
+- `AssetDatabase.Refresh` 在脚本编译期间延迟执行，避免刷新触发循环重编译；磁盘写入后改为按文件/目录定向导入
+
+### Changed
+
+- 移除 Unity 侧 `search_assets` / `download_asset` CustomTool 链路，改由后端 MCP 提供
+- `cn.tuanjie.codely.bridge` 依赖从 1.0.69 升级到 1.0.76
+- 天空盒文档移除已不支持的分辨率参数（后端仅支持 `high_res`）
+
+## [1.0.24] - 2026-08-19
+
+### Added
+
+- 图片分层新增 Seedream Pro（`provider=seedream_pro`）：自动拆为 1 张底图 + 最多 16 个透明图层，prompt 可选，`num_layers` 忽略，支持 `size` 档位
+- Rodin 3D 模型新增面数上限 `qualityOverride`（CustomTool `quality_override`，500–2000000），优先于 quality 预设，等价 Tripo 的 faceLimit
+
+### Fixed
+
+- 图片生成显式传入 `is_segmentation` 时不再被 `outputFormat` 覆盖
+- 3D 模型绑定 Prefab 时按包围盒自动适配缩放，兼容 Unity 2019
+
+### Changed
+
+- Game UI Kit 默认改为 Seedream Pro：Step 1 生成 2848×1600 UI 截图，Step 2 图层拆分为底图 + 最多 16 层透明 PNG；`frontier` 品红底抠图拼版保留为旧路径
+- 资产库下载前同步调用后台 `record-download` 落账（首次扣费 / 去重），失败不阻断下载
+
 ## [1.0.23] - 2026-08-14
 
 ### Fixed

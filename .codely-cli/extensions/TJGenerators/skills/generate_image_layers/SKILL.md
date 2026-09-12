@@ -1,6 +1,6 @@
 ---
 name: unity-image-layers-generation
-description: Split one image into multiple independent RGBA layers in Unity using AI (image-layering / Qwen). Use this skill whenever the user wants to decompose a picture into layers — e.g. "图片分层", "拆图层", "separate image layers", "extract layers from this image", "把这张图分层", "generate image layers". Trigger proactively for any layer-decomposition / multi-layer PNG output request from a single input image. Do NOT use for generating a new image from text (use generate_image) or upscaling (use upscale_image).
+description: Split one image into multiple independent RGBA layers in Unity using AI (image-layering / Qwen, or seedream_pro for Seedream 5.0 Pro auto layer decomposition). Use this skill whenever the user wants to decompose a picture into layers — e.g. "图片分层", "拆图层", "separate image layers", "extract layers from this image", "把这张图分层", "generate image layers", "Seedream 分层", "图层拆分". Trigger proactively for any layer-decomposition / multi-layer PNG output request from a single input image. Do NOT use for generating a new image from text (use generate_image) or upscaling (use upscale_image).
 ---
 
 > ⚠️ **执行约束**
@@ -24,6 +24,8 @@ Output：N 张 PNG（`TextureImporterType.Default`，含 alpha），自动保存
 
 模型固定：`image-layering`（Qwen image layered）。
 
+另支持 **Seedream 5.0 Pro 图层拆分**（`provider: "seedream_pro"`）：自动拆分为 **1 张底图 + 最多 16 个透明 PNG 图层**，无需指定层数；`prompt` 可选（留空自动拆分全部主体），`num_layers` 被忽略；可选 `size` 档位 `1K / 1.5K / 2K / auto`（默认 auto 跟随输入图）。
+
 ## 执行四步（不要跳读外链）
 
 > 本 skill 有 placeholder（第 0 层），但图层通常不放场景。
@@ -38,8 +40,8 @@ Output：N 张 PNG（`TextureImporterType.Default`，含 alpha），自动保存
 ## Skill 独有约束
 
 1. **`image_path` 必填**——本 skill 只做图驱动分层，没有纯文本模式。
-2. **`prompt` 必填**——描述画面内容以辅助拆层；用户只给图时先 `Read` 图片再写英文 prompt。
-3. **`num_layers` 范围 1–8**——默认 4；超出范围钳制到 1–8；非法值回退默认 4。
+2. **`prompt` 必填（qwen）**——描述画面内容以辅助拆层；用户只给图时先 `Read` 图片再写英文 prompt。**seedream_pro 时可选**（留空自动拆分）。
+3. **`num_layers` 范围 1–8（qwen）**——默认 4；超出范围钳制到 1–8；非法值回退默认 4。**seedream_pro 忽略此参数**（自动 1–16 层）。
 4. **通知含完整 `layer_paths`**——优先用 payload；若缺失再用 `glob(f"{layers_folder}/ImageLayers_*.png")` 或 `query_image_layers_status`。
 5. **并发上限 5**——同时运行的 image_layers 任务最多 5 个。
 
@@ -115,10 +117,20 @@ glob(f"{layers_folder}/ImageLayers_*.png")
 
 | 参数 | 类型 | 默认 | 说明 |
 |---|---|---|---|
-| `image_path` | string | **required** | 要分层的原图 PNG/JPG |
-| `prompt` | string | **required** | 画面描述，辅助拆层（英文更好） |
-| `num_layers` | int | `4` | 图层数量 1–8 |
+| `image_path` | string | **required** | 要分层的原图 PNG/JPG（seedream_pro 仅支持 1 张，≥512×512） |
+| `provider` | string | `qwen` | `qwen` 或 `seedream_pro`（Seedream 5.0 Pro 自动分层） |
+| `prompt` | string | **required**（qwen） | 画面描述，辅助拆层（英文更好）；seedream_pro 可选拆分提示词 |
+| `num_layers` | int | `4` | 图层数量 1–8（仅 qwen；seedream_pro 忽略） |
+| `size` | string | `auto` | seedream_pro 分辨率档位：`1K` / `1.5K` / `2K` / `auto`（仅 seedream_pro） |
 | `output_path` | string | — | 不建议指定 |
+
+### provider 决策
+
+| 场景 | 推荐 |
+|---|---|
+| 需要精确控制层数（1–8） | `qwen` + `num_layers` |
+| 要底图 + 多达 16 个透明图层、含层级/边界信息 | `seedream_pro`（自动分层） |
+| 用户提到 Seedream / 火山 / 自动分层 | `seedream_pro` |
 
 ### `num_layers` 决策
 
@@ -159,6 +171,22 @@ parameters={
     "prompt": "a cozy cabin in a snowy forest with smoke from chimney",
     "num_layers": 5,
 }
+```
+
+### Seedream 自动分层（底图 + 最多 16 层）
+
+```python
+result = execute_custom_tool(
+    tool_name="generate_image_layers",
+    parameters={
+        "image_path": "Assets/Art/scene.png",   # Required — 仅 1 张
+        "provider": "seedream_pro",              # Seedream 5.0 Pro 图层拆分
+        # prompt 可选：留空自动拆分全部主体；也可指定要拆分的元素
+        # "prompt": "separate the character, the sword and the background",
+        "size": "2K",                            # 可选：1K / 1.5K / 2K / auto
+    }
+)
+# layer 0 = 底图（不透明），layer 1..N = 透明 PNG 图层
 ```
 
 ## 故障排查
