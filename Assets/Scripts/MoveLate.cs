@@ -326,7 +326,10 @@ public class MoveLate : MonoBehaviour, IWaterResponder
             float vy = rb.velocity.y + windVy;
 
             // 梯子状态
-            if (isOnLadder && r.jump) isClimbing = true;
+            // 注意: 必须用 jumpHeld(按住) 而不是 jump(按下瞬间) —— 与 P1 MoveFirst.LadderInput() 的
+            // Input.GetKey(Space/W) 语义对齐. 用 r.jump 的话, 由于 P2 位置/时序滞后于 P1,
+            // 那条单帧按下的记录被重放时 P2 往往还没进入梯子触发器, isClimbing 永远不成立.
+            if (isOnLadder && r.jumpHeld) isClimbing = true;
             // 未在梯子上: 若宽限计时已结束则彻底放弃攀爬, 否则保留(等待回到梯子)
             if (!isOnLadder && ladderGraceTimer <= 0) isClimbing = false;
 
@@ -337,7 +340,10 @@ public class MoveLate : MonoBehaviour, IWaterResponder
             {
                 rb.gravityScale = 0;
                 vy = 0;
-                if (r.jump) vy = climbSpeed;
+                // 向上爬: 用 jumpHeld(按住) 持续给速度, 与 P1 LadderPhysics() 的 Input.GetKey 一致.
+                // 若用 r.jump(按下瞬间), 只有按下那一帧有速度, 按住期间 vy 归零 → P2 只动一帧就停住.
+                if (r.jumpHeld) vy = climbSpeed;
+                // 向下爬: climbDown 录制时即为 GetKey(S) 按住, 与 P1 一致(顺序保持 S 覆盖 W)
                 if (r.climbDown) vy = -climbSpeed;
             }
             else if (!isDashing)
