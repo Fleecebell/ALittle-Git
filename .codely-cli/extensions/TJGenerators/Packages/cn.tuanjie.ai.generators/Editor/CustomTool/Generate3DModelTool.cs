@@ -455,6 +455,8 @@ namespace UnityTcp.Editor.Tools
             "force_overwrite (bool, default false — set true to replace an existing prefab at the same path), " +
             "tier (string, default 'Gen-2.5-Extreme-High' — options: Gen-2.5-Extreme-Low/Low/Medium/High/Extreme-High), " +
             "quality (string, default 'medium' — options: extra-low/low/medium/high), " +
+            "quality_override (int, optional custom target face count 500-2000000, takes precedence over quality — " +
+            "set when the user wants a specific face budget, e.g. lightweight game props; Quad mode caps at 200000), " +
             "material (string, default 'PBR' — options: PBR/Shaded), " +
             "mesh_mode (string, default 'Quad' — options: Quad/Raw), " +
             "ta_pose (bool, default false — set true when add_motion so the mesh is easier to rig), " +
@@ -479,6 +481,7 @@ namespace UnityTcp.Editor.Tools
                 string prefabOutputPath = parameters["prefab_output_path"]?.ToString();
                 bool   forceOverwrite   = parameters["force_overwrite"]?.ToObject<bool>() ?? false;
                 string sessionId        = parameters["session_id"]?.ToString() ?? "";
+                GenerationRequestOrigin.SetWorkspaceName(parameters["workspace_name"]?.ToString());
 
                 if (string.IsNullOrEmpty(prompt) && string.IsNullOrEmpty(imagePath))
                     return Fail("At least one of 'prompt' or 'image_path' is required.");
@@ -898,6 +901,13 @@ namespace UnityTcp.Editor.Tools
             if (parameters["quality"] != null)
                 generator.SetParameter("quality", parameters["quality"].ToString());
 
+            // Custom face count cap (overrides the quality preset). Default to 0 (= not sent) so the
+            // high-precision default tier isn't silently capped; low tiers still get the backend auto-cap.
+            if (parameters["quality_override"] != null)
+                generator.SetParameter("qualityOverride", parameters["quality_override"].ToObject<int>());
+            else
+                generator.SetParameter("qualityOverride", 0);
+
             if (parameters["material"] != null)
                 generator.SetParameter("material", parameters["material"].ToString());
 
@@ -1023,6 +1033,7 @@ namespace UnityTcp.Editor.Tools
                 string prefabOutputPath = parameters["prefab_output_path"]?.ToString();
                 bool   forceOverwrite   = parameters["force_overwrite"]?.ToObject<bool>() ?? false;
                 string sessionId        = parameters["session_id"]?.ToString() ?? "";
+                GenerationRequestOrigin.SetWorkspaceName(parameters["workspace_name"]?.ToString());
 
                 var mvToken = parameters["multiview_image_paths"];
                 string[] multiviewPaths = null;

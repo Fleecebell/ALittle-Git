@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Button_twice : MonoBehaviour
+public class Button_Hold : MonoBehaviour
 {
     GameObject big_button;
 
@@ -26,7 +26,7 @@ public class Button_twice : MonoBehaviour
     private int direction = 1;
 
     // 所有活跃实例，用于死亡时统一复原所有按钮
-    private static List<Button_twice> activeInstances = new List<Button_twice>();
+    private static List<Button_Hold> activeInstances = new List<Button_Hold>();
 
     // 死亡/按R时统一复原所有按钮（由 DeathRespawnVFX.TriggerDeath 调用）
     public static void ResetAllButtons()

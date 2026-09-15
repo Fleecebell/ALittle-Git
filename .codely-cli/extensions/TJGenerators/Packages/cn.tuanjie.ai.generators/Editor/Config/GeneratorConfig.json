@@ -541,6 +541,18 @@
           "tooltip": "生成T/A姿势的模型",
           "apiFieldName": "taPose",
           "defaultValue": "false"
+        },
+        {
+          "id": "qualityOverride",
+          "type": "int",
+          "label": "面数上限",
+          "apiFieldName": "qualityOverride",
+          "apiFieldNameImage": "qualityOverride",
+          "apiFieldNameMultiview": "qualityOverride",
+          "defaultValue": "20000",
+          "min": 0,
+          "max": 1000000,
+          "tooltip": "自定义目标面数，优先于质量预设；范围 500-2000000，Quad 模式上限 200000，非 High 档上限 1000000；设为 0 表示使用质量预设"
         }
       ],
       "responseMapping": {
@@ -2091,6 +2103,74 @@
           ],
           "defaultValue": "png",
           "tooltip": "图层文件格式"
+        }
+      ],
+      "responseMapping": {
+        "downloadUrlPath": "imageUrls"
+      }
+    },
+    {
+      "id": "seedream-image-layering",
+      "displayName": "Seedream 图片分层",
+      "enabled": true,
+      "outputType": "image",
+      "imageBase64FieldName": "images",
+      "imageBase64AsArray": true,
+      "endpoints": [
+        {
+          "key": "default",
+          "value": "task/seedream-image-layering"
+        }
+      ],
+      "modelSelector": {
+        "name": "Seedream 图片分层",
+        "description": "一张图片 → 底图 + 最多 16 个透明图层（自动分层）",
+        "functionTags": [
+          "图生图",
+          "图片分层"
+        ],
+        "vendorTags": [
+          "Seedream"
+        ],
+        "pinned": false
+      },
+      "uiLayout": {
+        "showTextInput": true,
+        "showImageUpload": true,
+        "imageUploadRequired": true,
+        "imageUploadLabel": "输入图片（必填，仅 1 张）",
+        "maxReferenceImages": 1,
+        "advancedFoldout": true,
+        "advancedLabel": "高级设置",
+        "textInputLabel": "拆分提示词（可选）",
+        "textInputPlaceholder": "留空自动拆分全部主体；也可指定要拆分的元素..."
+      },
+      "parameters": [
+        {
+          "id": "size",
+          "type": "dropdown",
+          "label": "分辨率档位",
+          "apiFieldName": "size",
+          "options": [
+            {
+              "value": "",
+              "label": "auto"
+            },
+            {
+              "value": "1K",
+              "label": "1K"
+            },
+            {
+              "value": "1.5K",
+              "label": "1.5K"
+            },
+            {
+              "value": "2K",
+              "label": "2K"
+            }
+          ],
+          "defaultValue": "",
+          "tooltip": "输出分辨率档位；auto 跟随输入图尺寸（1K/1.5K/2K）"
         }
       ],
       "responseMapping": {

@@ -152,7 +152,7 @@ public class DeathRespawnVFX : MonoBehaviour
 
         // 重置所有按钮为初始状态（无论死亡原因：岩浆/夹死/按R 都会走到这里统一复原）
         Button_once.ResetAllButtons();
-        Button_twice.ResetAllButtons();
+        Button_Hold.ResetAllButtons();
         Button_Multi.ResetAllButtons();
 
         // 瞬移后停一帧让物理稳定 (防止刚传送就触发碰撞导致状态错乱)

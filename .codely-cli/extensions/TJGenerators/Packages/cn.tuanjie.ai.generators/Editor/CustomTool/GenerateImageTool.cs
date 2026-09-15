@@ -327,8 +327,8 @@ namespace UnityTcp.Editor.Tools
             "Key parameters: generator_id (default 'frontier-game-design'; or 'huoshan_seedream_image', 'frontier-effect'), " +
             "prompt (text description), image_path (optional reference image — omit for text-to-image), " +
             "size (output resolution, e.g. '2048x2048', huoshan_seedream_image only), " +
-            "is_segmentation (bool, auto-remove background; auto true for png / false for jpeg when outputFormat is set; " +
-            "controllable for huoshan_seedream_image when no outputFormat), " +
+            "is_segmentation (bool, auto-remove background; if explicitly set, its value is used as-is; " +
+            "if omitted, defaults to true for png and false for jpeg), " +
             "resolution (frontier-effect only, '0.5K'/'1K'/'2K'/'4K', default '1K'), " +
             "aspect_ratio (frontier-effect only, 'auto'/'16:9'/'9:16'/'1:1'/'4:3'/'3:4'/'3:2'/'2:3'/'5:4'/'4:5'/'21:9', default 'auto'), " +
             "output_format (frontier-effect only, 'png'/'jpeg', default 'jpeg'), " +
@@ -351,6 +351,7 @@ namespace UnityTcp.Editor.Tools
                 string imagePath   = parameters["image_path"]?.ToString();
                 string outputPath  = parameters["output_path"]?.ToString();
                 string sessionId   = parameters["session_id"]?.ToString() ?? "";
+                GenerationRequestOrigin.SetWorkspaceName(parameters["workspace_name"]?.ToString());
 
                 if (string.IsNullOrEmpty(prompt) && string.IsNullOrEmpty(imagePath))
                 {
@@ -1286,6 +1287,7 @@ namespace UnityTcp.Editor.Tools
             string imagePath   = parameters["image_path"]?.ToString();
             string outputPath  = parameters["output_path"]?.ToString();
             string sessionId   = parameters["session_id"]?.ToString() ?? "";
+            GenerationRequestOrigin.SetWorkspaceName(parameters["workspace_name"]?.ToString());
 
             List<string> frontierMergedPaths = null;
             int frontierUserImageCount = 0;
@@ -1934,15 +1936,20 @@ namespace UnityTcp.Editor.Tools
             if (parameters["quality"] != null)
                 generator.SetParameter("quality", parameters["quality"].ToString());
 
-            string fmt = generator.GetParameter("outputFormat")?.ToString()
-                      ?? parameters["outputFormat"]?.ToString()
-                      ?? parameters["output_format"]?.ToString()
-                      ?? "";
-            if (string.Equals(fmt, "jpeg", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(fmt, "jpg", StringComparison.OrdinalIgnoreCase))
-                generator.SetParameter("isSegmentation", false);
-            else if (string.Equals(fmt, "png", StringComparison.OrdinalIgnoreCase))
-                generator.SetParameter("isSegmentation", true);
+            // Only derive isSegmentation from outputFormat when the caller did not explicitly pass it.
+            // Previously this override ran unconditionally, clobbering is_segmentation=false for opaque PNGs.
+            if (parameters["is_segmentation"] == null)
+            {
+                string fmt = generator.GetParameter("outputFormat")?.ToString()
+                          ?? parameters["outputFormat"]?.ToString()
+                          ?? parameters["output_format"]?.ToString()
+                          ?? "";
+                if (string.Equals(fmt, "jpeg", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(fmt, "jpg", StringComparison.OrdinalIgnoreCase))
+                    generator.SetParameter("isSegmentation", false);
+                else if (string.Equals(fmt, "png", StringComparison.OrdinalIgnoreCase))
+                    generator.SetParameter("isSegmentation", true);
+            }
         }
 
         private static int GetImagePromptMaxLength(string generatorId)

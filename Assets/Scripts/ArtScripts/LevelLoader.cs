@@ -40,7 +40,16 @@ public class LevelLoader : MonoBehaviour
 
     public void LoadNextLevel()
     {
+        StopLevelTimer();
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+    }
+
+    // 通关瞬间冻结计时，把当前耗时存为成绩（供后续显示）
+    private void StopLevelTimer()
+    {
+        UIManager ui = FindObjectOfType<UIManager>();
+        if (ui != null)
+            ui.StopTimer();
     }
 
     IEnumerator LoadLevel(int levelIndex)
