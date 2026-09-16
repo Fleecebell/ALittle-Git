@@ -116,6 +116,8 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
         rb.interpolation = RigidbodyInterpolation2D.None;
         // 用检查器可调的 baseMoveSpeed 初始化实际移动速度
         moveSpeed = baseMoveSpeed;
+        // 自动挂上"跟随移动地面"组件: 站在移动平台上会被平台带走(手动挂过则跳过)
+        GroundCarry.EnsureOn(gameObject);
     }
 
     void Update()
