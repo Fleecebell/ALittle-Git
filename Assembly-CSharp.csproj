@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\ArtScripts\TumbleweedSpawner.cs" />
     <Compile Include="Assets\Scripts\Undecided\Combatant.cs" />
     <Compile Include="Assets\Scripts\Button_Hold.cs" />
+    <Compile Include="Assets\Scripts\GroundCarry.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\SandstormController.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\Tumbleweed.cs" />

@@ -279,6 +279,7 @@ GameObject:
   - component: {fileID: 9194768901541431613}
   - component: {fileID: 5839280523233403595}
   - component: {fileID: 1264352185247427060}
+  - component: {fileID: 8611970126979916347}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Player2
@@ -511,7 +512,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1423621427724842012}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f49332e7fb9ac4d409e99fbdf72ab6fb, type: 3}
   m_Name: 
@@ -519,6 +520,25 @@ MonoBehaviour:
   crushThreshold: 0.6
   rayLength: 1
   wallTag: Ground
+  showDebug: 1
+--- !u!114 &8611970126979916347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423621427724842012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f7a91c4d5b24e8fa6c0d1e2b3a45c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundTag: Ground
+  feetProbeHeight: 0.2
+  feetProbeWidthRatio: 0.9
+  carryFactor: 1
+  minDelta: 0.0001
+  maxCarrySpeed: 30
   showDebug: 1
 --- !u!1 &1432470134872957120
 GameObject:
@@ -16038,6 +16058,7 @@ GameObject:
   - component: {fileID: 7986580613515408769}
   - component: {fileID: 7952222917083601150}
   - component: {fileID: 2691111341201509074}
+  - component: {fileID: 3864938068095166264}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -16289,7 +16310,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6455782588203100808}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f49332e7fb9ac4d409e99fbdf72ab6fb, type: 3}
   m_Name: 
@@ -16297,6 +16318,25 @@ MonoBehaviour:
   crushThreshold: 0.6
   rayLength: 1
   wallTag: Ground
+  showDebug: 1
+--- !u!114 &3864938068095166264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6455782588203100808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f7a91c4d5b24e8fa6c0d1e2b3a45c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundTag: Ground
+  feetProbeHeight: 0.2
+  feetProbeWidthRatio: 0.9
+  carryFactor: 1
+  minDelta: 0.0001
+  maxCarrySpeed: 30
   showDebug: 1
 --- !u!1 &6482424533820733904
 GameObject:

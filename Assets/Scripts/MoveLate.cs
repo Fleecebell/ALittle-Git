@@ -147,6 +147,8 @@ public class MoveLate : MonoBehaviour, IWaterResponder
         moveSpeed = baseMoveSpeed;
         p1Pos = p1.transform.position;
         p2Pos = p2.transform.position;
+        // 自动挂上"跟随移动地面"组件: 站在移动平台上会被平台带走(手动挂过则跳过)
+        GroundCarry.EnsureOn(gameObject);
     }
 
     void Update()

@@ -2402,6 +2402,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1264352185247427060, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2616180010483666316, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2426,9 +2430,17 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2691111341201509074, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3864938068095166264, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
+      propertyPath: showDebug
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4495793572342896930, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.47
+      value: -6.88
       objectReference: {fileID: 0}
     - target: {fileID: 4495793572342896930, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2596,6 +2608,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8516146198222847846, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
       propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8611970126979916347, guid: a56e811c31b146043bb5a4f76eb2401f, type: 3}
+      propertyPath: showDebug
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2932,8 +2948,9 @@ MonoBehaviour:
   - pedal: {fileID: 2118519440}
     isOneTime: 0
   targetPosition: {fileID: 1235193015}
-  speed: 0.5
+  speed: 1
   oneTimeMove: 0
+  triggerOnSinglePedal: 0
 --- !u!66 &1782198189
 CompositeCollider2D:
   m_ObjectHideFlags: 0
