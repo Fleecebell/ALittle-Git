@@ -7,6 +7,7 @@ using UnityEngine;
 //
 // 用途: 风车 / 齿轮 / 光环 / 魔法阵 / 旋转的太阳
 // 叠加示例: AutoSpin + AutoPulse = 旋转的能量核心
+// 要"绕着别的物体转圈" → 用 AutoOrbit (它的"朝向跟随"开关=跟着转的效果)
 // ======================================================================
 public class AutoSpin : MonoBehaviour
 {

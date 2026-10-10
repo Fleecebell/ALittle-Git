@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit_WorldSpacePattern
+  m_Shader: {fileID: 4800000, guid: 59962b31a5070d14b830460074a1920a, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 2.2, y: 1}
+        m_Offset: {x: 1, y: 0}
+    - _PatternTex:
+        m_Texture: {fileID: 2800000, guid: e7587c311e243b442964c70a2c283a05, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _MaskMode: 0
+    - _MaskScale: 10.31
+    - _PatternAdditive: 0
+    - _PatternAlpha: 1
+    - _PatternEdgeFade: 0
+    - _PatternEdgeFadeWidth: 0
+    - _PatternHueShiftSpeed: 0
+    - _PatternIntensity: 1.37
+    - _PatternLocalSpace: 0
+    - _PatternPulseAmplitude: 0
+    - _PatternPulseSpeed: 1
+    - _PatternRotation: 0
+    - _PatternScale: 31.9
+    - _PatternSpinSpeed: 0
+    - _TilingMode: 0
+    m_Colors:
+    - _MaskOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _MaskScrollSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _MaskSize: {r: 4.44, g: 4.55, b: 0.39, a: -0.15}
+    - _PatternColor: {r: 1, g: 1, b: 1, a: 1}
+    - _PatternOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _PatternPulseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _PatternScrollSpeed: {r: 0.005, g: 0, b: 0, a: 0}
+    - _PatternSize: {r: 0, g: 0, b: 0, a: 0}
+    - _PatternSpacing: {r: 0, g: 1.65, b: 0, a: 0}
+    - _PatternStretch: {r: 1, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []
