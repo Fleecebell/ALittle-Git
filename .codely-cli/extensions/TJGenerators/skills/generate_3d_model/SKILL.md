@@ -31,7 +31,7 @@ description: Generate 3D models in Unity using AI (defaults to Tripo P1; use Rod
 ## ⚠️ Skill 独有约束
 
 1. **必须先选 generator 再调工具**——本 skill 没有"统一入口工具"，只有按 generator 区分的 `generate_3d_model_by_tripo_p1` 和 `generate_3d_model_by_rodin`。
-2. **必须先读子文档再调工具**——两个 generator 的参数集差异较大（Tripo P1 不支持 `tier`/`quality`/`material`/`mesh_mode`/`ta_pose`，Rodin 不支持 `face_limit`/`pbr` 这些 Tripo 参数）。直接照搬错 generator 的参数会被官方 API 拒绝。
+2. **必须先读子文档再调工具**——两个 generator 的参数集差异较大（Tripo P1 不支持 `tier`/`quality`/`material`/`mesh_mode`/`ta_pose`，Rodin 的面数控制参数是 `quality_override` 而非 Tripo 的 `face_limit`）。直接照搬错 generator 的参数会被官方 API 拒绝。
 3. **`prompt` 与 `image_path` 至少一个**——两个 generator 都可文生 / 图生 / 文+图混合。Tripo P1 还支持 4 视图模式（`multiview_image_paths`，顺序 `[front, left, back, right]`，front 必须）。
 4. **占位 Prefab 是 Cube 子节点**——生成完成后 Cube 被替换为真实 model 子节点。**不要**把场景里的实例当 Cube 删掉重建。
 5. **带动画角色从零 = UI「添加动作」**——`add_motion=true` + `motion_description`（如 `"a walking cycle"`）。**不要**再调 `generate_animated_character`，也**不要**传 Meshy 的 `action_id` / `topology` / `pose_mode`。Rodin 建议同时 `ta_pose=true`。
@@ -46,9 +46,9 @@ description: Generate 3D models in Unity using AI (defaults to Tripo P1; use Rod
 ### 选择决策树
 
 - 用户没明确说精度要求 → **Tripo P1**（默认）
-- 用户说"低面 / 低模 / 移动端 / 包体限制" → **Tripo P1**（独有 `face_limit` 控制）
+- 用户说"低面 / 低模 / 移动端 / 包体限制" → **Tripo P1**（`face_limit` 48~20000；面数 >20000 时用 Rodin 的 `quality_override`）
 - 用户说"高精度 / hero / 主角资产 / PBR" → **Rodin Gen-2.5**（输出 FBX，默认 Extreme-High tier）
-- 用户明确指定 face_count > 20000 → **Rodin Gen-2.5**（Tripo P1 上限约 20000）
+- 用户明确指定 face_count > 20000 → **Rodin Gen-2.5**（`quality_override` 上限 200 万，Tripo P1 上限约 20000）
 - 批量生成需要稳定面数与体积 → **Tripo P1**
 
 > **调用前必须 `Read` 对应子文档**，获取完整参数表与该 generator 的独有约束。
@@ -192,16 +192,16 @@ parameters={
 |---|---|---|
 | 调用 Tripo 工具传了 Rodin 参数（如 `tier` / `quality`） | 参数集不通用 | Tripo 用 `face_limit` / `pbr`；查 `generators/tripo-p1.md` |
 | 调用 Tripo 工具传了 `quad` / `smart_low_poly` / `generate_parts` / `geometry_quality` | P1-20260311 不支持这些 | 直接删掉这些参数，或改用 Rodin |
-| 调用 Rodin 工具传了 `face_limit` / `multiview_image_paths` | Rodin 不支持这些 | Rodin 用 `tier` / `quality`；多视图只 Tripo 支持 |
+| 调用 Rodin 工具传了 `face_limit` / `multiview_image_paths` | Rodin 参数名是 `quality_override`（等价 face_limit，500–2000000）；多视图只 Tripo 支持 | Rodin 用 `tier` / `quality` / `quality_override` |
 | 状态变 `interrupted`（仅 Rodin） | domain reload 丢失后端记录 | 用 `generate_3d_model_by_rodin` + `force_overwrite=true` + 相同 `prefab_output_path` 重新提交 |
-| 内容策略拦截（`content_moderation`） | Tripo P1 对武器/政治/版权词敏感，平台策略不可绕过 | 把拦截原因告知用户；如用户需要类似资产，先说明资产库不保证有合适内容，再询问是否改用 `search_assets` |
+| 内容策略拦截（`content_moderation`） | Tripo P1 对武器/政治/版权词敏感，平台策略不可绕过 | 把拦截原因告知用户；如用户需要类似资产，先说明资产库不保证有合适内容，再询问是否改用后端资产库搜索（`search_asset_lib`） |
 
 **内容策略拦截处理（不改写 prompt）：**
 
 1. 直接告知用户："生成被内容策略拒绝，原因：{拦截原因}"（从错误消息里的「拦截原因」后取；若无则只说被拒绝）
 2. 说明这是平台限制，无法通过修改 prompt 绕过
 3. 提示："也可以尝试从资产库搜索，但不保证有合适的资产，是否搜索？"
-4. **仅在用户确认后**再 `activate_skill("unity-asset-search")`；不要擅自改写 prompt 重试生成
+4. **仅在用户确认后**再调用后端 `search_asset_lib` 搜索资产库；不要擅自改写 prompt 重试生成
 
 ### Domain reload 后 task 丢失
 

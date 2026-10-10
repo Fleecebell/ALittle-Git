@@ -1122,6 +1122,13 @@ namespace TJGenerators.Utils
             _translations["文生图、图生图"] = "Text-to-Image / Image-to-Image";
             _translations["图片分层"] = "Image Layering";
             _translations["一张图片 → 多个独立 RGBA 图层"] = "One image → multiple independent RGBA layers";
+            _translations["Seedream 图片分层"] = "Seedream Image Layering";
+            _translations["一张图片 → 底图 + 最多 16 个透明图层（自动分层）"] = "One image → base + up to 16 transparent layers (auto)";
+            _translations["输入图片（必填，仅 1 张）"] = "Input Image (required, exactly 1)";
+            _translations["拆分提示词（可选）"] = "Split Prompt (optional)";
+            _translations["留空自动拆分全部主体；也可指定要拆分的元素..."] = "Leave empty to auto-split all main elements; or specify elements to split...";
+            _translations["分辨率档位"] = "Resolution Tier";
+            _translations["输出分辨率档位；auto 跟随输入图尺寸（1K/1.5K/2K）"] = "Output resolution tier; auto follows the input image size (1K/1.5K/2K)";
             _translations["文生音频、背景音乐"] = "Text-to-Audio / BGM";
             _translations["文生音效"] = "Text to SFX";
             _translations["文生语音、TTS"] = "Text-to-Speech / TTS";

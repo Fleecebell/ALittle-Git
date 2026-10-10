@@ -30,6 +30,7 @@ namespace TJGenerators.Utils
                 case "huoshan_seedream_pro_image": return 1024;
                 case "huoshan_seedream_material":  return 1024;
                 case "image-layering":             return 1024;
+                case "seedream-image-layering":    return 1024;
                 default:                     return 0;
             }
         }

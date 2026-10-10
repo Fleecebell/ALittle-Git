@@ -26,9 +26,16 @@ public class Button_Multi : MonoBehaviour
     [Tooltip("勾选后：物体触发后移动到目标位置不再返回，按钮保持被按下（不回弹）。不勾选：往返移动，松开按钮即返回，按钮回弹。")]
     public bool oneTimeMove = false;
 
+    [Header("单按钮触发")]
+    [Tooltip("勾选后：只要踩到任意一个踏板就触发（逻辑或）。不勾选：必须踩下全部踏板才触发（逻辑与）。")]
+    public bool triggerOnSinglePedal = false;
+
     private Vector3 originPosition;
     private bool[] pedalPressed;
+    // 所有踏板是否都被踩下（用于踏板回弹视觉）
     private bool allPressed;
+    // 本帧是否满足触发条件（由 triggerOnSinglePedal 决定：全部踩下 或 任意一个踩下）
+    private bool triggerConditionMet;
     private bool triggered;   // 是否已触发过一次性移动
     // 返回原位中：死亡/按R复原后平台平滑移回起点，此期间忽略踏板触发
     private bool returning = false;
@@ -83,15 +90,17 @@ public class Button_Multi : MonoBehaviour
 
     void Update()
     {
-        allPressed = true;
+        // 统计已踩下的踏板数量
+        int pressedCount = 0;
         for (int i = 0; i < pedals.Length; i++)
         {
-            if (!pedalPressed[i])
-            {
-                allPressed = false;
-                break;
-            }
+            if (pedalPressed[i]) pressedCount++;
         }
+
+        // 所有踏板是否都被踩下（仅用于踏板回弹视觉，与触发条件解耦）
+        allPressed = pressedCount == pedals.Length;
+        // 触发条件：不勾选时需全部踩下；勾选 triggerOnSinglePedal 后踩到任意一个即可
+        triggerConditionMet = triggerOnSinglePedal ? pressedCount > 0 : allPressed;
 
         UpdateBigs();
 
@@ -109,7 +118,7 @@ public class Button_Multi : MonoBehaviour
             // 返回原位：忽略踏板状态，强制平滑移回起点
             direction = -1;
         }
-        else if (allPressed)
+        else if (triggerConditionMet)
         {
             if (oneTimeMove) triggered = true;
             direction = 1;

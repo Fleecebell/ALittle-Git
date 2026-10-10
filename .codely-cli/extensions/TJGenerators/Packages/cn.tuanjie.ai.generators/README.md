@@ -9,7 +9,7 @@ TJGenerators for Unity 是一款强大的 AI 内容生成插件，集成团结 A
 | 生成器 | 功能 | 特点 |
 |--------|------|------|
 | **Tripo 3D / Tripo P1** | 文生3D、图生3D、多视图生成3D | 默认 P1 模型，支持低面控制、PBR、网格分割；文生 3D 可选 `add_motion` 一步生成带动画角色 |
-| **Rodin** | 文生3D、图生3D、多视图生成3D | 支持 Gen-2.5 五种层级（超低/低/中/高/极高），FBX 输出；文生 3D 可选 `add_motion` |
+| **Rodin** | 文生3D、图生3D、多视图生成3D | 支持 Gen-2.5 五种层级（超低/低/中/高/极高），FBX 输出；可用 `quality_override` 自定义面数上限（优先于 quality 预设）；文生 3D 可选 `add_motion` |
 | **混元3.1** | 文生3D、图生3D、多视图生成3D | 高精度生成，支持 PBR，输出 OBJ zip |
 | **Tripo 纹理重生成** | 对已有 3D 模型重新生成贴图 / PBR | CustomTool `generate_tripo_texture_model`，需已有模型 task ID 或 model URL |
 
@@ -18,9 +18,9 @@ TJGenerators for Unity 是一款强大的 AI 内容生成插件，集成团结 A
 | 工具 | 功能 |
 |------|------|
 | **图片切割** | 对大图进行传统 CV 自动区域检测，预览并批量导出独立精灵（`AI/工具/图片切割`） |
-| **图片分层** | 将一张输入图 AI 拆分为多张独立 RGBA 图层 PNG（`image-layering` / Qwen）；编辑器图片窗口与 CustomTool `generate_image_layers` |
+| **图片分层** | 将一张输入图 AI 拆分为多张独立 RGBA 图层 PNG（Qwen 或 Seedream Pro）；编辑器图片窗口与 CustomTool `generate_image_layers` |
 | **ESRGAN 图片放大** | Real-ESRGAN 超分（CustomTool `upscale_image`），支持 1x–8x、多种模型与可选人脸增强 |
-| **Game UI Kit** | 三步工作流（CustomTool `generate_game_ui_kit` + `slice_image`）：文生游戏 UI 截图 → 品红底 UI 抠图拼版 → CV 自动切割为独立 Sprite，便于提取 HUD/按钮等元素 |
+| **Game UI Kit** | 默认两步工作流（CustomTool `generate_game_ui_kit`）：Seedream Pro 文生游戏 UI 截图（2848×1600）→ 图层拆分为底图 + 最多 16 层透明 PNG；`frontier` 品红底抠图拼版为旧路径；图层合并时可用 `slice_image` 兜底切割 |
 
 ### 🌌 天空盒生成
 
@@ -38,6 +38,7 @@ TJGenerators for Unity 是一款强大的 AI 内容生成插件，集成团结 A
 | **Frontier** | 文生图、图生图 | 风格化特效，支持多档分辨率与画幅 |
 | **Frontier Lite** | 文生图、图生图 | 轻量风格化图片生成 |
 | **图片分层（Qwen）** | 图生多图层 | 一张图片拆分为多张独立 RGBA 图层；需上传参考图，可设置图层数量（1–8） |
+| **图片分层（Seedream Pro）** | 图生多图层 | 自动拆为 1 张底图 + 最多 16 个透明图层；prompt 可选，`num_layers` 忽略，支持 `size` 档位（1K / 1.5K / 2K / auto） |
 
 ### 🎨 2D 精灵生成
 
@@ -390,7 +391,7 @@ Editor/
 
 | 包 | 版本 | 用途 |
 |----|------|------|
-| `cn.tuanjie.codely.bridge` | 1.0.69 | Codely 桥接（提供 `Codely.Newtonsoft.Json`） |
+| `cn.tuanjie.codely.bridge` | 1.0.76 | Codely 桥接（提供 `Codely.Newtonsoft.Json`） |
 | `com.unity.modules.jsonserialize` | 1.0.0 | `JsonUtility` 序列化 |
 | `com.unity.modules.unitywebrequest` | 1.0.0 | HTTP 请求与资源下载 |
 | `com.unity.modules.video` | 1.0.0 | 视频播放与特效视频工作流 |
