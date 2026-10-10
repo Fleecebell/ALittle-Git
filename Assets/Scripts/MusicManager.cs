@@ -15,8 +15,24 @@ using UnityEngine;
 /// </summary>
 public class MusicManager : MonoBehaviour
 {
-    // 单例
-    public static MusicManager Instance { get; private set; }
+    // 单例（懒加载：找不到就自动创建，保证任意场景直接 Play 也有实例）
+    private static MusicManager _instance;
+    public static MusicManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<MusicManager>();
+                if (_instance == null)
+                {
+                    var go = new GameObject("MusicManager");
+                    _instance = go.AddComponent<MusicManager>(); // AddComponent 会同步执行 Awake 完成初始化
+                }
+            }
+            return _instance;
+        }
+    }
 
     [Header("=== 音量存储键 ===")]
     [Tooltip("音乐音量的 PlayerPrefs 键名")]
@@ -42,12 +58,13 @@ public class MusicManager : MonoBehaviour
     void Awake()
     {
         // 单例 + DontDestroyOnLoad
-        if (Instance != null && Instance != this)
+        // 注意：这里必须用 _instance 判断，不能用 Instance 属性（否则会触发懒加载递归）
+        if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        Instance = this;
+        _instance = this;
         DontDestroyOnLoad(gameObject);
 
         // 创建音效播放器（放在当前物体上）
