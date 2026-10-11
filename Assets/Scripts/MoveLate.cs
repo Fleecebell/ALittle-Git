@@ -9,6 +9,10 @@ public class MoveLate : MonoBehaviour, IWaterResponder
     public Animator jumpAnimator;
     public MoveFirst player;
 
+    [Header("手感统一配置(可选)")]
+    [Tooltip("拖入 Player Feel Settings 资产后, 运行时以该资产里的值为准。留空则用下方字段默认值")]
+    public PlayerFeelSettings feelSettings;
+
     [Header("基础移动速度")]
     [Tooltip("角色初始移动速度（检查器可调）。运行时 moveSpeed 会以该值初始化")]
     public float baseMoveSpeed = 10f;
@@ -18,6 +22,10 @@ public class MoveLate : MonoBehaviour, IWaterResponder
 
     public float maxMoveSpeed = 50f;
     public float jumpForce = 20f;
+
+    [Header("重力")]
+    [Tooltip("竖直重力倍数(1 = 真实重力 9.81 m/s²)。越大下落越快、跳跃越脆。跳跃高度 = jumpForce² / (2 × gravityScale × 9.81)")]
+    public float gravityScale = 4f;
 
     [Header("跳跃缓冲")]
     [Tooltip("跳跃缓冲时间(秒). 影子收到跳跃记录后, 落地前这么短时间内落地会自动起跳")]
@@ -143,12 +151,42 @@ public class MoveLate : MonoBehaviour, IWaterResponder
         myCollider = GetComponent<Collider2D>();
         // 关闭 Rigidbody2D 插值，避免在 Update 里写 velocity 时产生平滑/渐变观感
         rb.interpolation = RigidbodyInterpolation2D.None;
-        // 用检查器可调的 baseMoveSpeed 初始化实际移动速度
-        moveSpeed = baseMoveSpeed;
+        // 关键: 禁止休眠。着地静止后 Box2D 会让刚体休眠, 休眠期间 OnCollisionStay2D 不再触发,
+        // 而 isGrounded 每帧在 FixedUpdate 被重置为 false, 没人设回 true → 站在地上也跳不起来。
+        rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
+        // 有"手感统一配置"就用它(单点调参); 否则回退到检查器上的各字段
+        if (feelSettings != null) ApplyFeelSettings(feelSettings);
+        else moveSpeed = baseMoveSpeed;
         p1Pos = p1.transform.position;
         p2Pos = p2.transform.position;
         // 自动挂上"跟随移动地面"组件: 站在移动平台上会被平台带走(手动挂过则跳过)
         GroundCarry.EnsureOn(gameObject);
+    }
+
+    // 把 PlayerFeelSettings 资产里的手感数值拷贝到运行时字段(单点调参入口)。
+    // 冲刺的 dashForce/dashDuration 沿用 P1(影子重放 P1 手感), 这里只设自己的 dashCooldown。
+    private void ApplyFeelSettings(PlayerFeelSettings s)
+    {
+        moveSpeed = s.moveSpeed;
+        baseMoveSpeed = s.moveSpeed;
+        useAcceleration = s.useAcceleration;
+        acceleration = s.acceleration;
+
+        gravityScale = s.gravityScale;
+        jumpForce = s.ComputeJumpForce();
+        jumpBufferDuration = s.jumpBufferDuration;
+        jumpLockDuration = s.jumpLockDuration;
+
+        dashCooldown = s.dashCooldown;
+
+        climbSpeed = s.climbSpeed;
+
+        groundAngleThreshold = s.groundAngleThreshold;
+        oneWayPlatformSurfaceTolerance = s.oneWayPlatformSurfaceTolerance;
+        dropThroughDuration = s.dropThroughDuration;
+
+        bigScale = s.bigScale;
+        growShrinkSpeed = s.growShrinkSpeed;
     }
 
     void Update()
@@ -309,22 +347,25 @@ public class MoveLate : MonoBehaviour, IWaterResponder
             moveDir = r.h;
             isMoving = Mathf.Abs(moveDir) > 0.1f;
 
-            float horizontalVelocity;
             if (useAcceleration)
             {
                 // 有加速度：实际水平速度渐变逼近目标速度（加速、减速都平滑）
                 currentHorizontalSpeed = Mathf.MoveTowards(
                     currentHorizontalSpeed, r.h * moveSpeed, acceleration * Time.deltaTime);
-                horizontalVelocity = currentHorizontalSpeed + windVx;
             }
             else
             {
                 // 无加速度：速度瞬间到位
                 currentHorizontalSpeed = r.h * moveSpeed;
-                horizontalVelocity = currentHorizontalSpeed + windVx;
             }
 
-            float vx = horizontalVelocity;
+            // 贴墙时取消硬压(同 MoveFirst, 防蹭墙跳变矮)
+            if (WallAhead(r.h))
+            {
+                currentHorizontalSpeed = 0f;
+            }
+
+            float vx = currentHorizontalSpeed + windVx;
             float vy = rb.velocity.y + windVy;
 
             // 梯子状态
@@ -352,7 +393,7 @@ public class MoveLate : MonoBehaviour, IWaterResponder
             {
                 // 在水里时不恢复重力 — WaterPool 已设 gravityScale=0 并用目标速度模型管理沉浮
                 if (currentWaterPool == null)
-                    rb.gravityScale = 9.8f;
+                    rb.gravityScale = gravityScale;
             }
 
             rb.velocity = new Vector2(vx, vy);
@@ -499,6 +540,24 @@ public class MoveLate : MonoBehaviour, IWaterResponder
     #endregion
 
     #region 检测
+    // 检测前进方向是否被实心墙挡住(用于取消"硬压墙", 防止贴墙上升时竖直速度被接触吃掉)
+    private bool WallAhead(float dir)
+    {
+        if (Mathf.Abs(dir) < 0.01f || myCollider == null) return false;
+
+        Vector2 origin = myCollider.bounds.center;
+        // 关键: 只探测身体中段(50% 高度), 不包含脚底。否则脚底贴着地面/平台时,
+        // 全高 BoxCast 会把脚下的地面误判成"前方有墙", 走到平台边缘时水平输入被清零 → 卡一下。
+        Vector2 size = new Vector2(myCollider.bounds.size.x, myCollider.bounds.size.y * 0.5f);
+        float distance = 0.1f; // 皮肤余量
+
+        RaycastHit2D hit = Physics2D.BoxCast(origin, size, 0f, new Vector2(Mathf.Sign(dir), 0f), distance);
+        if (hit.collider == null || hit.collider == myCollider) return false;
+        if (hit.collider.isTrigger) return false;                                   // 梯子/水等触发器不算墙
+        if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Player2")) return false; // 玩家可互推
+        return true;
+    }
+
     private void OnCollisionStay2D(Collision2D col)
     {
         // 收集当前接触的碰撞体(用于 S 下穿时找到单向平台)
