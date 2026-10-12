@@ -85,6 +85,7 @@
     <Compile Include="Assets\Scripts\ArtScripts\PlayerVFX.cs" />
     <Compile Include="Assets\Scripts\LockAnimator.cs" />
     <Compile Include="Assets\Scripts\AutoMoving.cs" />
+    <Compile Include="Assets\Scripts\PlayerFeelSettings.cs" />
     <Compile Include="Assets\Scripts\Key.cs" />
     <Compile Include="Assets\2DWater\WaterShapeController.cs" />
     <Compile Include="Assets\Scripts\ArtScripts\DeadGrassSway.cs" />
