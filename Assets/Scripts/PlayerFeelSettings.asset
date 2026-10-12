@@ -15,8 +15,8 @@ MonoBehaviour:
   moveSpeed: 8
   useAcceleration: 0
   acceleration: 30
-  jumpHeight: 2
-  gravityScale: 4
+  jumpHeight: 1.5
+  gravityScale: 6
   jumpBufferDuration: 0.15
   jumpLockDuration: 0.25
   dashForce: 20

@@ -450,11 +450,18 @@ public class MoveLate : MonoBehaviour, IWaterResponder
 
         // 静止时 (本帧没有到期移动记录 → 循环没执行):
         // P2 的 velocity 不被更新, 若还有风力, 单独把风力应用到当前速度,
-        // 否则风推不动静止的 P2. 水平风改 x, 垂直风改 y.
+        // 否则风推不动静止的 P2. 垂直风改 y.
+        // 注意: 水平风必须按"设定"而不是"叠加"处理.
+        //   回放分支里 r.h = 0 时的水平速度是 horizontalVelocity = 0 * moveSpeed + windVx
+        //   (对应 P1 MoveFirst 把风作为常量偏移写进赋值式的做法), 所以这里的静止分支
+        //   也必须写成 windVx, 而不是 cv.x + windVx.
+        //   否则本分支在开局 delayTime 秒内每帧都会执行, rb.velocity.x 被逐帧累加
+        //   (每帧 +windVx), 把 P2 吹到极高速度; 撞墙后因物理每步清零速度才看似恢复正常.
         if (!processedMoveThisFrame && (Mathf.Abs(windVx) > 0.001f || Mathf.Abs(windVy) > 0.001f))
         {
             Vector2 cv = rb.velocity;
-            rb.velocity = new Vector2(cv.x + windVx, cv.y + windVy);
+            float newVx = (Mathf.Abs(windVx) > 0.001f) ? windVx : cv.x;
+            rb.velocity = new Vector2(newVx, cv.y + windVy);
         }
         processedMoveThisFrame = false;
 
