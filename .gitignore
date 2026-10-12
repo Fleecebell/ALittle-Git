@@ -50,3 +50,4 @@ OutPackages/Unity-Skills-main/docs/installation-demo.gif
 Assets/Editor/EditorMcpBridge.cs
 Assets/Editor/EditorMcpBridge.cs.meta
 Assets/Editor.meta
+EditorBridge-ReusePrompt.md
