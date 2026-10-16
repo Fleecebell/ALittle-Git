@@ -45,8 +45,3 @@ OutPackages/Unity-Skills-main/docs/installation-demo.gif
 
 # CodeBuddy/Unity local runtime state (machine-specific ports & heartbeat)
 .com-unity-codely.json
-
-# Local-only AI editor bridge (do not commit to git)
-Assets/Editor/EditorMcpBridge.cs
-Assets/Editor/EditorMcpBridge.cs.meta
-Assets/Editor.meta
