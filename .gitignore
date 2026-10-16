@@ -40,8 +40,15 @@ Tools/codebase-memory-mcp/codebase-memory-mcp.exe
 Assets/Resources/Font/SIMHEI SDF.asset
 OutPackages/Unity-Skills-main/docs/installation-demo.gif
 
-# CodeBuddy local index / cache (huge db files)
-.codely-cli/UnityInsight/
-
-# CodeBuddy/Unity local runtime state (machine-specific ports & heartbeat)
+# ===== 团结引擎 AI（CodeLy / CodeBuddy）本机文件 =====
+# 运行时状态：记录本机端口、seq、心跳时间戳，每次心跳都会改变，不参与版本管理
 .com-unity-codely.json
+
+# 本地索引 / 缓存（体积很大）
+.codely-cli/UnityInsight/
+.codely-cli/cache/
+.codely-cli/logs/
+*.codely.log
+
+# 扩展自带运行时（codely-unity-lsp-server、TJGenerators 等，数百 MB，可自动重新下载）
+.codely-cli/extensions/
