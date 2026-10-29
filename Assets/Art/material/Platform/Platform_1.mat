@@ -71,6 +71,6 @@ Material:
     - _HColorB: {r: 0.15686275, g: 0.35686275, b: 0.20392159, a: 1}
     - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _VColorBottom: {r: 0.25360623, g: 0.32109973, b: 0.3509434, a: 1}
-    - _VColorTop: {r: 0.23228908, g: 0.2949061, b: 0.3283019, a: 1}
+    - _VColorBottom: {r: 0.09048768, g: 0.2679245, b: 0.2323523, a: 1}
+    - _VColorTop: {r: 0.1283802, g: 0.26135263, b: 0.2754717, a: 1}
   m_BuildTextureStacks: []

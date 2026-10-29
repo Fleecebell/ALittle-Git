@@ -23,10 +23,34 @@ Shader "Custom/PlatformDapple"
     //
     // 颜色管线 (Mask 是主形状, Noise 只做扰动):
     //   Mask 灰度 (美术形状: 黑=无 灰=弱 白=强)
+    //     → 门槛裁剪 _DappleThreshold (灰度 < 门槛 一律没斑驳) → 剩下的重映射回 0..1
     //     → × (1 + 世界坐标 Noise 扰动)   ← _DappleNoiseWeight 控制, 只在 Mask 内起伏
     //     → Contrast 值域整形 → Softness 过渡带宽
     //     × _DappleStrength (整体强度)
     //     → 染上 _DappleColor → 输出彩色斑点
+    //
+    // 斑驳厚度 _DappleThreshold (按黑白灰度裁, 门槛以上的灰度才有斑驳):
+    //   数据图是"上白下黑"的竖直渐变时, 门槛 = 斑驳从最白处往下能蔓延多深:
+    //     门槛 0    → 整条渐变都出斑驳 (最厚, 和以前一样)
+    //     门槛 0.5  → 只有灰度 ≥ 0.5 的偏白区域出斑驳 (厚度约剩一半)
+    //     门槛 0.9  → 只有接近最白的一条出斑驳 (最薄)
+    //   门槛以上的灰度会被重新拉伸回 0..1, 所以"淡→浓"的渐隐过渡依然平滑,
+    //   只是整段变窄/变薄, 不会因为裁掉一半就只剩一层弱斑驳。
+    //
+    //   注意: 门槛作用在"原始灰度"上, 且在 Noise 扰动之前 ——
+    //   门槛以下的灰度永远是 0, 噪声再怎么起伏也绝不会在下面无中生有出斑驳。
+    //
+    // !! 数据 / 颜色 严格分离 (形状位置绝不受颜色影响) !!
+    //   形状与位置 = 只由"数据贴图"决定, 读的是贴图画好的灰度 (r × a):
+    //       瓦片模式   → _MainTex 当前瓦片的灰度
+    //       整图模式   → _MaskTex 在对应世界坐标的灰度
+    //     参与形状的只有这些标量开关: 门槛 / Mask强度 / 噪声 / 对比 / 柔和 / 总强度。
+    //     _DappleColor 和顶点色 (瓦片色、TilemapRenderer 的 Color) 一个都不进 Mask,
+    //     所以改斑驳颜色永远不会挪动、缩放、加厚、削薄斑驳。
+    //   颜色 = _DappleColor × 顶点色, 只在最后一步染色:
+    //     - 想统一改色 → 改材质上的 _DappleColor
+    //     - 想分区域改色 → 给瓦片/渲染器上色 (只染色, 不动形状)
+    //   一句话: 数据图管"长在哪、长多少", 颜色管"什么颜色"。
     //
     // Alpha 说明:
     //   Platform_Body (平台本体) 的颜色/Alpha 完全不受影响;
@@ -43,12 +67,13 @@ Shader "Custom/PlatformDapple"
         _MainTex("Mask 数据瓦片 (TilemapRenderer 自动绑定)", 2D) = "white" {}
 
         [Header(Dapple)]
-        _DappleColor("斑驳颜色", Color) = (0.45, 0.6, 0.35, 1)
+        _DappleColor("斑驳颜色 (纯染色: 改它不影响形状/位置)", Color) = (0.45, 0.6, 0.35, 1)
         _DappleStrength("斑驳强度 (整体开关, 0=关)", Range(0, 1)) = 1
-        _DappleColorStrength("颜色混入 (斑块最深时的不透明度)", Range(0, 1)) = 0.8
+        _DappleThreshold("斑驳门槛 (灰度 ≥ 此值才出斑驳: 越大斑驳越薄, 0=整条渐变都出)", Range(0, 1)) = 0
+        _DappleColorStrength("斑驳不透明度 (只改浓淡, 不改形状/位置)", Range(0, 1)) = 0.8
         _DappleNoiseWeight("噪声扰动 (0=完全按Mask, 1=强烈扰动)", Range(0, 1)) = 0.3
         _DappleScale("扰动粗细 (世界单位, 越小豁口越碎)", Float) = 0.8
-        _DappleContrast("对比整形 (>1 灰值两极化, 1=按Mask原样不变, <1 平缓)", Range(0.25, 4)) = 1
+        _DappleContrast("对比整形 (~1=按Mask原样, <1 灰值两极化(斑块更利落), >1 向0.5收拢(更平缓))", Range(0.25, 4)) = 1
         _DappleSoftness("柔和度 (0=按Mask原值透出, 1=S曲线渐变)", Range(0, 1)) = 0.25
 
         [Header(Mask)]
@@ -112,6 +137,7 @@ Shader "Custom/PlatformDapple"
             // ---------- 参数 ----------
             half4  _DappleColor;
             half   _DappleStrength;
+            half   _DappleThreshold;
             half   _DappleColorStrength;
             half   _DappleNoiseWeight;
             float  _DappleScale;
@@ -172,7 +198,7 @@ Shader "Custom/PlatformDapple"
                     {
                         half4 m4 = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, muv);
                         // 乘 alpha: 透明像素视作纯黑 (PNG 透明区 RGB 常为白, 只读 r 会误判)
-                        mask = saturate(m4.r * m4.a * _MaskStrength);
+                        mask = saturate(m4.r * m4.a);
                     }
                 }
                 else
@@ -180,10 +206,22 @@ Shader "Custom/PlatformDapple"
                     // 瓦片模式: 当前瓦片的灰度 = 该格强度
                     // (适合半砖/异形数据瓦片; 乘 alpha → 透明部分视作纯黑=无斑驳,
                     //  PNG 透明区 RGB 常为白, 只读 r 会把透明误判成强斑驳)
+                    // !! 只读贴图灰度, 绝不乘顶点色 / 瓦片色 ——
+                    //    给瓦片或 TilemapRenderer 调颜色, 是纯染色, 不会挪动斑驳的形状位置。
                     half4 maskTex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
-                    float tileTint = dot(i.color.rgb, half3(0.299, 0.587, 0.114));
-                    mask = saturate(maskTex.r * maskTex.a * tileTint * _MaskStrength);
+                    mask = saturate(maskTex.r * maskTex.a);
                 }
+
+                // ---- 1.5. 斑驳门槛: 按黑白灰度裁出"够白才算斑驳"的范围 ----
+                // 数据图是"上白下黑"的竖直渐变时, 门槛直接就是斑驳从最白处往下的厚度:
+                //   门槛 0   → 整条渐变都出斑驳 (最厚)
+                //   门槛 0.5 → 只有偏白的一半区域出斑驳 (厚度减半)
+                //   门槛 1   → 只有最白处出斑驳 (最薄)
+                // 门槛以上的灰度重新拉伸回 0..1 → 渐隐过渡的柔和程度不变, 只是整段变薄;
+                // 门槛以下恒为 0, 后面的 Noise 也不会让它在下面冒出斑驳。
+                // (先按原始灰度裁, 再乘 _MaskStrength, 保证门槛读的是贴图真实灰度值)
+                float threshold = clamp(_DappleThreshold, 0.0, 0.999);
+                mask = saturate((mask - threshold) / (1.0 - threshold)) * _MaskStrength;
 
                 // ---- 2. 世界坐标 Noise: 只扰动 Mask, 不生成形状 ----
                 // 连续跨 Tile, 绝不用单 Tile UV; Scale = 扰动的空间频率 (豁口/起伏的粗细)
@@ -202,8 +240,8 @@ Shader "Custom/PlatformDapple"
                 float disturbed = saturate(mask * (1.0 + n * _DappleNoiseWeight));
 
                 // ---- 4. Contrast: 整形扰动后的 Mask 值域 (不重新生成形状) ----
-                // 1=原样; >1 中间值向 0/1 两极分化 (豁口边缘利落, 灰区对比强);
-                // <1 向 0.5 收拢 (整体更平缓更弱)
+                // 1=原样; <1 中间值向 0/1 两极分化 (斑块边缘利落, 对比更强);
+                // >1 向 0.5 收拢 (整体更平缓更弱)
                 float c = disturbed * 2.0 - 1.0;
                 c = sign(c) * pow(abs(c), _DappleContrast);
                 disturbed = saturate(c * 0.5 + 0.5);
@@ -218,9 +256,13 @@ Shader "Custom/PlatformDapple"
                 // 无斑驳处直接丢弃 → 不留任何半透明灰膜, 也省填充开销
                 clip(amount - 0.001);
 
-                // ---- 5. 输出彩色斑驳 ----
+                // ---- 7. 输出彩色斑驳: 颜色只在这一步进场, 绝不回流进形状 ----
                 // 绝不输出黑白 Mask; 覆盖层 Alpha 只承载斑驳强弱 (平台 Alpha 不受影响)
-                return half4(_DappleColor.rgb, saturate(amount * _DappleColorStrength));
+                // 顶点色 (瓦片色 / TilemapRenderer 的 Color) 只当纯颜色乘上来:
+                //   改它只改颜色, 上面算好的形状/位置一个像素都不会动。
+                // 完全不想要瓦片染色时把 i.color 去掉即可 (只留 _DappleColor)。
+                half3 tint = _DappleColor.rgb * i.color.rgb;
+                return half4(tint, saturate(amount * _DappleColorStrength));
             }
             ENDHLSL
         }
