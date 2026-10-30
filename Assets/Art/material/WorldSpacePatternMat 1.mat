@@ -48,7 +48,7 @@ Material:
     - _EnableExternalAlpha: 0
     - _PatternAlpha: 0.37
     - _PatternIntensity: 0.965
-    - _PatternScale: 0.35
+    - _PatternScale: 0.71
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
