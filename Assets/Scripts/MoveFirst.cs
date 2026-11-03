@@ -6,45 +6,75 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
     #region 参数
     public Animator jumpAnimator;
 
-    [Header("手感统一配置(可选)")]
-    [Tooltip("拖入 Player Feel Settings 资产后, 运行时以该资产里的值为准, 覆盖下方各字段。留空则用下方字段默认值")]
+    [Header("手感统一配置")]
+    [Tooltip("手感数值(移动/跳跃/重力/冲刺/爬梯/变大变小/落地判定)全部从该资产读取。留空则退回脚本内置默认值")]
     public PlayerFeelSettings feelSettings;
 
-    [Header("基础移动速度")]
-    [Tooltip("角色初始移动速度（检查器可调）。运行时 moveSpeed 会以该值初始化")]
-    public float baseMoveSpeed = 10f;
-    // 运行时实际移动速度（static，被 SpeedBand 等脚本动态修改，P1/P2 共享）
-    public static float moveSpeed = 10f;
+    // 运行时实际移动速度（static，被 SpeedBand 等脚本动态修改）
+    public static float moveSpeed = DefaultMoveSpeed;
+
+    [Header("速度上下限")]
+    [Tooltip("移动速度下限. SpeedBand 加减速后每帧会被 clamp 到 [minMoveSpeed, maxMoveSpeed]")]
     public float minMoveSpeed = 0f;
-
+    [Tooltip("移动速度上限. SpeedBand 加减速后每帧会被 clamp 到 [minMoveSpeed, maxMoveSpeed]")]
     public float maxMoveSpeed = 50f;
-    public float jumpForce = 20f;
-    public float dashForce = 20f;
 
-    [Header("重力")]
-    [Tooltip("竖直重力倍数(1 = 真实重力 9.81 m/s²)。越大下落越快、跳跃越脆。跳跃高度 = jumpForce² / (2 × gravityScale × 9.81)")]
-    public float gravityScale = 4f;
-
-    [Header("跳跃缓冲")]
-    [Tooltip("跳跃缓冲时间(秒). 落地前这么短时间内按跳跃, 落地瞬间自动起跳. 解决空中按跳跃落地后不跳的问题")]
-    public float jumpBufferDuration = 0.15f;
     // 跳跃缓冲计时器(>0 表示有跳跃请求待执行)
     private float jumpBufferTimer = 0f;
-
-    [Tooltip("跳跃后冷却时间(秒). 跳起后这么短时间内不能再跳, 防止还没离地又跳(起飞问题)")]
-    public float jumpLockDuration = 0.25f;
     // 跳跃冷却计时器(>0 表示刚跳过, 还不能跳)
     private float jumpLockTimer = 0f;
 
-    [Header("变大/变小")]
-    [Tooltip("变大目标缩放倍数. 1=原大小, 2=两倍大")]
-    public float bigScale = 2f;
-    [Tooltip("变大/变小过渡速度(越大变化越快)")]
-    public float growShrinkSpeed = 5f;
     // 是否处于变大状态
     private bool isBig = false;
     // 目标缩放(1=原大小 或 bigScale)
     private float targetScale = 1f;
+
+    #region 手感数值(只读 PlayerFeelSettings 资产)
+    // 兜底默认值: 与旧检查器字段默认值一致, 保证未挂资产时手感不变
+    private const float DefaultMoveSpeed = 10f;
+    private const float DefaultJumpForce = 20f;
+    private const float DefaultDashForce = 20f;
+    private const float DefaultDashDuration = 0.1f;
+    private const float DefaultDashCooldown = 1f;
+    private const float DefaultGravityScale = 4f;
+    private const float DefaultJumpBufferDuration = 0.15f;
+    private const float DefaultJumpLockDuration = 0.25f;
+    private const float DefaultAcceleration = 30f;
+    private const float DefaultClimbSpeed = 5f;
+    private const float DefaultGroundAngleThreshold = 45f;
+    private const float DefaultOneWayPlatformTolerance = 0.1f;
+    private const float DefaultDropThroughDuration = 0.3f;
+    private const float DefaultBigScale = 2f;
+    private const float DefaultGrowShrinkSpeed = 5f;
+
+    private bool useAcceleration => feelSettings != null ? feelSettings.useAcceleration : false;
+    private float acceleration => feelSettings != null ? feelSettings.acceleration : DefaultAcceleration;
+
+    // 起跳初速度: 资产里配的是跳跃高度, 这里按"高度 + 重力"反推(与旧的拷贝逻辑一致)
+    private float jumpForce => feelSettings != null ? feelSettings.ComputeJumpForce() : DefaultJumpForce;
+    private float gravityScale => feelSettings != null ? feelSettings.gravityScale : DefaultGravityScale;
+    private float jumpBufferDuration => feelSettings != null ? feelSettings.jumpBufferDuration : DefaultJumpBufferDuration;
+    private float jumpLockDuration => feelSettings != null ? feelSettings.jumpLockDuration : DefaultJumpLockDuration;
+
+    // P2(MoveLate) 的冲刺沿用手感资产里的力与时长, 所以这两个保持 public
+    public float dashForce => feelSettings != null ? feelSettings.dashForce : DefaultDashForce;
+    public float dashDuration => feelSettings != null ? feelSettings.dashDuration : DefaultDashDuration;
+    private float dashCooldown => feelSettings != null ? feelSettings.dashCooldown : DefaultDashCooldown;
+
+    private float climbSpeed => feelSettings != null ? feelSettings.climbSpeed : DefaultClimbSpeed;
+
+    private float groundAngleThreshold => feelSettings != null ? feelSettings.groundAngleThreshold : DefaultGroundAngleThreshold;
+    private float oneWayPlatformSurfaceTolerance => feelSettings != null ? feelSettings.oneWayPlatformSurfaceTolerance : DefaultOneWayPlatformTolerance;
+    private float dropThroughDuration => feelSettings != null ? feelSettings.dropThroughDuration : DefaultDropThroughDuration;
+
+    private float bigScale => feelSettings != null ? feelSettings.bigScale : DefaultBigScale;
+    private float growShrinkSpeed => feelSettings != null ? feelSettings.growShrinkSpeed : DefaultGrowShrinkSpeed;
+    #endregion
+
+    #region 能力开关(同样只读 PlayerFeelSettings 资产, P1/P2 共用)
+    private bool enableSizeToggle => feelSettings != null ? feelSettings.enableSizeToggle : true;
+    private bool enableDash => feelSettings != null ? feelSettings.enableDash : true;
+    #endregion
 
     [Header("水池")]
     [Tooltip("当前所在的水池(进入时由 WaterPool 设置, 离开时清空). 为空表示不在水里")]
@@ -59,26 +89,11 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
     public static float lastPositionX;
     public static float traveledDistance;
 
-    [Header("移动加速度")]
-    [Tooltip("开关：勾选后移动有加速度（速度渐变到目标值）；不勾选则速度瞬间到位")]
-    public bool useAcceleration = false;
-    [Tooltip("加速度大小（越大加速越快）。仅在 useAcceleration 勾选时生效")]
-    public float acceleration = 30f;
     // 当前实际水平速度（用于加速度平滑，静止时为 0）
     private float currentHorizontalSpeed;
 
-    [Header("冲刺")]
-    public float dashDuration = 0.1f;
-    public float dashCooldown = 1f;
-
-    [Header("爬梯")]
-    public float climbSpeed = 5f;
-
     private Rigidbody2D rb;
     public bool isGrounded;
-    public float groundAngleThreshold = 45f;
-    [Tooltip("单向平台着地容差. 角色脚底比平台顶面低多少以内才算踩到(防止从下方跳到平台中间就误判着地)")]
-    public float oneWayPlatformSurfaceTolerance = 0.1f;
 
     // 状态
     private bool canDash = true;
@@ -103,9 +118,6 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
     // 外部风力(垂直) —— 由 WindArea(上下风) 每帧写入. 叠加到垂直速度上.
     public float externalWindVy = 0f;
 
-    [Header("单向平台下穿")]
-    [Tooltip("按 S 从单向平台下落的持续时间(秒). 期间忽略单向平台碰撞, 到期自动恢复")]
-    public float dropThroughDuration = 0.3f;
     // 下穿计时器(>0 表示正在下穿, 期间忽略单向平台碰撞)
     private float dropThroughTimer = 0f;
     // 角色自身的碰撞体引用
@@ -125,38 +137,10 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
         // 关键: 禁止休眠。着地静止后 Box2D 会让刚体休眠, 休眠期间 OnCollisionStay2D 不再触发,
         // 而 isGrounded 每帧在 FixedUpdate 被重置为 false, 没人设回 true → 站在地上也跳不起来。
         rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
-        // 有"手感统一配置"就用它(单点调参); 否则回退到检查器上的各字段
-        if (feelSettings != null) ApplyFeelSettings(feelSettings);
-        else moveSpeed = baseMoveSpeed;
+        // 手感数值统一从 PlayerFeelSettings 资产读取(单点调参); 未挂资产时用内置默认值
+        moveSpeed = feelSettings != null ? feelSettings.moveSpeed : DefaultMoveSpeed;
         // 自动挂上"跟随移动地面"组件: 站在移动平台上会被平台带走(手动挂过则跳过)
         GroundCarry.EnsureOn(gameObject);
-    }
-
-    // 把 PlayerFeelSettings 资产里的手感数值拷贝到运行时字段(单点调参入口)
-    private void ApplyFeelSettings(PlayerFeelSettings s)
-    {
-        moveSpeed = s.moveSpeed;
-        baseMoveSpeed = s.moveSpeed;
-        useAcceleration = s.useAcceleration;
-        acceleration = s.acceleration;
-
-        gravityScale = s.gravityScale;
-        jumpForce = s.ComputeJumpForce();   // 由"跳跃高度 + 重力"反推起跳初速度
-        jumpBufferDuration = s.jumpBufferDuration;
-        jumpLockDuration = s.jumpLockDuration;
-
-        dashForce = s.dashForce;
-        dashDuration = s.dashDuration;
-        dashCooldown = s.dashCooldown;
-
-        climbSpeed = s.climbSpeed;
-
-        groundAngleThreshold = s.groundAngleThreshold;
-        oneWayPlatformSurfaceTolerance = s.oneWayPlatformSurfaceTolerance;
-        dropThroughDuration = s.dropThroughDuration;
-
-        bigScale = s.bigScale;
-        growShrinkSpeed = s.growShrinkSpeed;
     }
 
     void Update()
@@ -214,6 +198,9 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
     // 变大/变小输入: 按 E 切换大小状态
     void SizeInput()
     {
+        // 能力开关关闭时完全不能变大变小
+        if (!enableSizeToggle) return;
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             isBig = !isBig;                  // 切换状态
@@ -368,7 +355,8 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
             if (dashCooldownTimer <= 0) canDash = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        // 能力开关关闭时完全不能冲刺(冷却计时照常走, 重新打开后可立即使用)
+        if (enableDash && Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
             StartCoroutine(Dash()); 
         }
