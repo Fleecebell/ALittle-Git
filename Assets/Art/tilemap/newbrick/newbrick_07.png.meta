@@ -1,0 +1,498 @@
+fileFormatVersion: 2
+guid: 47f43ed13336b99419d65c7c3c8f308f
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: newbrick_07_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -25.164463, y: 32}
+        - {x: -32, y: 25}
+        - {x: -32, y: 0.058380127}
+        - {x: 32, y: 0.18702698}
+        - {x: 32, y: 32}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c97128f74244e04fad1e833c80f2461
+      internalID: 41043038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: 32}
+        - {x: -32, y: -0.051376343}
+        - {x: 31.885376, y: -0.051376343}
+        - {x: 32, y: 26}
+        - {x: 26, y: 32}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82c4ab31b22999d4689ae22df2ec1191
+      internalID: 676542562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -26, y: 32}
+        - {x: -32, y: 26}
+        - {x: -32, y: 0}
+        - {x: 32, y: 0}
+        - {x: 32, y: 26}
+        - {x: 26, y: 32}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c1afab11fd9cdb4ea6b5be6baf29fa3
+      internalID: -1066038904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: -26}
+        - {x: -26, y: -32}
+        - {x: 0, y: -32}
+        - {x: 0, y: 32}
+        - {x: -25, y: 32}
+        - {x: -32, y: 26}
+      tessellationDetail: 0
+      bones: []
+      spriteID: de9efcfbe48465842b50164768c19429
+      internalID: -166392813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: -7}
+        - {x: -32, y: -32}
+        - {x: 32, y: -32}
+        - {x: 32, y: 0}
+        - {x: -26, y: 0}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26feb8ca06153fe4fbf8b4a4f0d59cf9
+      internalID: 240029190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_5
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: 0}
+        - {x: -32, y: -32}
+        - {x: 32, y: -32}
+        - {x: 32, y: -6}
+        - {x: 26, y: 0}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 210a4a4959bf09b4c9b621efc3174ec0
+      internalID: -435995105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_6
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -27, y: 0}
+        - {x: -32, y: -6}
+        - {x: -32, y: -32}
+        - {x: 32, y: -32}
+        - {x: 32, y: -6}
+        - {x: 26, y: 0}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 874d67b34d9b71248974bff0b4a1cabe
+      internalID: -13998657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_7
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 0, y: 32}
+        - {x: 0, y: -32}
+        - {x: 26, y: -32}
+        - {x: 32, y: -26}
+        - {x: 32, y: 26}
+        - {x: 26, y: 32}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61ecd7e9d5838cf42aa3ca93faaa1ade
+      internalID: -1386729810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: 32}
+        - {x: -32, y: 7}
+        - {x: -25, y: 0}
+        - {x: 32, y: 0}
+        - {x: 32, y: 32}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22f5178fdf6957944bd511265d8a9c3c
+      internalID: 352454070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_9
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: 32}
+        - {x: -32, y: 0}
+        - {x: 26, y: 0}
+        - {x: 32, y: 6}
+        - {x: 32, y: 32}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76aacc00611bacc4297fc9a59c113435
+      internalID: 1071919958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_10
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: 32}
+        - {x: -32, y: 6}
+        - {x: -26, y: 0}
+        - {x: 27, y: 0}
+        - {x: 32, y: 5}
+        - {x: 32, y: 32}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89d4d3d7e47be0649ae99c943c4c5371
+      internalID: 2088197032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: 0}
+        - {x: -32, y: -25}
+        - {x: -26, y: -32}
+        - {x: 32, y: -32}
+        - {x: 32, y: 0}
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb4c92f4348853e46b7bb501c94d4ad7
+      internalID: -1710241609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_12
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: 0}
+        - {x: -32, y: -32}
+        - {x: 26, y: -32}
+        - {x: 32, y: -26}
+        - {x: 32, y: 0}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f6436e67a9871a479d46c3dc713acc6
+      internalID: 1816930515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: newbrick_07_13
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -32, y: 0}
+        - {x: -32, y: -25}
+        - {x: -26, y: -32}
+        - {x: 27, y: -32}
+        - {x: 32, y: -26}
+        - {x: 32, y: 0}
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb2fdbe9958db0d43bc0289174ca6054
+      internalID: -481396994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      newbrick_07_0: 41043038
+      newbrick_07_1: 676542562
+      newbrick_07_10: 2088197032
+      newbrick_07_11: -1710241609
+      newbrick_07_12: 1816930515
+      newbrick_07_13: -481396994
+      newbrick_07_2: -1066038904
+      newbrick_07_3: -166392813
+      newbrick_07_4: 240029190
+      newbrick_07_5: -435995105
+      newbrick_07_6: -13998657
+      newbrick_07_7: -1386729810
+      newbrick_07_8: 352454070
+      newbrick_07_9: 1071919958
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

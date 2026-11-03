@@ -247,3 +247,4 @@ MonoBehaviour:
   transition: {fileID: 2566782272257887942}
   fadeInDuration: 0.88
   fadeOutDuration: 0.88
+  transitionSpeed: 0.55
