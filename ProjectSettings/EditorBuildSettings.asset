@@ -12,17 +12,17 @@ EditorBuildSettings:
     path: Assets/Scenes/Date/9101.unity
     guid: f34b3ec1ba3f578439a6450af39cda6f
   - enabled: 1
-    path: Assets/Scenes/S0.unity
-    guid: 74f61c2070b214a45bc436ce29e6f96e
-  - enabled: 1
-    path: Assets/Scenes/S0.5.unity
-    guid: 8714217e787bbb149b77940a026aa070
-  - enabled: 1
     path: Assets/Scenes/Date/9101 1.unity
     guid: 7cefac72602d42442a978d74ec0fb12f
   - enabled: 1
     path: Assets/Scenes/Date/9101 2.unity
     guid: 8ba6591c1cfc7fd418cd5999400e2e4c
+  - enabled: 1
+    path: Assets/Scenes/S0.unity
+    guid: 74f61c2070b214a45bc436ce29e6f96e
+  - enabled: 1
+    path: Assets/Scenes/S0.5.unity
+    guid: 8714217e787bbb149b77940a026aa070
   - enabled: 1
     path: Assets/Scenes/Date/9102.unity
     guid: 1c7e45e5c492805489c9f57ef2a6c91e
