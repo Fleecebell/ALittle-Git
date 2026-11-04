@@ -5254,6 +5254,7 @@ MonoBehaviour:
   targetPosition: {fileID: 1133341724}
   speed: 2
   oneTimeMove: 0
+  triggerOnSinglePedal: 0
 --- !u!66 &724839114
 CompositeCollider2D:
   m_ObjectHideFlags: 0
@@ -6160,7 +6161,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.87
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -9253,6 +9254,7 @@ MonoBehaviour:
   targetPosition: {fileID: 1133341724}
   speed: 10
   oneTimeMove: 0
+  triggerOnSinglePedal: 0
 --- !u!66 &1721994984
 CompositeCollider2D:
   m_ObjectHideFlags: 0

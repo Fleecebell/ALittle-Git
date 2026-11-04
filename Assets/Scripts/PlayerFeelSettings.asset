@@ -28,3 +28,5 @@ MonoBehaviour:
   dropThroughDuration: 0.3
   bigScale: 2
   growShrinkSpeed: 5
+  enableSizeToggle: 0
+  enableDash: 0

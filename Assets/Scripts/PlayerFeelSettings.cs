@@ -67,6 +67,13 @@ public class PlayerFeelSettings : ScriptableObject
     [Tooltip("变大/变小过渡速度")]
     public float growShrinkSpeed = 5f;
 
+    [Header("=== 能力开关 ===")]
+    [Tooltip("勾选后按 E 可以放大/变小; 取消勾选则完全不能变大变小(P1/P2 共用)")]
+    public bool enableSizeToggle = true;
+
+    [Tooltip("勾选后按 Shift 可以冲刺; 取消勾选则完全不能冲刺(P1/P2 共用)")]
+    public bool enableDash = true;
+
     /// <summary>根据 jumpHeight 和 gravityScale 反推出起跳初速度(m/s)</summary>
     public float ComputeJumpForce()
     {

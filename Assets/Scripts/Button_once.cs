@@ -14,6 +14,11 @@ public class Button_once : MonoBehaviour
     [Header("移动速度")]
     public float speed = 2f;
 
+    [Header("触发方式")]
+    [Tooltip("勾选：一次性——踩一次就移过去并停住（只有按 R / 死亡才复原）。" +
+             "不勾选：踩住时移过去，松开/离开按钮自动平滑返回原位。")]
+    public bool oneTime = true;
+
     bool wall_isgone = false;
     // 返回原位中：死亡/按R复原后平台平滑移回起点，此期间忽略触发，防止玩家站在上面又把它推走
     bool returning = false;
@@ -106,16 +111,43 @@ public class Button_once : MonoBehaviour
         returning = true;
     }
 
-    // 一次性按钮：用 Enter 触发，只在玩家进入时触发一次并保持按下。
-    // 玩家离开时按钮不回弹（保持 wall_isgone = true），只有按R或死亡才复原。
+    // 一次性模式：Enter 触发一次并保持按下，玩家离开也不回弹，只有按 R / 死亡才复原。
+    // 非一次性模式：Stay 保持按下（踩住），Exit 松开即平滑返回原位。
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
+        if (!oneTime) return;
+        if (IsPlayer(collision))
         {
             // 返回原位期间忽略触发
             if (returning) return;
             wall_isgone = true;
         }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (oneTime) return;
+        if (IsPlayer(collision))
+        {
+            // 返回原位期间忽略触发
+            if (returning) return;
+            wall_isgone = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (oneTime) return;
+        if (IsPlayer(collision))
+        {
+            // 松开/离开按钮 -> 平滑返回原位
+            wall_isgone = false;
+        }
+    }
+
+    private static bool IsPlayer(Collider2D collision)
+    {
+        return collision.CompareTag("Player") || collision.CompareTag("Player2");
     }
 
     private void OnDestroy()
