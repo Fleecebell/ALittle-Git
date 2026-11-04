@@ -894,7 +894,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &325134226
 Transform:
   m_ObjectHideFlags: 0
@@ -13016,15 +13016,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5063964781069999101, guid: 99431b36ddda59c49a28ed9cdf82d8eb, type: 3}
       propertyPath: m_Color.b
-      value: 0.22549729
+      value: 0.25827837
       objectReference: {fileID: 0}
     - target: {fileID: 5063964781069999101, guid: 99431b36ddda59c49a28ed9cdf82d8eb, type: 3}
       propertyPath: m_Color.g
-      value: 0.2191883
+      value: 0.2537771
       objectReference: {fileID: 0}
     - target: {fileID: 5063964781069999101, guid: 99431b36ddda59c49a28ed9cdf82d8eb, type: 3}
       propertyPath: m_Color.r
-      value: 0.4943396
+      value: 0.4113207
       objectReference: {fileID: 0}
     - target: {fileID: 5063964781069999101, guid: 99431b36ddda59c49a28ed9cdf82d8eb, type: 3}
       propertyPath: m_Tiles.Array.size
