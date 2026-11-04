@@ -803,6 +803,7 @@ GameObject:
   - component: {fileID: 168057164}
   - component: {fileID: 168057163}
   - component: {fileID: 168057162}
+  - component: {fileID: 168057167}
   m_Layer: 0
   m_Name: map (1)
   m_TagString: Ground
@@ -1446,6 +1447,25 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &168057167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168057160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a707c19413b008c47a4a52734443e648, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pedals:
+  - pedal: {fileID: 1660105386}
+    isOneTime: 0
+  targetPosition: {fileID: 127731049}
+  speed: 2
+  oneTimeMove: 0
+  triggerOnSinglePedal: 0
 --- !u!1 &519966120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1632,10 +1652,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7779040877778374808, guid: bfa277ed61b397746a7312a576dbbc88, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1660105387}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfa277ed61b397746a7312a576dbbc88, type: 3}
 --- !u!1 &888393516
 GameObject:
@@ -3764,27 +3781,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7779040877778374808, guid: bfa277ed61b397746a7312a576dbbc88, type: 3}
   m_PrefabInstance: {fileID: 801149768}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1660105387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660105386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a707c19413b008c47a4a52734443e648, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pedals:
-  - pedal: {fileID: 168057160}
-    isOneTime: 1
-  - pedal: {fileID: 888393516}
-    isOneTime: 1
-  targetPosition: {fileID: 1823255655}
-  speed: 2
-  oneTimeMove: 0
-  triggerOnSinglePedal: 0
 --- !u!1 &1823255654
 GameObject:
   m_ObjectHideFlags: 0
