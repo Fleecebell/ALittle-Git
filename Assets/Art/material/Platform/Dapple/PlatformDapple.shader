@@ -24,7 +24,8 @@ Shader "Custom/PlatformDapple"
     // 颜色管线 (Mask 是主形状, Noise 只做扰动):
     //   Mask 灰度 (美术形状: 黑=无 灰=弱 白=强)
     //     → 门槛裁剪 _DappleThreshold (灰度 < 门槛 一律没斑驳) → 剩下的重映射回 0..1
-    //     → × (1 + 世界坐标 Noise 扰动)   ← _DappleNoiseWeight 控制, 只在 Mask 内起伏
+    //     → × (1 + 平台相对坐标 Noise 扰动)   ← _DappleNoiseWeight 控制, 只在 Mask 内起伏
+    //       (世界坐标 - 平台世界位置 → 平台移动时斑驳跟随平台, 不会滑动)
     //     → Contrast 值域整形 → Softness 过渡带宽
     //     × _DappleStrength (整体强度)
     //     → 染上 _DappleColor → 输出彩色斑点
@@ -52,6 +53,25 @@ Shader "Custom/PlatformDapple"
     //     - 想分区域改色 → 给瓦片/渲染器上色 (只染色, 不动形状)
     //   一句话: 数据图管"长在哪、长多少", 颜色管"什么颜色"。
     //
+    // 移动平台 (自动移动平台上斑驳不能滑动) —— 重要:
+    //   实测结论: TilemapRenderer 送进来的顶点 v.vertex 已经是"世界坐标"
+    //   (平台一动它跟着变), 而对象矩阵的平移列是 0 —— 也就是说 shader 内部
+    //   **拿不到平台自己的位置**。所以必须由脚本喂进来:
+    //
+    //     Assets/Scripts/Gameplay/Platform/DappleAnchorFollower.cs
+    //       挂到移动平台的斑驳层上, 每帧把平台世界位置写进 _DappleAnchorPos
+    //
+    //   然后把材质的 噪声锚定(_DappleAnchorMode) 设成 5:
+    //       噪声坐标 = v.vertex - _DappleAnchorPos  → 平台相对坐标
+    //     → 平台平移时坐标恒定, 斑驳钉在平台上; 且是世界单位,
+    //       _DappleScale / 噪声扰动 / 对比 / 柔和度 全部照常可调, 没有瓦片重复。
+    //
+    //   静态平台不挂脚本也行: 它不动, v.vertex-0 就是固定值, 结果一样稳。
+    //   锚定模式 0~4 是排查用的对照 (0/1/3/4 会滑, 2 是瓦片UV只能停住但图案重复)。
+    //   只处理平移; 如果以后有会自转的平台, 告诉我, 我再把平台轴向一起传进来。
+    //   注意: 整图 Mask 模式 (勾"使用整图 Mask") 是按世界坐标采样的, 本来就
+    //   不跟平台走; 移动平台请用瓦片灰度模式。
+    //
     // Alpha 说明:
     //   Platform_Body (平台本体) 的颜色/Alpha 完全不受影响;
     //   本覆盖层自身的 Alpha 只用来承载斑驳强弱 ——
@@ -76,6 +96,11 @@ Shader "Custom/PlatformDapple"
         _DappleContrast("对比整形 (~1=按Mask原样, <1 灰值两极化(斑块更利落), >1 向0.5收拢(更平缓))", Range(0.25, 4)) = 1
         _DappleSoftness("柔和度 (0=按Mask原值透出, 1=S曲线渐变)", Range(0, 1)) = 0.25
 
+        [Header(Debug)]
+        _DappleDebug("调试视图 (0=正常, 1=显示噪声坐标, 2=品红标记)", Range(0, 2)) = 0
+        _DappleAnchorMode("噪声锚定 (0顶点 1世界 2瓦片UV 3顶点-矩阵原点 4世界-矩阵原点 5顶点-脚本锚点)", Range(0, 5)) = 0
+        _DappleAnchorPos("噪声锚点 XY (DappleAnchorFollower 每帧写入, 一般不用手填)", Vector) = (0, 0, 0, 0)
+
         [Header(Mask)]
         _MaskStrength("Mask 强度 (整体压低 Mask 的影响)", Range(0, 1)) = 1
 
@@ -93,6 +118,9 @@ Shader "Custom/PlatformDapple"
             "RenderType"     = "Transparent"
             "Queue"          = "Transparent"
             "RenderPipeline" = "UniversalPipeline"
+            // 禁止动态合批: 动态合批会把顶点烘焙到世界空间、
+            // 对象矩阵变成单位矩阵, 导致 shader 里拿不到平台自身的位置。
+            "DisableBatching" = "True"
         }
 
         Blend SrcAlpha OneMinusSrcAlpha
@@ -122,19 +150,25 @@ Shader "Custom/PlatformDapple"
             {
                 float4 vertex   : SV_POSITION;
                 float2 uv       : TEXCOORD0;   // 瓦片自身 UV → 只用来读 Mask 灰度数据
-                float2 worldPos : TEXCOORD1;   // 世界坐标 → 用来生成跨 Tile 连续的 Noise
+                float2 worldPos : TEXCOORD1;   // 世界坐标 → 整图 Mask 用
                 float4 color    : TEXCOORD2;   // 顶点色 (Tile 的 Color) 透传
+                float2 dapplePos : TEXCOORD3;  // 物体空间顶点位置 → 噪声用, 天生钉在平台上
+                float2 dapplePosMinus : TEXCOORD4;  // 顶点位置 - 平台世界原点
+                float2 worldPosMinus  : TEXCOORD5;  // 世界坐标 - 平台世界原点
             };
 
             // ---------- 贴图声明 ----------
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
-            float4 _MainTex_ST;
 
             TEXTURE2D(_MaskTex);
             SAMPLER(sampler_MaskTex);
 
             // ---------- 参数 ----------
+            // 必须放在 UnityPerMaterial 里: 否则 shader 不兼容 SRP Batcher,
+            // 会被动态合批, 顶点被烘焙到世界空间 → 拿不到平台自身世界位置。
+            CBUFFER_START(UnityPerMaterial)
+            float4 _MainTex_ST;
             half4  _DappleColor;
             half   _DappleStrength;
             half   _DappleThreshold;
@@ -143,10 +177,14 @@ Shader "Custom/PlatformDapple"
             float  _DappleScale;
             half   _DappleContrast;
             half   _DappleSoftness;
+            half   _DappleDebug;
+            half   _DappleAnchorMode;
+            float4 _DappleAnchorPos;
             half   _MaskStrength;
             float  _UseMaskTex;
             float4 _MaskWorldOrigin;
             float4 _MaskWorldSize;
+            CBUFFER_END
 
             // ---------- 程序化噪声: 世界坐标采样 → 跨 Tile 连续 ----------
             // (内部用 float 计算, 哈希在 half 精度下会坏)
@@ -175,7 +213,19 @@ Shader "Custom/PlatformDapple"
                 v2f o;
                 o.vertex = TransformObjectToHClip(v.vertex.xyz);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xy;   // 世界坐标
+
+                // 世界坐标 (只给整图 Mask 用; 那张图本身就是世界坐标数据)
+                o.worldPos = TransformObjectToWorld(v.vertex.xyz).xy;
+
+                // ---------- 平台锚点候选 ----------
+                // 实测: 这个 tilemap 的顶点不是物体空间坐标(平台一动它也跟着变),
+                // 所以除了直接用顶点/世界坐标, 再准备两种"减掉平台世界原点"的锚定方式,
+                // 由 _DappleAnchorMode 在片元里挑。平台世界原点 = 对象矩阵的平移列。
+                float2 platformOrigin = GetObjectToWorldMatrix()._m03_m13;
+                o.dapplePos      = v.vertex.xy;                 // 0: 顶点位置
+                o.dapplePosMinus = v.vertex.xy - platformOrigin;  // 3: 顶点 - 平台原点
+                o.worldPosMinus  = o.worldPos   - platformOrigin; // 4: 世界 - 平台原点
+
                 o.color = v.color;
                 return o;
             }
@@ -183,12 +233,41 @@ Shader "Custom/PlatformDapple"
             // ---------- 片元着色器 ----------
             half4 frag (v2f i) : SV_Target
             {
+                // ---- 0. 噪声坐标: 多种锚定方式 (用来找"哪个坐标钉得住") ----
+                // 0 = 顶点位置          1 = 世界坐标(对照, 会滑)
+                // 2 = 瓦片UV (绝对不动, 但图案按瓦片重复、形状不好调)
+                // 3 = 顶点位置 - 平台原点   4 = 世界坐标 - 平台原点   ← 这两个如果稳, 就最理想
+                // 5 = 顶点位置 - _DappleAnchorPos   ← 脚本喂平台位置, 推荐的正式方案
+                float2 np;
+                if (_DappleAnchorMode < 0.5)      np = i.dapplePos / max(_DappleScale, 0.0001);
+                else if (_DappleAnchorMode < 1.5) np = i.worldPos / max(_DappleScale, 0.0001);
+                else if (_DappleAnchorMode < 2.5) np = i.uv * 32.0 / max(_DappleScale, 0.05);
+                else if (_DappleAnchorMode < 3.5) np = i.dapplePosMinus / max(_DappleScale, 0.0001);
+                else if (_DappleAnchorMode < 4.5) np = i.worldPosMinus / max(_DappleScale, 0.0001);
+                else                              np = (i.dapplePos - _DappleAnchorPos.xy) / max(_DappleScale, 0.0001);
+
+                // ---- 0.5. 调试视图 (默认 0 = 不生效, 不影响正常画面) ----
+                // 1 = 把当前噪声坐标画成颜色: 平台移动时颜色钉在表面上不动 = 坐标稳;
+                //     颜色在表面上滑动 = 这个网格的顶点/UV 不在平台空间里
+                // 2 = 整层变品红 → 确认这版 shader 真的编译生效了
+                if (_DappleDebug > 0.5)
+                {
+                    if (_DappleDebug < 1.5)
+                    {
+                        float2 dfr = frac(np);
+                        return half4(dfr.x, dfr.y, 0.5, 1);
+                    }
+                    return half4(1, 0, 1, 1);   // 品红
+                }
+
                 // ---- 1. Mask: 只当数据用, 绝不上画面 (两种来源二选一) ----
                 float mask;
                 if (_UseMaskTex > 0.5)
                 {
                     // 整图模式: 世界坐标 → 整图 UV (图左下角对齐 _MaskWorldOrigin)
                     // 覆盖整个连续平台的渐变 Mask 用这种, 一张图管整个平台区域
+                    // (故意用世界坐标: 一张图可以横跨多块平台。所以它在移动平台上会跟着
+                    //  世界走、不跟平台走 —— 移动平台请用瓦片灰度模式)
                     float2 muv = (i.worldPos - _MaskWorldOrigin.xy) / max(_MaskWorldSize.xy, float2(0.0001, 0.0001));
                     if (muv.x < 0.0 || muv.x > 1.0 || muv.y < 0.0 || muv.y > 1.0)
                     {
@@ -223,9 +302,8 @@ Shader "Custom/PlatformDapple"
                 float threshold = clamp(_DappleThreshold, 0.0, 0.999);
                 mask = saturate((mask - threshold) / (1.0 - threshold)) * _MaskStrength;
 
-                // ---- 2. 世界坐标 Noise: 只扰动 Mask, 不生成形状 ----
-                // 连续跨 Tile, 绝不用单 Tile UV; Scale = 扰动的空间频率 (豁口/起伏的粗细)
-                float2 np = i.worldPos / max(_DappleScale, 0.0001);
+                // ---- 2. Noise: 只扰动 Mask, 不生成形状 ----
+                // np 已在上面按 _DappleAnchorMode 算好 (0=物体空间顶点, 1=世界, 2=瓦片UV)
                 // 轻度域扭曲: 先让噪声场自己变成波浪形有机纹路 (去掉 value noise 的规则格子感)
                 np += (float2(DappleValueNoise(np + float2(17.3, 51.7)),
                               DappleValueNoise(np + float2(93.7, 11.3))) - 0.5) * 0.8;

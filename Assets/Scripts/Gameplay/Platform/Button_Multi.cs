@@ -51,6 +51,9 @@ public class Button_Multi : MonoBehaviour
     // 所有活跃实例，用于死亡时统一复原所有按钮
     private static List<Button_Multi> activeInstances = new List<Button_Multi>();
 
+    // 把平台位置喂给斑驳/木纹 shader，移动时贴图才不会在表面滑动（无需任何手动组件）
+    private readonly PlatformAnchorFeeder _anchorFeeder = new PlatformAnchorFeeder();
+
     // 死亡/按R时统一复原所有按钮（由 DeathRespawnVFX.TriggerDeath 调用）
     public static void ResetAllButtons()
     {
@@ -69,6 +72,9 @@ public class Button_Multi : MonoBehaviour
         previousPos = transform.position;
         PlatformDelta = Vector3.zero;
         pedalPressed = new bool[pedals.Length];
+
+        // 先喂一次锚点，避免第一帧贴图还按世界坐标采样
+        _anchorFeeder.Feed(transform);
 
         // 将自身注册为移动平台
         Button_once.PlatformDeltas[this.gameObject] = () => PlatformDelta;
@@ -141,6 +147,9 @@ public class Button_Multi : MonoBehaviour
         moveProgress = Mathf.Clamp01(moveProgress + direction * speed * Time.deltaTime);
         float t = Mathf.SmoothStep(0f, 1f, moveProgress);
         transform.position = Vector3.Lerp(originPosition, targetPosition.position, t);
+
+        // 移动后立刻把平台位置喂给斑驳/木纹 shader
+        _anchorFeeder.Feed(transform);
 
         PlatformDelta = transform.position - previousPos;
 
