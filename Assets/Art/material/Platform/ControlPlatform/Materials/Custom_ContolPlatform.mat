@@ -37,7 +37,7 @@ Material:
     - _PatternScale: 0.41
     - _PatternStrength: 0.62
     m_Colors:
-    - _BaseColor: {r: 0.5471698, g: 0.4125516, b: 0.20544672, a: 1}
+    - _BaseColor: {r: 0.5924529, g: 0.45062745, b: 0.23586327, a: 1}
     - _PatternColor: {r: 0.33087203, g: 0.3433962, b: 0.077102125, a: 1}
     - _PatternOffset: {r: 0, g: 0, b: 0, a: 0}
     - _PlatformAnchorPos: {r: 0, g: 0, b: 0, a: 0}
