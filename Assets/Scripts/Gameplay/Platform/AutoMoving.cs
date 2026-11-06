@@ -18,6 +18,9 @@ public class AutoMoving : MonoBehaviour
     // 用于移动的坐标系：父物体(勾选 useParentSpace 时) 或 世界坐标
     private Transform parentT;
 
+    // 把平台位置喂给斑驳/木纹 shader，移动时贴图才不会在表面滑动（无需任何手动组件）
+    private readonly PlatformAnchorFeeder _anchorFeeder = new PlatformAnchorFeeder();
+
     void Start()
     {
         parentT = useParentSpace ? transform.parent : null;
@@ -33,6 +36,9 @@ public class AutoMoving : MonoBehaviour
         p1Pos = ToSpace(pointA != null ? pointA.position : transform.position);
         p2Pos = ToSpace(pointB.position);
         targetPos = p2Pos;
+
+        // 先喂一次锚点，避免第一帧贴图还按世界坐标采样
+        _anchorFeeder.Feed(transform);
     }
 
     // 世界坐标 -> 移动坐标系(父物体本地空间；没有父物体时就是世界坐标)
@@ -62,6 +68,8 @@ public class AutoMoving : MonoBehaviour
             moveSpeed * Time.fixedDeltaTime
         );
         SetCurrent(current);
+        // 移动后立刻把平台位置喂给斑驳/木纹 shader
+        _anchorFeeder.Feed(transform);
 
         if (Vector2.Distance(current, p2Pos) < 0.1f)
         {

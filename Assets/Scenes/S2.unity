@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 5023027}
   - component: {fileID: 5023029}
   - component: {fileID: 5023028}
+  - component: {fileID: 5023030}
   m_Layer: 0
   m_Name: Dapple
   m_TagString: Ground
@@ -646,6 +647,20 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &5023030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5023026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 289ff126153d65c4b94f4d02c1724f48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorSource: {fileID: 0}
+  targetRenderer: {fileID: 5023028}
 --- !u!1 &15471976
 GameObject:
   m_ObjectHideFlags: 0
@@ -2031,7 +2046,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 425b8ae18ba6db24499baebe4e555f84, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2490,7 +2505,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.3509434, g: 0.24136531, b: 0.18209325, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -12, y: -7, z: 0}
   m_Size: {x: 24, y: 14, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -3345,6 +3360,7 @@ GameObject:
   - component: {fileID: 108285907}
   - component: {fileID: 108285909}
   - component: {fileID: 108285908}
+  - component: {fileID: 108285910}
   m_Layer: 0
   m_Name: Dapple
   m_TagString: Ground
@@ -3858,6 +3874,20 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &108285910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108285906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 289ff126153d65c4b94f4d02c1724f48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorSource: {fileID: 0}
+  targetRenderer: {fileID: 108285908}
 --- !u!1 &122174392
 GameObject:
   m_ObjectHideFlags: 0
@@ -4138,34 +4168,6 @@ CompositeCollider2D:
         Y: -468750
       - X: 7750000
         Y: -1718750
-  - m_Collider: {fileID: 450094032}
-    m_ColliderPaths:
-    - - X: 8000000
-        Y: 0
-      - X: -8000000
-        Y: 0
-      - X: -8000000
-        Y: -5000000
-      - X: 8000000
-        Y: -5000000
-  - m_Collider: {fileID: 209426713}
-    m_ColliderPaths:
-    - - X: 8000000
-        Y: -4375000
-      - X: 8000000
-        Y: -625000
-      - X: 7375000
-        Y: 0
-      - X: -7500000
-        Y: 0
-      - X: -8000000
-        Y: -781250
-      - X: -8000000
-        Y: -4375000
-      - X: -7500000
-        Y: -5000000
-      - X: 7500000
-        Y: -5000000
   - m_Collider: {fileID: 1592244839}
     m_ColliderPaths:
     - - X: 4250000
@@ -4202,6 +4204,34 @@ CompositeCollider2D:
         Y: 1093750
       - X: -5000000
         Y: 1093750
+  - m_Collider: {fileID: 450094032}
+    m_ColliderPaths:
+    - - X: 8000000
+        Y: 0
+      - X: -8000000
+        Y: 0
+      - X: -8000000
+        Y: -5000000
+      - X: 8000000
+        Y: -5000000
+  - m_Collider: {fileID: 209426713}
+    m_ColliderPaths:
+    - - X: 8000000
+        Y: -4375000
+      - X: 8000000
+        Y: -625000
+      - X: 7375000
+        Y: 0
+      - X: -7500000
+        Y: 0
+      - X: -8000000
+        Y: -781250
+      - X: -8000000
+        Y: -4375000
+      - X: -7500000
+        Y: -5000000
+      - X: 7500000
+        Y: -5000000
   m_CompositePaths:
     m_Paths:
     - - {x: 0.7999707, y: -0.5}
@@ -4801,16 +4831,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3187676314288489103, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -726672860, guid: 929ef4742d9fe114b8e0093c52a9a98d, type: 3}
+    - target: {fileID: 3187676314288489103, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: m_Color.b
-      value: 0.3137255
+      value: 0.15686275
       objectReference: {fileID: 0}
     - target: {fileID: 3187676314288489103, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: m_Color.g
-      value: 0.3137255
+      value: 0.67058825
       objectReference: {fileID: 0}
     - target: {fileID: 3187676314288489103, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: m_Color.r
-      value: 0.7137255
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3187676314288489103, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4046653757422577176, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: speed
@@ -4864,17 +4902,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5794268527281449437, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
+      propertyPath: m_Color.b
+      value: 0.15614808
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794268527281449437, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
+      propertyPath: m_Color.g
+      value: 0.90943396
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794268527281449437, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
+      propertyPath: m_Color.r
+      value: 0.3517127
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282959840242477346, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1835364392, guid: 929ef4742d9fe114b8e0093c52a9a98d, type: 3}
     - target: {fileID: 8282959840242477346, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: m_Color.b
-      value: 0.31085077
+      value: 0.1566037
       objectReference: {fileID: 0}
     - target: {fileID: 8282959840242477346, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: m_Color.g
-      value: 0.31085077
+      value: 0.6688265
       objectReference: {fileID: 0}
     - target: {fileID: 8282959840242477346, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: m_Color.r
-      value: 0.7132075
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8282959840242477346, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8713456655411835602, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: m_Name
@@ -5174,6 +5232,7 @@ GameObject:
   - component: {fileID: 450094034}
   - component: {fileID: 450094033}
   - component: {fileID: 450094032}
+  - component: {fileID: 450094035}
   m_Layer: 0
   m_Name: Dapple
   m_TagString: Ground
@@ -5723,6 +5782,20 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &450094035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450094030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 289ff126153d65c4b94f4d02c1724f48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorSource: {fileID: 0}
+  targetRenderer: {fileID: 450094033}
 --- !u!1001 &461866141
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9924,6 +9997,7 @@ GameObject:
   - component: {fileID: 883923249}
   - component: {fileID: 883923251}
   - component: {fileID: 883923250}
+  - component: {fileID: 883923252}
   m_Layer: 0
   m_Name: Dapple
   m_TagString: Untagged
@@ -10067,6 +10141,20 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &883923252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 883923248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 289ff126153d65c4b94f4d02c1724f48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorSource: {fileID: 0}
+  targetRenderer: {fileID: 883923250}
 --- !u!1001 &889127211
 PrefabInstance:
   m_ObjectHideFlags: 0

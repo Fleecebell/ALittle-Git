@@ -1066,7 +1066,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.93207544, g: 0.69851, b: 0.31479523, a: 1}
+  m_Color: {r: 1, g: 0.7599713, b: 0.3679244, a: 1}
   m_Origin: {x: -10, y: -5, z: 0}
   m_Size: {x: 20, y: 11, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -3763,7 +3763,7 @@ Tilemap:
     m_Data: {r: 4.7793e-41, g: 4.7793e-41, b: 4.7793e-41, a: 4.7793e-41}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.3433962, g: 0.26513878, b: 0.23519398, a: 1}
+  m_Color: {r: 0.4113207, g: 0.343802, b: 0.2537771, a: 1}
   m_Origin: {x: -10, y: -5, z: 0}
   m_Size: {x: 20, y: 11, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -5665,8 +5665,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -20
-  m_Sprite: {fileID: 21300000, guid: 8469f31ce0c0bd047ba21b9cbe0d7c84, type: 3}
-  m_Color: {r: 0.89433956, g: 0.8269202, b: 0.74078315, a: 1}
+  m_Sprite: {fileID: 21300000, guid: dc45cc91bf2717741af2955fff2bbfb4, type: 3}
+  m_Color: {r: 0.82214874, g: 0.8490566, b: 0.75453895, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6728,7 +6728,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.93333334, g: 0.7019608, b: 0.31764707, a: 1}
+  m_Color: {r: 1, g: 0.7607843, b: 0.36862746, a: 1}
   m_Origin: {x: -6, y: -1, z: 0}
   m_Size: {x: 11, y: 4, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}

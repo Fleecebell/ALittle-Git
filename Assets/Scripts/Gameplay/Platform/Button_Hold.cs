@@ -28,6 +28,9 @@ public class Button_Hold : MonoBehaviour
     // 所有活跃实例，用于死亡时统一复原所有按钮
     private static List<Button_Hold> activeInstances = new List<Button_Hold>();
 
+    // 把平台位置喂给斑驳/木纹 shader，移动时贴图才不会在表面滑动（无需任何手动组件）
+    private readonly PlatformAnchorFeeder _anchorFeeder = new PlatformAnchorFeeder();
+
     // 死亡/按R时统一复原所有按钮（由 DeathRespawnVFX.TriggerDeath 调用）
     public static void ResetAllButtons()
     {
@@ -48,6 +51,8 @@ public class Button_Hold : MonoBehaviour
             wall0_pos = wall0.transform.position;
             previousWall0Pos = wall0.transform.position;
             Button_once.PlatformDeltas[wall0] = () => PlatformDelta;
+            // 先喂一次锚点，避免第一帧贴图还按世界坐标采样
+            _anchorFeeder.Feed(wall0.transform);
         }
         else Debug.Log("未正确设置移动物体");
         wall_isgone = false;
@@ -81,6 +86,9 @@ public class Button_Hold : MonoBehaviour
         moveProgress = Mathf.Clamp01(moveProgress + direction * speed * Time.deltaTime);
         float t = Mathf.SmoothStep(0f, 1f, moveProgress);
         wall0.transform.position = Vector3.Lerp(wall0_pos, wall1_pos.position, t);
+
+        // 移动后立刻把平台位置喂给斑驳/木纹 shader
+        _anchorFeeder.Feed(wall0.transform);
 
         PlatformDelta = wall0.transform.position - previousWall0Pos;
 

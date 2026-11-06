@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dapple_forest
+  m_Name: Dapple_gobi_01
   m_Shader: {fileID: 4800000, guid: 1392395106f9b8f4d80814f3acffe3cf, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -41,18 +41,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DappleColorStrength: 0.56
+    - _DappleColorStrength: 0.782
     - _DappleContrast: 0.25
     - _DappleNoiseWeight: 1
-    - _DappleScale: 0.35
-    - _DappleSoftness: 1
-    - _DappleStrength: 0.39
+    - _DappleScale: 0.31
+    - _DappleSoftness: 0.886
+    - _DappleStrength: 0.424
+    - _DappleThreshold: 0.24
     - _EnableExternalAlpha: 0
     - _MaskStrength: 1
     - _UseMaskTex: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DappleColor: {r: 0.61960787, g: 0.7607844, b: 0.2901961, a: 1}
+    - _DappleColor: {r: 0.81568635, g: 0.6627451, b: 0.41176474, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _MaskWorldOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _MaskWorldSize: {r: 32, g: 8, b: 0, a: 0}
