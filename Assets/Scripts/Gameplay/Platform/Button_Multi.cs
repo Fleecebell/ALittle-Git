@@ -48,6 +48,9 @@ public class Button_Multi : MonoBehaviour
     private float moveProgress = 0f;
     private int direction = 1;
 
+    // 已绑定的踏板触发器（销毁时解绑，避免残留监听者）
+    private readonly List<PedalTrigger> boundTriggers = new List<PedalTrigger>();
+
     // 所有活跃实例，用于死亡时统一复原所有按钮
     private static List<Button_Multi> activeInstances = new List<Button_Multi>();
 
@@ -77,11 +80,15 @@ public class Button_Multi : MonoBehaviour
         {
             if (pedals[i].pedal == null) continue;
 
-            var oldTriggers = pedals[i].pedal.GetComponents<PedalTrigger>();
-            foreach (var t in oldTriggers) Destroy(t);
+            // 同一个踏板可能被多个平台(多个 Button_Multi)共用：
+            // 已经有 PedalTrigger 就复用它并追加一个监听者，不能 Destroy 掉别人注册的那份，
+            // 否则后执行的 Start 会把先注册的平台踢掉(表现就是只有一个平台会动)。
+            var trigger = pedals[i].pedal.GetComponent<PedalTrigger>();
+            if (trigger == null) trigger = pedals[i].pedal.AddComponent<PedalTrigger>();
+            trigger.Bind(this, i, pedals[i].isOneTime, () => returning);
 
-            var trigger = pedals[i].pedal.AddComponent<PedalTrigger>();
-            trigger.Init(this, i, pedals[i].isOneTime, () => returning);
+            if (!boundTriggers.Contains(trigger))
+                boundTriggers.Add(trigger);
 
             var big = pedals[i].pedal.transform.Find("big");
             if (big != null) big.gameObject.SetActive(true);
@@ -210,55 +217,127 @@ public class Button_Multi : MonoBehaviour
         activeInstances.Remove(this);
         if (Button_once.PlatformDeltas.ContainsKey(this.gameObject))
             Button_once.PlatformDeltas.Remove(this.gameObject);
+
+        // 把自己从踏板触发器上解绑，避免留下空监听者
+        for (int i = 0; i < boundTriggers.Count; i++)
+        {
+            if (boundTriggers[i] != null)
+                boundTriggers[i].Unbind(this);
+        }
+        boundTriggers.Clear();
     }
 }
 
+// ======================================================================
+// PedalTrigger —— 踏板触发器
+// ----------------------------------------------------------------------
+// 一个踏板可以被多个 Button_Multi（多个平台）同时引用，所以这里维护的是
+// “监听者列表”，而不是单个 controller：
+//   · Button_Multi.Start 里用 Bind 追加监听者（同一控制器重复 Bind 会覆盖旧记录）
+//   · Button_Multi.OnDestroy 里用 Unbind 移除
+//   · 触发时把 Enter / Stay / Exit 广播给所有监听者，各自按自己的
+//     index / isOneTime / returning 状态处理
+// ======================================================================
 public class PedalTrigger : MonoBehaviour
 {
-    private Button_Multi controller;
-    private int index;
-    private bool isOneTime;
-    private Func<bool> isReturning;
-
-    public void Init(Button_Multi ctrl, int idx, bool oneTime, Func<bool> returningCheck)
+    private class Listener
     {
-        controller = ctrl;
-        index = idx;
-        isOneTime = oneTime;
-        isReturning = returningCheck;
+        public Button_Multi controller;
+        public int index;
+        public bool isOneTime;
+        public Func<bool> isReturning;
+    }
+
+    private readonly List<Listener> listeners = new List<Listener>();
+
+    // 绑定一个控制器（同一控制器重复绑定会覆盖旧记录）
+    public void Bind(Button_Multi ctrl, int idx, bool oneTime, Func<bool> returningCheck)
+    {
+        if (ctrl == null) return;
+
+        Unbind(ctrl);
+        listeners.Add(new Listener
+        {
+            controller = ctrl,
+            index = idx,
+            isOneTime = oneTime,
+            isReturning = returningCheck,
+        });
+    }
+
+    // 解绑一个控制器
+    public void Unbind(Button_Multi ctrl)
+    {
+        for (int i = listeners.Count - 1; i >= 0; i--)
+        {
+            if (listeners[i].controller == ctrl)
+                listeners.RemoveAt(i);
+        }
+    }
+
+    private static bool IsPlayer(Collider2D collision)
+    {
+        return collision.CompareTag("Player") || collision.CompareTag("Player2");
     }
 
     // 一次性踏板：用 Enter 触发，只在玩家进入时触发一次。
     // 复原后玩家重新踩上会重新触发 Enter，无需依赖离开事件解锁。
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
+        if (!IsPlayer(collision)) return;
+
+        for (int i = listeners.Count - 1; i >= 0; i--)
         {
+            Listener listener = listeners[i];
+            if (listener.controller == null)
+            {
+                listeners.RemoveAt(i);
+                continue;
+            }
+
             // 返回原位期间忽略触发，防止把平台又推回去
-            if (isReturning != null && isReturning()) return;
-            if (isOneTime)
-                controller.SetPedalPressed(index, true);
+            if (listener.isReturning != null && listener.isReturning()) continue;
+            if (listener.isOneTime)
+                listener.controller.SetPedalPressed(listener.index, true);
         }
     }
 
     // 非一次性踏板：用 Stay 触发（持续保持按下，离开则弹回）
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
+        if (!IsPlayer(collision)) return;
+
+        for (int i = listeners.Count - 1; i >= 0; i--)
         {
+            Listener listener = listeners[i];
+            if (listener.controller == null)
+            {
+                listeners.RemoveAt(i);
+                continue;
+            }
+
             // 返回原位期间忽略触发
-            if (isReturning != null && isReturning()) return;
-            if (!isOneTime)
-                controller.SetPedalPressed(index, true);
+            if (listener.isReturning != null && listener.isReturning()) continue;
+            if (!listener.isOneTime)
+                listener.controller.SetPedalPressed(listener.index, true);
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
+        if (!IsPlayer(collision)) return;
+
+        for (int i = listeners.Count - 1; i >= 0; i--)
         {
+            Listener listener = listeners[i];
+            if (listener.controller == null)
+            {
+                listeners.RemoveAt(i);
+                continue;
+            }
+
             // 非一次性踏板离开时复位（一次性踏板在 SetPedalPressed 内部会忽略 false）
-            controller.SetPedalPressed(index, false);
+            listener.controller.SetPedalPressed(listener.index, false);
         }
     }
 }
