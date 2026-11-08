@@ -36,6 +36,8 @@ public class DappleAnchorFollower : MonoBehaviour
     private MaterialPropertyBlock _mpb;
     private Vector4 _lastValue;
     private bool _hasValue;
+    private Vector2 _phaseOffset;
+    private bool _phaseReady;
 
     private void OnEnable()
     {
@@ -59,8 +61,16 @@ public class DappleAnchorFollower : MonoBehaviour
         }
 
         var src = anchorSource != null ? anchorSource : transform;
+
+        // 每块平台按初始位置取一个稳定相位，避免同尺寸平台花纹一模一样（只算一次）
+        if (!_phaseReady)
+        {
+            _phaseOffset = PlatformAnchorFeeder.StablePhase(src.position);
+            _phaseReady = true;
+        }
+
         var p = src.position;
-        var value = new Vector4(p.x, p.y, 0f, 0f);
+        var value = new Vector4(p.x - _phaseOffset.x, p.y - _phaseOffset.y, 0f, 0f);
 
         // 没动就不重复写：静态平台第一帧之后零开销
         if (_hasValue && value == _lastValue) return;

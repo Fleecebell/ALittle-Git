@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 929ef4742d9fe114b8e0093c52a9a98d
+guid: 22c4ec19a74192d4585e20c6ca64a39b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 110
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -97,43 +97,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: button_White_0
+      name: Gobi_Plant_07_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 128
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        y: 21
+        width: 33
+        height: 21
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a628b46c174079c49b62c9f6e54a9bf6
-      internalID: 1835364392
+      spriteID: df084b1ae8ba1ef4596178451557635c
+      internalID: -317532489
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: button_White_1
+      name: Gobi_Plant_07_1
       rect:
         serializedVersion: 2
-        x: 128
+        x: 0
         y: 0
-        width: 128
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 33
+        height: 21
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0330d91b2ad1bd5489907499eaf2ee54
-      internalID: -726672860
+      spriteID: 3d7157ba4a8abf04caecdcf365916dc4
+      internalID: 2131989833
       vertices: []
       indices: 
       edges: []
@@ -149,8 +149,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      button_White_0: 1835364392
-      button_White_1: -726672860
+      Gobi_Plant_07_0: -317532489
+      Gobi_Plant_07_1: 2131989833
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

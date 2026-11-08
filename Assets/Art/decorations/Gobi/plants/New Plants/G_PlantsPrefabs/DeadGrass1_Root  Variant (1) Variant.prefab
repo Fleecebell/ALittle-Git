@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4076495158410906490
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1230697166037945109, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1416225672, guid: 279b6cfc5131e1a4f831ded0db441c07, type: 3}
+    - target: {fileID: 1445755838728952883, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.185
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090496538327073261, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_Name
+      value: DeadGrass1_Root  Variant (1) Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.287
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.438
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608213741327008980, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7907421221832204698, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -524194394, guid: 279b6cfc5131e1a4f831ded0db441c07, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 625764f301d701f4dac9a741eb045cbf, type: 3}

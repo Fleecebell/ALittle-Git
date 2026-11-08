@@ -35,6 +35,28 @@ public sealed class PlatformAnchorFeeder
 
     private Transform _root;
     private bool _built;
+    private Vector2 _phaseOffset;
+
+    /// <summary>
+    /// 用"平台初始位置"生成一个稳定的伪随机相位（同一个平台每次运行都一样，
+    /// 但不同平台之间互相错开），用来避免同尺寸平台的斑驳/木纹长得一模一样。
+    /// 返回值单位是世界单位。
+    /// </summary>
+    public static Vector2 StablePhase(Vector3 initialWorldPos)
+    {
+        unchecked
+        {
+            uint h = 2166136261u;
+            h = (h ^ (uint)Mathf.RoundToInt(initialWorldPos.x * 100f)) * 16777619u;
+            h = (h ^ (uint)Mathf.RoundToInt(initialWorldPos.y * 100f)) * 16777619u;
+            h = (h ^ (uint)Mathf.RoundToInt(initialWorldPos.z * 100f)) * 16777619u;
+
+            float a = (h & 0xFFFFu) / 65535f;
+            float b = ((h >> 16) & 0xFFFFu) / 65535f;
+            // 0..256 世界单位：对 _DappleScale(约 0.3) 来说足够跳到完全不同的噪声区域
+            return new Vector2(a * 256f, b * 256f);
+        }
+    }
 
     public void Feed(Transform root)
     {
@@ -44,7 +66,8 @@ public sealed class PlatformAnchorFeeder
         if (_renderers.Count == 0) return;
 
         Vector3 p = root.position;
-        var value = new Vector4(p.x, p.y, 0f, 0f);
+        // 减掉固定相位：shader 里 (顶点 - 锚点) = 平台局部坐标 + 相位，每块平台的花纹就错开了
+        var value = new Vector4(p.x - _phaseOffset.x, p.y - _phaseOffset.y, 0f, 0f);
 
         for (int i = 0; i < _renderers.Count; i++)
         {
@@ -72,6 +95,8 @@ public sealed class PlatformAnchorFeeder
     {
         _root = root;
         _built = true;
+        // 相位只在第一次收集时按初始位置算一次，之后平台怎么移动它都不变（否则花纹会滑）
+        _phaseOffset = StablePhase(root.position);
         _renderers.Clear();
         _blocks.Clear();
         _lastValues.Clear();
