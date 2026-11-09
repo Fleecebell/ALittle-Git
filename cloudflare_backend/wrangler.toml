@@ -21,6 +21,13 @@ database_name = "alittle-telemetry"
 database_id = "c6b4a93e-60ae-4bca-936f-3ac3cdf8ce7b"    # ← npx wrangler d1 create 的输出粘贴到这里
 migrations_dir = "migrations"
 
+# 关卡背景图（可选）。KV 免费额度：1 GB 存储、10 万次读/天、1000 次写/天
+# 建法: npx wrangler kv namespace create ALITTLE_BG  → 把 id 填到下面
+# 没建也不影响上报和看板，只是「上传背景图到服务器」会返回 503
+[[kv_namespaces]]
+binding = "BG"
+id = "e6efe82c832c4f4ea4d1022caf15d71d"
+
 # 可观测性（免费额度内，方便看错误日志）
 [observability]
 enabled = true

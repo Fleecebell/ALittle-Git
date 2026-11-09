@@ -464,6 +464,9 @@ public class MoveLate : MonoBehaviour, IWaterResponder
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 jumpBufferTimer = 0f;   // 跳了就清零缓冲
                 jumpLockTimer = jumpLockDuration; // 启动冷却
+
+                // [Telemetry] P2 起跳（延迟模仿 P1）：单独按格子计数，热力图上是蓝色
+                Telemetry.OnJump("player2", transform.position);
             }
         }
 

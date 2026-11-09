@@ -103,8 +103,9 @@ test("schema.sql 可重复执行，字段与首页索引齐全", () => {
     .all()
     .map((r) => r.name);
   assert.ok(indexes.includes("idx_events_type_ts"));
-  assert.ok(indexes.includes("idx_events_session_ts"));
-  assert.ok(indexes.includes("idx_events_player_ts"));
+  // 故意只有这一个索引：D1 免费额度按写入行数算，多一个索引每次 INSERT 就多写一行。
+  assert.ok(!indexes.includes("idx_events_session_ts"));
+  assert.ok(!indexes.includes("idx_events_player_ts"));
 });
 
 test("Worker 的 INSERT 语句与表结构匹配（7 列 6 个占位符）", () => {
@@ -153,14 +154,12 @@ test("空格统计：同一格子两行增量会被 SUM，失败率计算正确"
   assert.equal(cell10.fail_rate, 0.375, "3 / (5+3)");
 });
 
-test("驻留统计：dwell 合并、idle_ratio 正确，且过滤短驻留格子", () => {
+test("驻留统计：dwell 合并，且过滤短驻留格子", () => {
   const db = seed();
-  const rows = db.prepare(findByMarker("AS idle_ratio")).all();
+  const rows = db.prepare(findByMarker("HAVING dwell_s > 5")).all();
   assert.equal(rows.length, 1, "只有 dwell > 5 的格子入选");
   assert.equal(rows[0].cell_x, 10);
   assert.equal(rows[0].dwell_s, 12);
-  assert.equal(rows[0].idle_s, 6);
-  assert.equal(rows[0].idle_ratio, 0.5);
 });
 
 test("关卡时长与通关率", () => {

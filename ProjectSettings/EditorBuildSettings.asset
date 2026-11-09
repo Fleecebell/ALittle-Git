@@ -36,9 +36,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Date/9111.unity
     guid: 949399516deca8e439c37d5eabc8141f
   - enabled: 1
-    path: Assets/Scenes/6th.unity
-    guid: e83fd0f9b9b6fce48b3d754c2d1576fa
-  - enabled: 1
     path: Assets/Scenes/Date/9144.unity
     guid: 3853279cdbdc0c14ab1657eb5f884c60
   - enabled: 1
@@ -92,4 +89,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CUSoon.unity
     guid: c6dd5426225305e4cbf870114199d6db
+  - enabled: 1
+    path: Assets/Scenes/6th.unity
+    guid: e83fd0f9b9b6fce48b3d754c2d1576fa
   m_configObjects: {}

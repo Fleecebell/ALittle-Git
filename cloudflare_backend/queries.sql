@@ -51,18 +51,12 @@ HAVING jumps > 0
 ORDER BY jumps DESC
 LIMIT 50;
 
--- 4) 待的时间最长的地方（玩家在哪卡住）
+-- 4) 待的时间最长的地方（玩家在哪卡住；客户端只上报停留超过 1 秒的格子）
 SELECT
   json_extract(metadata, '$.scene')  AS scene,
   json_extract(metadata, '$.cell_x') AS cell_x,
   json_extract(metadata, '$.cell_y') AS cell_y,
-  ROUND(SUM(json_extract(metadata, '$.dwell_s')), 1) AS dwell_s,
-  ROUND(SUM(json_extract(metadata, '$.idle_s')), 1)  AS idle_s,
-  ROUND(
-    SUM(json_extract(metadata, '$.idle_s')) * 1.0 /
-    NULLIF(SUM(json_extract(metadata, '$.dwell_s')), 0),
-    2
-  ) AS idle_ratio
+  ROUND(SUM(json_extract(metadata, '$.dwell_s')), 1) AS dwell_s
 FROM game_events
 WHERE event_type = 'cell'
 GROUP BY scene, cell_x, cell_y
@@ -128,3 +122,54 @@ SELECT
 FROM game_events
 GROUP BY player_id
 ORDER BY events DESC;
+
+-- 10) 每关 P1 / P2 各死多少次（看板用红色画 P1、蓝色画 P2）
+--     老数据没有 actor 字段，一律算 player1
+SELECT
+  json_extract(metadata, '$.scene') AS scene,
+  COALESCE(json_extract(metadata, '$.actor'), 'player1') AS actor,
+  COUNT(*)                          AS deaths
+FROM game_events
+WHERE event_type = 'death'
+GROUP BY scene, actor
+ORDER BY scene, actor;
+
+-- 11) 单个格子里 P1 / P2 的停留、跳跃（热力图取数用这个）
+SELECT
+  json_extract(metadata, '$.scene')  AS scene,
+  json_extract(metadata, '$.cell_x') AS cell_x,
+  json_extract(metadata, '$.cell_y') AS cell_y,
+  COALESCE(json_extract(metadata, '$.actor'), 'player1') AS actor,
+  ROUND(SUM(json_extract(metadata, '$.dwell_s')), 1) AS dwell_s,
+  SUM(json_extract(metadata, '$.jumps'))             AS jump_count
+FROM game_events
+WHERE event_type = 'cell'
+GROUP BY scene, cell_x, cell_y, actor
+ORDER BY dwell_s DESC
+LIMIT 200;
+
+-- 12) 每关的平均单次时长（通关 + 中途退出都算，比只算通关更接近真实体验）
+SELECT
+  json_extract(metadata, '$.scene') AS scene,
+  COUNT(*)                          AS runs,
+  ROUND(AVG(json_extract(metadata, '$.duration_s')), 1) AS avg_run_seconds,
+  ROUND(AVG(json_extract(metadata, '$.deaths')), 2)     AS avg_run_deaths
+FROM game_events
+WHERE event_type IN ('level_clear', 'level_quit')
+GROUP BY scene
+ORDER BY avg_run_seconds DESC;
+
+-- 13) 通关路线（每格 0.5 世界单位；老数据 cell_size 缺省按 1，索引 ×2 归一化）
+--     cells 是一串 "x,y" 用分号连起来，直接拿去脚本里画图就行
+SELECT
+  json_extract(metadata, '$.scene')             AS scene,
+  COALESCE(json_extract(metadata, '$.actor'), 'player1') AS actor,
+  json_extract(metadata, '$.attempt')           AS attempt,
+  json_extract(metadata, '$.cell_count')        AS cell_count,
+  ROUND(json_extract(metadata, '$.duration_s'), 1) AS run_seconds,
+  json_extract(metadata, '$.cells')             AS cells,
+  datetime(client_ts / 1000, 'unixepoch', 'localtime') AS at
+FROM game_events
+WHERE event_type = 'route'
+ORDER BY client_ts DESC
+LIMIT 50;

@@ -34,6 +34,11 @@ class Statement {
   all() {
     return { results: this.db.prepare(this.sql).all(...this.args) };
   }
+  // 真 D1 的 .run() 返回 { success, meta: { changes } }，这里照内存 SQLite 的 changes 模拟
+  run() {
+    const info = this.db.prepare(this.sql).run(...this.args);
+    return { success: true, meta: { changes: Number(info.changes || 0) } };
+  }
 }
 
 class FakeD1 {
@@ -46,6 +51,30 @@ class FakeD1 {
   async batch(statements) {
     return statements.map((s) => ({ success: true, results: s.all().results }));
   }
+}
+
+/* ------------------------------------------------ 假 KV（背景图用） */
+
+function makeFakeKV() {
+  const map = new Map();
+  return {
+    async put(key, value, opts) {
+      map.set(key, { value, metadata: opts && opts.metadata });
+    },
+    async getWithMetadata(key) {
+      const e = map.get(key);
+      return e ? { value: e.value, metadata: e.metadata } : { value: null, metadata: null };
+    },
+    async delete(key) {
+      map.delete(key);
+    },
+    async list({ prefix } = {}) {
+      const keys = [...map.entries()]
+        .filter(([k]) => !prefix || k.startsWith(prefix))
+        .map(([name, v]) => ({ name, metadata: v.metadata }));
+      return { keys, list_complete: true };
+    },
+  };
 }
 
 /* ------------------------------------------------ 假数据（确定性随机） */
@@ -80,8 +109,8 @@ function levelCells(config) {
     cells.push({
       x,
       y,
-      dwell: rf(0.4, 1.2) * w,
-      idle: rf(0, 0.6) * w,
+      // 客户端只上报停留超过 1 秒的格子，这里也照着造，预览才和线上一致
+      dwell: rf(1.0, 3.5) * w,
       jumps: 0,
       fails: 0,
     });
@@ -92,10 +121,7 @@ function levelCells(config) {
   for (const [px0, px1, py] of config.platforms) {
     for (let x = px0; x <= px1; x++) push(x, py, 1);
   }
-  // 深坑底部（掉下去就死，所以停留时间极短）
-  for (let x = config.pitX0; x <= config.pitX1; x++) {
-    cells.push({ x, y: config.pitBottomY, dwell: rf(0.1, 0.5), idle: 0, jumps: 0, fails: 0 });
-  }
+  // 深坑底部：掉下去立刻死，等不到 1 秒就不上报，所以这里不造格子（和线上一致）
   return cells;
 }
 
@@ -103,6 +129,24 @@ function seedDatabase(db) {
   const players = ["player_7f3a91", "player_c2e84b", "player_19ad05"];
   let ts = NOW - 48 * HOUR;
   const tick = () => (ts += ri(300, 9000));
+
+  // 新客户端是 0.5 世界单位一格 → 假数据也用同样密度（索引 = 世界坐标 × 2）
+  const GRID = 2;
+  const CS = 0.5;
+  const toCell = (v) => Math.round(v * GRID);
+
+  // 假通关路线：沿地面走，遇到坑就跳个弧线
+  function makeRoute(lv, dxCells) {
+    const path = [];
+    for (let x = lv.x0; x <= lv.x1; x++) {
+      if (x >= lv.pitX0 && x <= lv.pitX1) {
+        path.push([x, lv.groundY + 1], [x, lv.groundY + 2]);
+      } else {
+        path.push([x, lv.groundY]);
+      }
+    }
+    return path.map(([x, y]) => [toCell(x) + dxCells, toCell(y)]);
+  }
 
   const levels = [
     {
@@ -205,8 +249,9 @@ function seedDatabase(db) {
           actor: rnd() < 0.8 ? "player1" : "player2",
           x: dx + rf(0.1, 0.9),
           y: dy + rf(0.1, 0.9),
-          cell_x: dx,
-          cell_y: dy,
+          cell_x: toCell(dx),
+          cell_y: toCell(dy),
+          cell_size: CS,
           survived_s: rf(3, 30),
           deaths_in_level: d + 1,
           jumps_before_death: ri(0, 6),
@@ -221,20 +266,66 @@ function seedDatabase(db) {
           addEvent(db, player, session, "cell", tick(), {
             scene: lv.scene,
             attempt: 1,
-            cell_x: c.x,
-            cell_y: c.y,
-            x: c.x + 0.5,
-            y: c.y + 0.5,
-            dwell_s: +(c.dwell * rf(0.3, 0.7)).toFixed(2),
-            idle_s: +(c.idle * rf(0.2, 0.8)).toFixed(2),
+            cell_x: toCell(c.x),
+            cell_y: toCell(c.y),
+            x: toCell(c.x) * CS,
+            y: toCell(c.y) * CS,
+            dwell_s: +(c.dwell * rf(0.6, 1.2)).toFixed(2),
             jumps: jumps,
             jump_fails: jumps > 0 ? ri(0, Math.min(2, jumps)) : 0,
+            cell_size: CS,
           });
         }
       }
 
       const duration = rf(18, 95);
       const cleared = i < lv.clears;
+
+      // 每趟尝试结束一条路线：通关发 clear，没通关的发 death（死在半路，只画到死点）
+      if (cleared) {
+        const p1Path = makeRoute(lv, 0);
+        addEvent(db, player, session, "route", tick(), {
+          scene: lv.scene,
+          level_index: lv.index,
+          attempt: 1,
+          actor: "player1",
+          outcome: "clear",
+          cells: p1Path.map(([x, y]) => `${x},${y}`).join(";"),
+          cell_count: p1Path.length,
+          duration_s: +duration.toFixed(1),
+          cell_size: CS,
+        });
+        if (rnd() < 0.6) {
+          // P2 是延迟模仿 P1，实际游戏里两条路线几乎完全重合 —— 预览数据也照这个来，
+          // 好检查"重合时红蓝都看得见"（drawRoutes 重合处画紫色方块）
+          const p2Path = makeRoute(lv, 0);
+          addEvent(db, player, session, "route", tick(), {
+            scene: lv.scene,
+            level_index: lv.index,
+            attempt: 1,
+            actor: "player2",
+            outcome: "clear",
+            cells: p2Path.map(([x, y]) => `${x},${y}`).join(";"),
+            cell_count: p2Path.length,
+            duration_s: +(duration + rf(0.3, 2)).toFixed(1),
+            cell_size: CS,
+          });
+        }
+      } else {
+        const p1Path = makeRoute(lv, 0).slice(0, Math.max(10, Math.floor(lv.width * 0.5)));
+        addEvent(db, player, session, "route", tick(), {
+          scene: lv.scene,
+          level_index: lv.index,
+          attempt: 1,
+          actor: "player1",
+          outcome: "death",
+          cells: p1Path.map(([x, y]) => `${x},${y}`).join(";"),
+          cell_count: p1Path.length,
+          duration_s: +duration.toFixed(1),
+          cell_size: CS,
+        });
+      }
+
       addEvent(
         db,
         player,
@@ -300,6 +391,7 @@ function pickCause(dx, dy, lv) {
 const db = makeDb();
 seedDatabase(db);
 const d1 = new FakeD1(db);
+const kv = makeFakeKV();
 
 const port = Number(process.argv[2] || 8792);
 
@@ -320,7 +412,14 @@ const server = http.createServer(async (req, res) => {
     body: ["GET", "HEAD"].includes(req.method) ? undefined : body,
   });
 
-  const response = await worker.fetch(request, { DB: d1, INGEST_KEY: "" });
+  // 本地预览默认不设 ADMIN_KEY（清库按钮会返回 403，和线上没配密钥时一致）；
+  // 想在本地点清库 / 上传背景图：ADMIN_KEY=devkey node tools/preview-dashboard.mjs
+  const response = await worker.fetch(request, {
+    DB: d1,
+    BG: kv,
+    INGEST_KEY: "",
+    ADMIN_KEY: process.env.ADMIN_KEY || "",
+  });
 
   res.statusCode = response.status;
   response.headers.forEach((v, k) => res.setHeader(k, v));

@@ -52,6 +52,15 @@ namespace EditorMcpBridge
 
         static EditorMcpBridgeServer()
         {
+            // 资源导入子进程（Unity 会为每个 project 起若干个 AssetImportWorker）也会加载编辑器脚本，
+            // 如果它们也来 bind 35353，主编辑器就抢不到端口了 —— 表现是端口 LISTEN 着、
+            // 但请求全部超时（因为子进程的主线程在忙着导入资源，永远轮不到处理请求）。
+            // 注意：改这里之后必须让 Unity 重新编译一次（域重载）才会重新绑定端口。
+            if (UnityEditor.AssetDatabase.IsAssetImportWorkerProcess())
+            {
+                return;
+            }
+
             Application.logMessageReceived += OnLog;
             EditorApplication.update += OnUpdate;
             AppDomain.CurrentDomain.DomainUnload += OnDomainUnload;

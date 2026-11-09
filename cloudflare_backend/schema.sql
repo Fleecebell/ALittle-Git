@@ -6,7 +6,9 @@
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS game_events (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  -- 注意：没有 AUTOINCREMENT。有它的话每次 INSERT 还要写一行 sqlite_sequence，
+  -- 实测每条事件从 2 行写入变 3 行（D1 免费额度按写入行数算）。
+  id         INTEGER PRIMARY KEY,
   player_id  TEXT    NOT NULL,              -- 客户端生成并持久化的 UUID
   session_id TEXT    NOT NULL,              -- 一次启动一个（关掉重开算新会话）
   event_type TEXT    NOT NULL,              -- session_start / level_start / level_clear / death / cell / ...
@@ -15,14 +17,12 @@ CREATE TABLE IF NOT EXISTS game_events (
   server_ts  INTEGER NOT NULL               -- 服务端落库毫秒时间戳（可用来发现改系统时间）
 );
 
--- 按事件类型 + 时间扫描（分析最常用入口）
+-- 只留这一个索引。
+-- 原因：D1 的免费额度是按「写入行数」算的，每建一个索引，每次 INSERT 就多写一行。
+-- 实测：3 个索引时 1 条事件 = 5 行写入；砍到 1 个索引后 1 条 = 3 行（表 + 索引 + 自增序号），
+-- 也就是说同样额度能多存 66% 的数据。按 session_id / player_id 过滤的查询目前没有，
+-- 所以这两个索引只是白花写入额度。以后真要做"按玩家看长期行为"，再加回来。
 CREATE INDEX IF NOT EXISTS idx_events_type_ts ON game_events (event_type, client_ts);
-
--- 按会话还原一段完整游玩过程
-CREATE INDEX IF NOT EXISTS idx_events_session_ts ON game_events (session_id, client_ts);
-
--- 按玩家看长期行为
-CREATE INDEX IF NOT EXISTS idx_events_player_ts ON game_events (player_id, client_ts);
 
 -- ============================================================
 -- 事件约定（客户端实现，见 Assets/Scripts/Telemetry/）

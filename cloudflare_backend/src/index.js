@@ -11,6 +11,7 @@
  *   GET     /                     看板页面（热力图等可视化）
  *   GET     /v1                   服务信息（JSON）
  *   GET     /v1/stats/*           只读统计（见 stats.js）
+ *   POST    /v1/admin/clear       清数据（需 X-Admin-Key，见 stats.js）
  *   POST    /v1/events            上报（单条或数组）
  *
  * 上报体格式（两种都支持）：
@@ -21,7 +22,8 @@
  */
 
 import { json, html, CORS_HEADERS } from "./http.js";
-import { handleStats } from "./stats.js";
+import { handleStats, handleAdminClear } from "./stats.js";
+import { handleBackgrounds } from "./backgrounds.js";
 import DASHBOARD_HTML from "./dashboard-page.js";
 
 const INGEST_PATH = "/v1/events";
@@ -228,6 +230,21 @@ export default {
         return await handleStats(url, env, request);
       }
 
+      // 清库（要 ADMIN_KEY，没配就拒绝）
+      if (url.pathname === "/v1/admin/clear" || url.pathname.startsWith("/v1/admin/")) {
+        if (request.method !== "POST") {
+          return json({ ok: false, error: "method_not_allowed" }, 405, {
+            Allow: "POST, OPTIONS",
+          });
+        }
+        return await handleAdminClear(url, env, request);
+      }
+
+      // 关卡背景图（读公开，写要 ADMIN_KEY）
+      if (url.pathname === "/v1/backgrounds" || url.pathname.startsWith("/v1/backgrounds/")) {
+        return await handleBackgrounds(url, env, request);
+      }
+
       if (request.method === "GET") {
         if (url.pathname === "/health") {
           return json({ ok: true, service: "alittle-telemetry", now: Date.now() });
@@ -245,8 +262,11 @@ export default {
               ingest: `POST ${INGEST_PATH}`,
               health: "GET /health",
               overview: "GET /v1/stats/overview",
+              compare: "GET /v1/stats/compare",
               scene: "GET /v1/stats/scene?scene=<场景名>",
               recent: "GET /v1/stats/recent",
+              clear: "POST /v1/admin/clear  {scene|all}（需 X-Admin-Key）",
+              backgrounds: "GET /v1/backgrounds  |  GET/PUT/DELETE /v1/backgrounds/<场景名>（写需 X-Admin-Key）",
             },
           });
         }

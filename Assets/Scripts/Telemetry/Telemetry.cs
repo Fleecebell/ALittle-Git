@@ -48,6 +48,7 @@ public class Telemetry : MonoBehaviour
 
     private bool sending;
     private bool sendOk;
+    private long lastStatus;
     private bool warnedNoEndpoint;
     private bool quitHandled;
     private long loopTicks; // 调试用：主循环跑了多少拍
@@ -122,14 +123,28 @@ public class Telemetry : MonoBehaviour
         StartCoroutine(MainLoop());
     }
 
+    /// <summary>
+    /// 每帧驱动统计。**必须放在 Update 里**：协程是 0.1 秒一跳，DeltaTime 却是"一帧"的长度，
+    /// 用 Time.unscaledDeltaTime 累计会只算到真实时间的 1/6（表现就是"一关只玩了 1 秒"）。
+    /// </summary>
+    private void Update()
+    {
+        if (stats == null) return;
+
+        float dt = Time.unscaledDeltaTime;
+        if (dt > 0.5f) dt = 0.5f; // 编辑器断点/卡顿后的异常大 dt，别污染驻留统计
+        stats.Tick(dt);
+    }
+
     // ============================================================
-    // 主循环：统计采样 + 定时上报 + 离线补发
+    // 主循环：定时上报 + 离线补发（采样在 Update 里，这里只管网络）
     // ============================================================
 
     private IEnumerator MainLoop()
     {
         float sinceFlush = 0f;
         float sinceSpool = 0f;
+        float lastRealtime = Time.realtimeSinceStartup;
 
         while (true)
         {
@@ -140,14 +155,17 @@ public class Telemetry : MonoBehaviour
             // 注意：yield 不能写在带 catch 的 try 里，所以这里只算标志位，yield 放到外面
             try
             {
-                float dt = Time.unscaledDeltaTime;
-                if (dt > 0.5f) dt = 0.5f; // 编辑器断点/卡顿后的异常大 dt，别污染驻留统计
+                // 用真实时间算间隔：协程自己是 0.1 秒一跳，不能再拿一帧的 DeltaTime 当时钟
+                float now = Time.realtimeSinceStartup;
+                float elapsed = now - lastRealtime;
+                lastRealtime = now;
+                if (elapsed < 0f) elapsed = 0f;
+                if (elapsed > 5f) elapsed = 5f;
 
-                stats.Tick(dt);
                 loopTicks++;
 
-                sinceFlush += dt;
-                sinceSpool += dt;
+                sinceFlush += elapsed;
+                sinceSpool += elapsed;
 
                 wantFlush = !sending && queue.Count > 0 &&
                             (queue.Count >= TelemetryConfig.FlushAtCount ||
@@ -201,6 +219,13 @@ public class Telemetry : MonoBehaviour
             queue.RemoveRange(0, n);
             if (TelemetryConfig.verbose) Debug.Log($"[Telemetry] 上报成功 {n} 条");
         }
+        else if (IsPermanentRejection(lastStatus))
+        {
+            // 服务端明确说"这批数据不合法"（400/413/422），重试多少次都不会成功，
+            // 丢掉它们，否则会永远堵在 spool 里，把后面的好数据一起卡死。
+            queue.RemoveRange(0, n);
+            Debug.LogWarning($"[Telemetry] 服务端拒收 HTTP {lastStatus}，已丢弃这 {n} 条");
+        }
         else
         {
             // 失败就整批落盘，下个会话/30 秒后补发，避免内存无限涨
@@ -209,6 +234,12 @@ public class Telemetry : MonoBehaviour
             AppendSpool(failed);
             if (TelemetryConfig.verbose) Debug.LogWarning($"[Telemetry] 上报失败，已存本地 {n} 条");
         }
+    }
+
+    /// <summary>4xx 里只有超时/限流是可重试的，其余都是"数据本身有问题"。</summary>
+    private static bool IsPermanentRejection(long status)
+    {
+        return status >= 400 && status < 500 && status != 408 && status != 429;
     }
 
     private IEnumerator PostJson(string json)
@@ -250,6 +281,7 @@ public class Telemetry : MonoBehaviour
 
         yield return request.SendWebRequest();
 
+        lastStatus = request.responseCode;
         sendOk = request.result == UnityWebRequest.Result.Success &&
                  request.responseCode >= 200 && request.responseCode < 300;
 
@@ -362,18 +394,18 @@ public class Telemetry : MonoBehaviour
         hasPendingPos = false;
     }
 
-    /// <summary>成功起跳</summary>
-    public static void OnJump(Vector3 position)
+    /// <summary>成功起跳（actor 决定热力图上是红 P1 还是蓝 P2）</summary>
+    public static void OnJump(string actor, Vector3 position)
     {
         if (Instance == null) return;
-        Instance.stats.RecordJump(position, true);
+        Instance.stats.RecordJump(actor, position, true);
     }
 
     /// <summary>按了跳但没跳成（用于发现手感差/判定苛刻的位置）</summary>
-    public static void OnJumpFail(Vector3 position, string reason)
+    public static void OnJumpFail(string actor, Vector3 position, string reason)
     {
         if (Instance == null) return;
-        Instance.stats.RecordJump(position, false);
+        Instance.stats.RecordJump(actor, position, false);
     }
 
     /// <summary>通关（在 GoToNextLevel 里调用）</summary>
@@ -430,51 +462,90 @@ public class Telemetry : MonoBehaviour
         if (Instance == this) Instance = null;
     }
 
+    /// <summary>
+    /// 退出时的最后一批上报。
+    ///
+    /// 为什么不用 UnityWebRequest：它在主线程上由玩家循环推进，而退出（尤其是编辑器里点停止）
+    /// 时主循环马上就停了，经常"请求发出去了但永远 isDone=false"，于是最后一批（含 level_quit）
+    /// 只能在下次启动时才补发 —— 表现就是"退出后服务器上看不到这一局"。
+    /// 这里改成后台线程 + HttpWebRequest 同步发送，不依赖 Unity 的帧循环。
+    /// </summary>
     private void FlushBlockingAtQuit()
     {
         if (queue.Count == 0) return;
+        if (!TelemetryConfig.HasEndpoint) return;
 
-        int n = Mathf.Min(TelemetryConfig.MaxBatch, queue.Count);
+        long deadline = NowMs() + (long)(TelemetryConfig.QuitFlushTimeoutSeconds * 1000f);
 
-        if (!TelemetryConfig.HasEndpoint)
+        while (queue.Count > 0)
         {
-            return; // 交给 SpoolAll()
-        }
+            int n = Mathf.Min(TelemetryConfig.MaxBatch, queue.Count);
+            string json = BuildPayload(n);
 
-        UnityWebRequest request = null;
+            string error = null;
+            var thread = new System.Threading.Thread(() => { error = PostJsonSync(json); });
+            thread.IsBackground = true;
+            thread.Start();
+
+            long remain = deadline - NowMs();
+            if (remain <= 0)
+            {
+                Debug.LogWarning("[Telemetry] 退出时上报超时（已存本地，下次启动补发）");
+                break;
+            }
+            if (!thread.Join((int)remain))
+            {
+                Debug.LogWarning("[Telemetry] 退出时上报超时（已存本地，下次启动补发）");
+                break; // 超时：这批留在队列里，交给 SpoolAll()
+            }
+
+            if (error != null)
+            {
+                Debug.LogWarning("[Telemetry] 退出时上报失败（已存本地，下次启动补发）: " + error);
+                break;
+            }
+
+            queue.RemoveRange(0, n);
+        }
+    }
+
+    /// <summary>同步 POST（可在后台线程调用）。成功返回 null，失败返回错误信息。</summary>
+    private string PostJsonSync(string json)
+    {
         try
         {
-            byte[] body = Encoding.UTF8.GetBytes(BuildPayload(n));
-            request = new UnityWebRequest(TelemetryConfig.endpoint, UnityWebRequest.kHttpVerbPOST);
-            request.uploadHandler = new UploadHandlerRaw(body);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
+            var request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(TelemetryConfig.endpoint);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Accept = "application/json";
+            request.KeepAlive = false;
+            // 单次请求超时略短于总预算，让 3.5 秒预算里还有一点线程调度余量
+            request.Timeout = Mathf.Max(500, Mathf.RoundToInt(TelemetryConfig.QuitFlushTimeoutSeconds * 1000f) - 500);
+            request.ReadWriteTimeout = request.Timeout;
             if (!string.IsNullOrEmpty(TelemetryConfig.IngestKey))
             {
-                request.SetRequestHeader("X-Telemetry-Key", TelemetryConfig.IngestKey);
-            }
-            request.SendWebRequest();
-
-            long deadline = NowMs() + (long)(TelemetryConfig.QuitFlushTimeoutSeconds * 1000f);
-            while (!request.isDone && NowMs() < deadline)
-            {
-                System.Threading.Thread.Sleep(10);
+                request.Headers["X-Telemetry-Key"] = TelemetryConfig.IngestKey;
             }
 
-            if (request.isDone &&
-                request.result == UnityWebRequest.Result.Success &&
-                request.responseCode >= 200 && request.responseCode < 300)
+            byte[] body = Encoding.UTF8.GetBytes(json);
+            request.ContentLength = body.Length;
+
+            using (Stream stream = request.GetRequestStream())
             {
-                queue.RemoveRange(0, n);
+                stream.Write(body, 0, body.Length);
             }
+
+            using (var response = (System.Net.HttpWebResponse)request.GetResponse())
+            {
+                int code = (int)response.StatusCode;
+                if (code < 200 || code >= 300) return "HTTP " + code;
+            }
+
+            return null;
         }
         catch (Exception e)
         {
-            Debug.LogWarning("[Telemetry] 退出时上报失败: " + e.Message);
-        }
-        finally
-        {
-            if (request != null) request.Dispose();
+            return e.Message;
         }
     }
 

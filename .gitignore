@@ -52,3 +52,6 @@ OutPackages/Unity-Skills-main/docs/installation-demo.gif
 
 # 扩展自带运行时（codely-unity-lsp-server、TJGenerators 等，数百 MB，可自动重新下载）
 .codely-cli/extensions/
+
+# 本地打包验证产物
+Builds/

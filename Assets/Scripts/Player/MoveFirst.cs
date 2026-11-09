@@ -291,12 +291,12 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
             jumpLockTimer = jumpLockDuration; // 启动冷却, 防止还没离地又跳(起飞)
 
             // [Telemetry] 成功起跳：按格子聚合计数，关卡结束/每 60 秒上报一次
-            Telemetry.OnJump(transform.position);
+            Telemetry.OnJump("player1", transform.position);
         }
         else if (jumpPressedNow && isGrounded)
         {
             // [Telemetry] 站在地上按了空格却没跳成（冷却/爬梯/下穿中）→ 手感问题定位
-            Telemetry.OnJumpFail(transform.position, "grounded_blocked");
+            Telemetry.OnJumpFail("player1", transform.position, "grounded_blocked");
         }
 
         // 水里游泳: 在水里时按 空格/W = 向上游

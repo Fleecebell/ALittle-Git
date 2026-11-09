@@ -12,7 +12,9 @@
     "db:init": "wrangler d1 execute alittle-telemetry --remote --file=./schema.sql",
     "db:init:local": "wrangler d1 execute alittle-telemetry --local --file=./schema.sql",
     "db:list:local": "wrangler d1 execute alittle-telemetry --local --command=\"SELECT event_type, COUNT(*) AS n FROM game_events GROUP BY event_type ORDER BY n DESC\"",
-    "test": "node --test test/worker.test.mjs test/sql.test.mjs test/stats.test.mjs"
+    "test": "node --test test/worker.test.mjs test/sql.test.mjs test/stats.test.mjs test/backgrounds.test.mjs",
+    "bg:create": "wrangler kv namespace create ALITTLE_BG",
+    "bg:list": "wrangler kv key list --namespace-id e6efe82c832c4f4ea4d1022caf15d71d"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

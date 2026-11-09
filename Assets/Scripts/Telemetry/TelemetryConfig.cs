@@ -39,8 +39,13 @@ public static class TelemetryConfig
 
     public const float RequestTimeoutSeconds = 10f;
 
-    /// <summary>退出游戏时同步发最后一批的最长等待（秒）</summary>
-    public const float QuitFlushTimeoutSeconds = 2f;
+    /// <summary>
+    /// 退出游戏时同步发最后一批的最长等待（秒）。
+    /// 第一次连接要做 DNS + TLS 握手，国内到 workers.dev 实测约 1.7 秒，
+    /// 所以不能给 2 秒（会被误判超时，最后一局又落回本地）。给 3.5 秒留余量，
+    /// 断网时最坏也就多卡这么久，之后走本地补发。
+    /// </summary>
+    public const float QuitFlushTimeoutSeconds = 3.5f;
 
     /// <summary>离线补发：本地最多存多少条未上报事件</summary>
     public const int SpoolMaxEvents = 3000;
@@ -49,8 +54,8 @@ public static class TelemetryConfig
     public const float SpoolRetryIntervalSeconds = 30f;
 
     // ---------------- 关卡统计 ----------------
-    /// <summary>热力图格子边长（世界单位）。1 = 一个 Unity 单位</summary>
-    public const float CellSize = 1f;
+    /// <summary>热力图格子边长（世界单位）。0.5 = 半格，比 1 密一倍（横竖各翻倍）</summary>
+    public const float CellSize = 0.5f;
 
     /// <summary>驻留采样间隔（秒）。0.1 = 每秒 10 次</summary>
     public const float SampleInterval = 0.1f;
@@ -61,8 +66,17 @@ public static class TelemetryConfig
     /// <summary>一次最多上报多少个格子，超出的下次再发</summary>
     public const int CellFlushMaxEvents = 300;
 
-    /// <summary>驻留不足这个秒数的格子不上报（过滤路过）</summary>
-    public const float MinDwellToReport = 0.25f;
+    /// <summary>停留不超过这个秒数的格子不上报（只记待过 1 秒以上的地方，过滤路过）</summary>
+    public const float MinDwellToReport = 1f;
+
+    /// <summary>一条路线最多记多少个格子（再多就丢，防止一条事件超长被服务端拒收）</summary>
+    public const int RouteMaxCells = 300;
+
+    /// <summary>
+    /// 死亡时也把这一趟的路线发出去，但短于这么多格子就不发：
+    /// 刚进关就摔死的一趟没有分析价值，只会白白多一行数据。
+    /// </summary>
+    public const int RouteMinCellsOnDeath = 10;
 
     /// <summary>地址是否已正确配置（没配就只落盘、不发网络，避免刷屏报错）</summary>
     public static bool HasEndpoint

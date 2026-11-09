@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 using System.Collections.Generic;
 
@@ -41,6 +42,25 @@ public class Key : MonoBehaviour
     /// 全局静态标志: 是否已获得钥匙. 由本脚本设为 true, 由 NextLevel 检查.
     /// </summary>
     public static bool hasKey = false;
+
+    /// <summary>
+    /// 每次场景加载完成后把 hasKey 清零.
+    /// 之前这段逻辑写在 NextLevel.Start() 里, 但场景里只要有一扇门是后激活/后实例化的,
+    /// 它的 Start 就会把玩家已经拿到的钥匙清掉, 导致"有钥匙也开不了门".
+    /// 钥匙标志属于跨场景的全局状态, 只应该跟随"场景加载"这一件事重置.
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void RegisterSceneReset()
+    {
+        // 先移除再添加, 防止关闭 Domain Reload 时重复订阅
+        SceneManager.sceneLoaded -= OnAnySceneLoaded;
+        SceneManager.sceneLoaded += OnAnySceneLoaded;
+    }
+
+    private static void OnAnySceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        hasKey = false;
+    }
 
     // 静态列表: 场景里所有钥匙 (重生时全部重置)
     private static List<Key> allKeys = new List<Key>();
@@ -110,6 +130,7 @@ public class Key : MonoBehaviour
 
         // 标记已获得钥匙
         hasKey = true;
+        Debug.Log($"[Key] {name} 被 {collision.gameObject.name} 拿到, hasKey=true");
 
         // 激活灵光球, 飞向主角 P1 (到达后变成钥匙跟随主角)
         ActivateKeyOrb();
