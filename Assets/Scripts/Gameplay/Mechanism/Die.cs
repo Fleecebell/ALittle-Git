@@ -10,6 +10,11 @@ public class Die : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Player2"))
         {
+            // [Telemetry] 暂存死因（哪个危险物）与死亡瞬间的位置。
+            // 真正发出事件在 DeathRespawnVFX.TriggerDeath()，那时玩家还没被传送走。
+            string actor = collision.gameObject.CompareTag("Player2") ? "player2" : "player1";
+            Telemetry.NoteDeath("hazard:" + gameObject.name, actor, collision.transform.position);
+
             MoveLate.isR = true;
             playerDying = true;
         }

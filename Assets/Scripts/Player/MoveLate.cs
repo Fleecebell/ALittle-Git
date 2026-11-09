@@ -499,6 +499,12 @@ public class MoveLate : MonoBehaviour, IWaterResponder
         // 不再直接传送, 而是交给 DeathRespawnVFX 播放动画, 动画结束后由 DoReset() 做实际传送
         if (Input.GetKeyDown(KeyCode.R) || isR)
         {
+            // [Telemetry] 区分"自己按 R 重置"和"被危险物判死"（isR 由 Die.cs 置位，死因已在那边记好）
+            if (!isR && Input.GetKeyDown(KeyCode.R))
+            {
+                Telemetry.NoteDeath("manual_r", "player1");
+            }
+
             isR = false; // 清掉标志, 防止下一帧重复触发
             DeathRespawnVFX.TriggerDeath();
         }

@@ -165,6 +165,10 @@ public class NextLevel : MonoBehaviour
 
     private void GoToNextLevel()
     {
+        // [Telemetry] 通关埋点：记录本关时长/死亡数/跳跃数，并把格子统计一次性发完。
+        // 放在加载下一关之前，此时统计还是本关的。
+        Telemetry.OnLevelClear();
+
         int nextScene = currentScene + 1;
 
         if (nextScene < SceneManager.sceneCountInBuildSettings)

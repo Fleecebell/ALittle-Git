@@ -1,0 +1,26 @@
+#:schema node_modules/wrangler/config-schema.json
+# ============================================================
+# ALittle 遥测后端 —— Cloudflare Worker + D1
+# 部署前必改：下面 [[d1_databases]] 里的 database_id
+#   获取方式: npx wrangler d1 create alittle-telemetry
+# ============================================================
+
+name = "alittle-telemetry"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+workers_dev = true
+
+# 开发/预发环境变量（生产密钥请用 wrangler secret put，不要写在这里）
+[vars]
+# 留空字符串表示不校验上报密钥（默认）。填了就用 wrangler secret put INGEST_KEY 设置同名密钥
+INGEST_KEY = ""
+
+[[d1_databases]]
+binding = "DB"                                   # 代码里用 env.DB 访问
+database_name = "alittle-telemetry"
+database_id = "c6b4a93e-60ae-4bca-936f-3ac3cdf8ce7b"    # ← npx wrangler d1 create 的输出粘贴到这里
+migrations_dir = "migrations"
+
+# 可观测性（免费额度内，方便看错误日志）
+[observability]
+enabled = true

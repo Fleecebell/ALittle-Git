@@ -270,7 +270,8 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
         //   1. GetKeyDown 按下瞬间 → 记入跳跃缓冲(空中按了落地也能跳)
         //   2. GetKey 长按 → 落地就跳(连按连跳, 踩影子也能跳)
         // 用 jumpLockTimer 冷却防止起飞：跳起后 0.25 秒内不能跳, 确保已离开地面
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W))
+        bool jumpPressedNow = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W);
+        if (jumpPressedNow)
         {
             jumpBufferTimer = jumpBufferDuration;
         }
@@ -281,11 +282,21 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
         if (jumpLockTimer > 0f) jumpLockTimer -= Time.deltaTime;
 
         // 执行跳跃：缓冲有效 或 长按, 且在地面 + 没冷却 + 没在爬梯 + 不在下穿中
-        if ((jumpBufferTimer > 0f || jumpHeld) && isGrounded && !isClimbing && dropThroughTimer <= 0f && jumpLockTimer <= 0f)
+        bool jumped = (jumpBufferTimer > 0f || jumpHeld) && isGrounded && !isClimbing &&
+                      dropThroughTimer <= 0f && jumpLockTimer <= 0f;
+        if (jumped)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             jumpBufferTimer = 0f;   // 跳了就清零缓冲
             jumpLockTimer = jumpLockDuration; // 启动冷却, 防止还没离地又跳(起飞)
+
+            // [Telemetry] 成功起跳：按格子聚合计数，关卡结束/每 60 秒上报一次
+            Telemetry.OnJump(transform.position);
+        }
+        else if (jumpPressedNow && isGrounded)
+        {
+            // [Telemetry] 站在地上按了空格却没跳成（冷却/爬梯/下穿中）→ 手感问题定位
+            Telemetry.OnJumpFail(transform.position, "grounded_blocked");
         }
 
         // 水里游泳: 在水里时按 空格/W = 向上游
