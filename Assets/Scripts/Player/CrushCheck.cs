@@ -48,6 +48,9 @@ public class CrushCheck : MonoBehaviour
 
         if (IsCrushed())
         {
+            // [Telemetry] 记录死因：被地形夹死（下一帧 CheckReset 会真正触发死亡）
+            Telemetry.NoteDeath("crush", gameObject.CompareTag("Player2") ? "player2" : "player1", transform.position);
+
             // 与按 R 效果一致: 交给 MoveLate.CheckReset 下一帧触发 TriggerDeath()
             MoveLate.isR = true;
         }

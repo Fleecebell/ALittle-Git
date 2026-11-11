@@ -32,10 +32,15 @@ public class NextLevel : MonoBehaviour
     private static List<NextLevel> allDoors = new List<NextLevel>();
 
     private int currentScene;
-    // 玩家是否在门触发器内
-    private bool playerInTrigger = false;
+
+    // 触发区内的玩家数量. P1 / P2 都算, 用计数可以避免"一人离开就当没人"的误判
+    private int playersInTrigger = 0;
+    private bool playerInTrigger => playersInTrigger > 0;
+
     // 锁动画是否正在播放
     private bool isUnlocking = false;
+    // 是否已经触发过关流程 (防止重复加载下一关)
+    private bool hasCleared = false;
 
     private void Awake()
     {
@@ -49,8 +54,9 @@ public class NextLevel : MonoBehaviour
     {
         currentScene = SceneManager.GetActiveScene().buildIndex;
 
-        // 新场景开始时重置钥匙标志
-        Key.hasKey = false;
+        // 注意: 这里不再写 Key.hasKey = false.
+        // 钥匙标志改由 Key 在"每次场景加载完成"时统一清零(见 Key.OnAnySceneLoaded).
+        // 否则场景里任何一扇后激活/后实例化的门, 都会把玩家已经拿到的钥匙清掉.
 
         // 没有锁 → 默认已解锁, 可直接通关
         // 有锁 → 需要钥匙
@@ -68,7 +74,7 @@ public class NextLevel : MonoBehaviour
 
     /// <summary>
     /// 重置所有门 (重生时由 DeathRespawnVFX 调用):
-    /// 重置 isUnlocked + isUnlocking + playerInTrigger
+    /// 重置 isUnlocked + isUnlocking + 触发区状态
     /// 有锁的门重置回锁定状态, 无锁的门保持解锁
     /// </summary>
     public static void ResetAllDoors()
@@ -78,22 +84,66 @@ public class NextLevel : MonoBehaviour
             if (door != null)
             {
                 door.isUnlocking = false;
-                door.playerInTrigger = false;
+                door.hasCleared = false;
+                door.playersInTrigger = 0;
                 // 有锁 → 锁定; 无锁 → 解锁
                 door.isUnlocked = (door.lockAnimator == null);
             }
         }
     }
 
+    // P1(Player) 和 P2(Player2) 都能触发:
+    // Key 允许 P1/P2 任意一方捡钥匙, 通关门也必须允许任意一方通过,
+    // 否则 P2 拿到钥匙后走到门前不会有任何反应(连日志都不会打印).
+    private static bool IsPlayer(Collider2D collision)
+    {
+        return collision.CompareTag("Player") || collision.CompareTag("Player2");
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag("Player"))
+        if (!IsPlayer(collision))
             return;
 
-        playerInTrigger = true;
+        playersInTrigger++;
 
         if (showDebug)
-            Debug.Log($"[NextLevel] 玩家碰到门. isUnlocked={isUnlocked}, hasKey={Key.hasKey}, isUnlocking={isUnlocking}");
+            Debug.Log($"[NextLevel] {collision.gameObject.name} 碰到门. isUnlocked={isUnlocked}, hasKey={Key.hasKey}, isUnlocking={isUnlocking}");
+
+        if (isUnlocked || Key.hasKey)
+        {
+            TryClear();
+        }
+        else if (showDebug)
+        {
+            Debug.Log("[NextLevel] 门是锁着的，需要先收集钥匙！");
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (IsPlayer(collision))
+            playersInTrigger = Mathf.Max(0, playersInTrigger - 1);
+    }
+
+    private void Update()
+    {
+        // 兜底轮询: 玩家已经在触发区里时才检查
+        // (比如先站进门里、再去拿钥匙; 或者物理触发事件被漏掉的情况)
+        if (hasCleared || !playerInTrigger || isUnlocking)
+            return;
+
+        if (isUnlocked || Key.hasKey)
+            TryClear();
+    }
+
+    /// <summary>
+    /// 尝试通关/解锁. 已解锁 → 通关; 有钥匙 → 播解锁动画; 没钥匙 → 不动.
+    /// </summary>
+    private void TryClear()
+    {
+        if (hasCleared || isUnlocking)
+            return;
 
         // 已解锁 → 直接通关
         if (isUnlocked)
@@ -102,27 +152,12 @@ public class NextLevel : MonoBehaviour
             return;
         }
 
-        // 未解锁 (有锁)
-        if (!isUnlocking)
+        // 有钥匙 → 触发解锁动画
+        if (Key.hasKey)
         {
-            if (Key.hasKey)
-            {
-                // 有钥匙 → 触发解锁动画
-                if (showDebug) Debug.Log("[NextLevel] 玩家有钥匙, 开始解锁动画");
-                StartCoroutine(UnlockSequence());
-            }
-            else
-            {
-                // 没钥匙 → 提示
-                Debug.Log("[NextLevel] 门是锁着的，需要先收集钥匙！");
-            }
+            if (showDebug) Debug.Log("[NextLevel] 玩家有钥匙, 开始解锁动画");
+            StartCoroutine(UnlockSequence());
         }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-            playerInTrigger = false;
     }
 
     /// <summary>
@@ -149,6 +184,14 @@ public class NextLevel : MonoBehaviour
         }
 
         isUnlocking = false;
+
+        // 动画期间玩家死亡重生 → 门被重置回锁定状态, 本次解锁作废
+        if (!isUnlocked)
+        {
+            if (showDebug) Debug.Log("[NextLevel] 解锁过程被重置(死亡重生), 取消本次通关");
+            yield break;
+        }
+
         Debug.Log("[NextLevel] 通关门已解锁！");
 
         // 如果玩家还在门内, 通关
@@ -165,6 +208,14 @@ public class NextLevel : MonoBehaviour
 
     private void GoToNextLevel()
     {
+        // 防止同一帧/同一扇门重复触发加载
+        if (hasCleared) return;
+        hasCleared = true;
+
+        // [Telemetry] 通关埋点：记录本关时长/死亡数/跳跃数，并把格子统计一次性发完。
+        // 放在加载下一关之前，此时统计还是本关的。
+        Telemetry.OnLevelClear();
+
         int nextScene = currentScene + 1;
 
         if (nextScene < SceneManager.sceneCountInBuildSettings)

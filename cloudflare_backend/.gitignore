@@ -1,0 +1,10 @@
+node_modules/
+.wrangler/
+.dev.vars
+.env
+dist/
+tools/received.jsonl
+
+# ±æµÿ‘§¿¿ΩÿÕº
+docs/_*
+tools/_shot_*.png

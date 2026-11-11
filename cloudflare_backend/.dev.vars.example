@@ -1,0 +1,2 @@
+# 本地/预发密钥（wrangler dev 自动读取，不会提交）
+INGEST_KEY=

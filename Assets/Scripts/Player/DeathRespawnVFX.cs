@@ -91,6 +91,10 @@ public class DeathRespawnVFX : MonoBehaviour
             return;
         }
 
+        // [Telemetry] 死亡埋点唯一入口：此刻玩家还在死亡点，0.12 秒后 DoReset 才会传送回去。
+        // 放在 isProcessing 判断之后，重复触发不会重复计数。
+        Telemetry.OnDeath();
+
         // 找一个实例启动协程 (协程里统一驱动所有实例)
         if (activeInstances.Count == 0)
         {
