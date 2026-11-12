@@ -123,18 +123,26 @@ Shader "Custom/PlatformDapple"
             "DisableBatching" = "True"
         }
 
-        Blend SrcAlpha OneMinusSrcAlpha
+        Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
         ZWrite Off
         Cull Off
 
         Pass
         {
             Name "Forward"
-            Tags { "LightMode" = "SRPDefaultUnlit" }
+            // 2D 光照通道 (与项目里 Custom/PlatformTilemapLit 一致)
+            Tags { "LightMode" = "Universal2D" }
 
             HLSLPROGRAM
             #pragma vertex   vert
             #pragma fragment frag
+
+            // URP 2D 光照: 4 种形状光混合方式 + 调试显示
+            #pragma multi_compile USE_SHAPE_LIGHT_TYPE_0 __
+            #pragma multi_compile USE_SHAPE_LIGHT_TYPE_1 __
+            #pragma multi_compile USE_SHAPE_LIGHT_TYPE_2 __
+            #pragma multi_compile USE_SHAPE_LIGHT_TYPE_3 __
+            #pragma multi_compile _ DEBUG_DISPLAY
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
@@ -155,7 +163,11 @@ Shader "Custom/PlatformDapple"
                 float2 dapplePos : TEXCOORD3;  // 物体空间顶点位置 → 噪声用, 天生钉在平台上
                 float2 dapplePosMinus : TEXCOORD4;  // 顶点位置 - 平台世界原点
                 float2 worldPosMinus  : TEXCOORD5;  // 世界坐标 - 平台世界原点
+                half2  lightingUV : TEXCOORD6;      // 2D 光照采样用 (屏幕坐标)
             };
+
+            // URP 2D 光照工具 (SHAPE_LIGHT / 光照纹理声明)
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
 
             // ---------- 贴图声明 ----------
             TEXTURE2D(_MainTex);
@@ -186,6 +198,23 @@ Shader "Custom/PlatformDapple"
             float4 _MaskWorldSize;
             CBUFFER_END
 
+            // ---------- 2D 形状光: 每启用一个混合方式就声明一组光照纹理 ----------
+            #if USE_SHAPE_LIGHT_TYPE_0
+            SHAPE_LIGHT(0)
+            #endif
+
+            #if USE_SHAPE_LIGHT_TYPE_1
+            SHAPE_LIGHT(1)
+            #endif
+
+            #if USE_SHAPE_LIGHT_TYPE_2
+            SHAPE_LIGHT(2)
+            #endif
+
+            #if USE_SHAPE_LIGHT_TYPE_3
+            SHAPE_LIGHT(3)
+            #endif
+
             // ---------- 程序化噪声: 世界坐标采样 → 跨 Tile 连续 ----------
             // (内部用 float 计算, 哈希在 half 精度下会坏)
             float DappleHash(float2 p)
@@ -213,6 +242,8 @@ Shader "Custom/PlatformDapple"
                 v2f o;
                 o.vertex = TransformObjectToHClip(v.vertex.xyz);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                // 2D 光照采样坐标 (屏幕空间)
+                o.lightingUV = half2(ComputeScreenPos(o.vertex / o.vertex.w).xy);
 
                 // 世界坐标 (只给整图 Mask 用; 那张图本身就是世界坐标数据)
                 o.worldPos = TransformObjectToWorld(v.vertex.xyz).xy;
@@ -229,6 +260,9 @@ Shader "Custom/PlatformDapple"
                 o.color = v.color;
                 return o;
             }
+
+            // URP 2D 光照合成 (与 Sprite-Lit-Default 同一套)
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
 
             // ---------- 片元着色器 ----------
             half4 frag (v2f i) : SV_Target
@@ -340,7 +374,16 @@ Shader "Custom/PlatformDapple"
                 //   改它只改颜色, 上面算好的形状/位置一个像素都不会动。
                 // 完全不想要瓦片染色时把 i.color 去掉即可 (只留 _DappleColor)。
                 half3 tint = _DappleColor.rgb * i.color.rgb;
-                return half4(tint, saturate(amount * _DappleColorStrength));
+                half  coverage = saturate(amount * _DappleColorStrength);
+
+                // ---- 8. 2D 光照合成 ----
+                // 形状光只乘 RGB(明暗), Alpha 仍是斑驳覆盖度, 遮挡关系不变。
+                // 没有 2D 光时由 URP 的全局光/环境光决定(和别的 lit 精灵一致)。
+                SurfaceData2D surfaceData;
+                InputData2D  inputData;
+                InitializeSurfaceData(tint, coverage, half4(1, 1, 1, 1), surfaceData);
+                InitializeInputData(i.uv, i.lightingUV, inputData);
+                return CombinedShapeLightShared(surfaceData, inputData);
             }
             ENDHLSL
         }
