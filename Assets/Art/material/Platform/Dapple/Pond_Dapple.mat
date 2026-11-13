@@ -33,8 +33,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _DappleAnchorMode: 0
     - _DappleColorStrength: 0.95
     - _DappleContrast: 0.25
+    - _DappleDebug: 0
     - _DappleNoiseWeight: 1
     - _DappleScale: 0.8
     - _DappleSoftness: 0
@@ -43,7 +45,8 @@ Material:
     - _MaskStrength: 1
     - _UseMaskTex: 0
     m_Colors:
-    - _DappleColor: {r: 0.18586686, g: 0.4339623, b: 0.3912183, a: 1}
+    - _DappleAnchorPos: {r: 0, g: 0, b: 0, a: 0}
+    - _DappleColor: {r: 0.17003201, g: 0.6301887, b: 0.5510993, a: 1}
     - _MaskWorldOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _MaskWorldSize: {r: 32, g: 8, b: 0, a: 0}
   m_BuildTextureStacks: []
