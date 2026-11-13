@@ -39,6 +39,7 @@ public class Telemetry : MonoBehaviour
     }
 
     private readonly List<Queued> queue = new List<Queued>();
+    private List<Queued> inFlight; // 已经出队、正在发的那一批（退出时用它落盘）
     private TelemetryLevelStats stats;
 
     private string playerId;
@@ -207,32 +208,68 @@ public class Telemetry : MonoBehaviour
     {
         if (queue.Count == 0) yield break;
 
+        // 先把这一批摘出队列、再发请求。
+        //
+        // 旧写法是"发完再 RemoveRange(0, n)"，但 yield 期间队列会被别处改动：
+        //   ① Enqueue() 超过 MaxQueue 会从队首裁剪；
+        //   ② 退出/暂停时 SpoolAll() 会 Clear()。
+        // 等回到这里时 queue.Count 可能已经 < n，RemoveRange 直接抛
+        // ArgumentException，还会把 MainLoop 整个协程打死（遥测从此静默停摆）。
+        // 摘出来之后，这批数据就只属于本地变量，队列怎么变都与它无关。
         int n = Mathf.Min(TelemetryConfig.MaxBatch, queue.Count);
-        string payload = BuildPayload(n);
+        var batch = queue.GetRange(0, n);
 
+        string payload;
+        try
+        {
+            payload = BuildPayload(batch);
+        }
+        catch (Exception e)
+        {
+            // payload 都拼不出来就别留在内存里反复重试
+            Debug.LogWarning("[Telemetry] 拼装上报内容失败，已存本地: " + e.Message);
+            queue.RemoveRange(0, n);
+            AppendSpool(batch);
+            yield break;
+        }
+        queue.RemoveRange(0, n); // 和上面同步执行，中间没有 yield，不会跟别的改动交错
+
+        inFlight = batch;
         sending = true;
-        yield return PostJson(payload);
-        sending = false;
+        try
+        {
+            yield return PostJson(payload);
+        }
+        finally
+        {
+            // 无论正常结束还是抛异常都要复位，否则 sending 永远是 true，上报永久卡死
+            sending = false;
+            inFlight = null;
+        }
 
-        if (sendOk)
+        // 结果处理再兜一层：落盘、写日志抛异常也不能让 MainLoop 停摆
+        try
         {
-            queue.RemoveRange(0, n);
-            if (TelemetryConfig.verbose) Debug.Log($"[Telemetry] 上报成功 {n} 条");
+            if (sendOk)
+            {
+                if (TelemetryConfig.verbose) Debug.Log($"[Telemetry] 上报成功 {n} 条");
+            }
+            else if (IsPermanentRejection(lastStatus))
+            {
+                // 服务端明确说"这批数据不合法"（400/413/422），重试多少次都不会成功，
+                // 丢掉它们，否则会永远堵在 spool 里，把后面的好数据一起卡死。
+                Debug.LogWarning($"[Telemetry] 服务端拒收 HTTP {lastStatus}，已丢弃这 {n} 条");
+            }
+            else
+            {
+                // 失败就整批落盘（用本地批次，不去队列里再取，避免删错数据）
+                AppendSpool(batch);
+                if (TelemetryConfig.verbose) Debug.LogWarning($"[Telemetry] 上报失败，已存本地 {n} 条");
+            }
         }
-        else if (IsPermanentRejection(lastStatus))
+        catch (Exception e)
         {
-            // 服务端明确说"这批数据不合法"（400/413/422），重试多少次都不会成功，
-            // 丢掉它们，否则会永远堵在 spool 里，把后面的好数据一起卡死。
-            queue.RemoveRange(0, n);
-            Debug.LogWarning($"[Telemetry] 服务端拒收 HTTP {lastStatus}，已丢弃这 {n} 条");
-        }
-        else
-        {
-            // 失败就整批落盘，下个会话/30 秒后补发，避免内存无限涨
-            var failed = queue.GetRange(0, n);
-            queue.RemoveRange(0, n);
-            AppendSpool(failed);
-            if (TelemetryConfig.verbose) Debug.LogWarning($"[Telemetry] 上报失败，已存本地 {n} 条");
+            Debug.LogWarning("[Telemetry] 处理上报结果异常（已忽略）: " + e);
         }
     }
 
@@ -281,26 +318,45 @@ public class Telemetry : MonoBehaviour
 
         yield return request.SendWebRequest();
 
-        lastStatus = request.responseCode;
-        sendOk = request.result == UnityWebRequest.Result.Success &&
-                 request.responseCode >= 200 && request.responseCode < 300;
-
-        if (!sendOk && TelemetryConfig.verbose)
+        // yield 之后的代码一律包起来：这里抛异常会顺着迭代器冒出去，把 MainLoop 协程打死
+        try
         {
-            Debug.LogWarning($"[Telemetry] HTTP {request.responseCode} {request.error} {request.downloadHandler?.text}");
-        }
+            lastStatus = request.responseCode;
+            sendOk = request.result == UnityWebRequest.Result.Success &&
+                     request.responseCode >= 200 && request.responseCode < 300;
 
-        request.Dispose();
+            if (!sendOk && TelemetryConfig.verbose)
+            {
+                Debug.LogWarning($"[Telemetry] HTTP {request.responseCode} {request.error} {request.downloadHandler?.text}");
+            }
+        }
+        catch (Exception e)
+        {
+            sendOk = false;
+            Debug.LogWarning("[Telemetry] 读取响应失败: " + e.Message);
+        }
+        finally
+        {
+            try { request.Dispose(); } catch { }
+        }
     }
 
+    /// <summary>退出时用：从队首取 count 条拼 payload（同步执行，中间没有 yield）</summary>
     private string BuildPayload(int count)
     {
-        var sb = new StringBuilder(128 + count * 200);
+        count = Mathf.Min(count, queue.Count);
+        return BuildPayload(queue.GetRange(0, count));
+    }
+
+    /// <summary>用一批已摘出队列的事件拼 payload</summary>
+    private static string BuildPayload(List<Queued> batch)
+    {
+        var sb = new StringBuilder(128 + batch.Count * 200);
         sb.Append("{\"game\":\"alittle\",\"v\":1,\"events\":[");
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < batch.Count; i++)
         {
             if (i > 0) sb.Append(',');
-            sb.Append(queue[i].json);
+            sb.Append(batch[i].json);
         }
         sb.Append("]}");
         return sb.ToString();
@@ -450,7 +506,15 @@ public class Telemetry : MonoBehaviour
 
         stats.CloseLevel("quit");
 
-        // 退出时给最后一批一次同步机会（最多 2 秒，玩家已经点关闭了，感知不到）
+        // 正在发的那一批已经从队列里摘出去了，主循环马上要停、那个 request 也不会再有结果，
+        // 先落盘，否则这批数据会凭空消失
+        if (inFlight != null)
+        {
+            AppendSpool(inFlight);
+            inFlight = null;
+        }
+
+        // 退出时给最后一批一次同步机会（预算 3.5 秒，玩家已经点关闭了，感知不到）
         FlushBlockingAtQuit();
 
         if (queue.Count > 0) SpoolAll();
