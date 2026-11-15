@@ -1,0 +1,58 @@
+﻿=== move apps start ===
+[23:42:02] ---- JianyingPro-6.3 ----
+[23:42:13]   source: 23135 files, 6458 MB
+[23:44:44]   robocopy exit code = 1
+[23:44:44]   after copy: target=True sourceStillThere=True
+[23:44:44]   leftover source removed
+[23:44:44]   JUNCTION OK: C:\Users\14401\AppData\Local\JianyingPro -> E:\programs\JianyingPro
+[23:44:44] ---- Quark ----
+[23:44:46]   source: 5782 files, 4802 MB
+[23:45:35]   robocopy exit code = 1
+[23:45:35]   after copy: target=True sourceStillThere=False
+[23:45:35]   JUNCTION OK: C:\Users\14401\AppData\Local\Programs\Quark -> E:\programs\Quark
+[23:45:35] ---- PaintToolSAI ----
+[23:45:36]   source: 13025 files, 3716 MB
+[23:47:08]   robocopy exit code = 1
+[23:47:08]   after copy: target=True sourceStillThere=False
+[23:47:08]   JUNCTION OK: C:\Users\14401\AppData\Local\SYSTEMAX Software Development -> E:\programs\PaintToolSAI
+[23:47:08] ---- GitHubDesktop ----
+[23:47:08]   source: 2159 files, 1306 MB
+[23:47:29]   robocopy exit code = 1
+[23:47:29]   after copy: target=True sourceStillThere=False
+[23:47:29]   JUNCTION OK: C:\Users\14401\AppData\Local\GitHubDesktop -> E:\programs\GitHubDesktop
+[23:47:29] ---- TuanjieCowork ----
+[23:47:29]   source: 714 files, 670 MB
+[23:47:38]   robocopy exit code = 1
+[23:47:38]   after copy: target=True sourceStillThere=False
+[23:47:38]   JUNCTION OK: C:\Users\14401\AppData\Local\Programs\Tuanjie Cowork -> E:\programs\TuanjieCowork
+[23:47:38] ---- cron-web ----
+[23:47:38]   source: 77 files, 321 MB
+[23:47:40]   robocopy exit code = 1
+[23:47:40]   after copy: target=True sourceStillThere=False
+[23:47:40]   JUNCTION OK: C:\Users\14401\AppData\Local\Programs\cron-web -> E:\programs\cron-web
+[23:47:40] ---- Kimi ----
+[23:47:40]   source: 596 files, 306 MB
+[23:47:46]   robocopy exit code = 1
+[23:47:46]   after copy: target=True sourceStillThere=False
+[23:47:46]   JUNCTION OK: C:\Users\14401\AppData\Local\Programs\Kimi 智能助手 -> E:\programs\Kimi
+[23:47:46] ---- Notion ----
+[23:47:46]   source: 83 files, 297 MB
+[23:47:48]   robocopy exit code = 1
+[23:47:48]   after copy: target=True sourceStillThere=False
+[23:47:48]   JUNCTION OK: C:\Users\14401\AppData\Local\Programs\Notion -> E:\programs\Notion
+[23:47:48] ---- Python ----
+[23:47:49]   source: 5486 files, 139 MB
+[23:48:17]   robocopy exit code = 1
+[23:48:17]   after copy: target=True sourceStillThere=False
+[23:48:17]   JUNCTION OK: C:\Users\14401\AppData\Local\Programs\Python -> E:\programs\Python
+[23:48:17] === verify ===
+[23:48:17]   JianyingPro-6.3  srcExists=True linkType=Junction
+[23:48:17]   Quark            srcExists=True linkType=Junction
+[23:48:17]   PaintToolSAI     srcExists=True linkType=Junction
+[23:48:17]   GitHubDesktop    srcExists=True linkType=Junction
+[23:48:17]   TuanjieCowork    srcExists=True linkType=Junction
+[23:48:17]   cron-web         srcExists=True linkType=Junction
+[23:48:18]   Kimi             srcExists=True linkType=Junction
+[23:48:18]   Notion           srcExists=True linkType=Junction
+[23:48:18]   Python           srcExists=True linkType=Junction
+[23:48:18] === move apps end ===

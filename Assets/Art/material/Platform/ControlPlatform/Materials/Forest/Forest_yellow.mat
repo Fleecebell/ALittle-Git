@@ -35,10 +35,10 @@ Material:
     m_Floats:
     - _PatternAnchor: 1
     - _PatternRotate90: 0
-    - _PatternScale: 0.41
+    - _PatternScale: 0.3
     - _PatternStrength: 0.62
     m_Colors:
-    - _BaseColor: {r: 0.89433956, g: 0.87138385, b: 0.1873051, a: 1}
+    - _BaseColor: {r: 0.83396226, g: 0.8147129, b: 0.25648266, a: 1}
     - _PatternColor: {r: 0.3283019, g: 0.27722538, b: 0.05141329, a: 1}
     - _PatternOffset: {r: 0, g: 0, b: 0, a: 0}
     - _PlatformAnchorPos: {r: 0, g: 0, b: 0, a: 0}

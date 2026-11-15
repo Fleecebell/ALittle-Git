@@ -35,7 +35,7 @@ Material:
     m_Floats:
     - _PatternAnchor: 1
     - _PatternRotate90: 0
-    - _PatternScale: 0.41
+    - _PatternScale: 0.3
     - _PatternStrength: 0.62
     m_Colors:
     - _BaseColor: {r: 0.645283, g: 0.33699796, b: 0.018262615, a: 1}
