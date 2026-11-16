@@ -28,9 +28,10 @@ public class LevelSelectPanel : MonoBehaviour
     [Tooltip("点一下隐藏面板（可以不填）")]
     public Button closeButton;
 
-    [Header("=== 正式版保护 ===")]
-    [Tooltip("勾选：只在编辑器和 Development Build 里出现，正式版打包时自动销毁（避免调试面板漏进正式游戏）")]
-    public bool devOnly = true;
+    [Header("=== 正式包 ===")]
+    [Tooltip("勾选：只在编辑器和 Development Build 里出现，正式包自动销毁（避免调试面板漏进正式游戏）；" +
+             "不勾：正式包里也保留，打包后能正常用。默认不勾。")]
+    public bool removeFromReleaseBuild = false;
 
     private void Reset()
     {
@@ -39,7 +40,8 @@ public class LevelSelectPanel : MonoBehaviour
 
     private void Awake()
     {
-        if (devOnly && !Application.isEditor && !Debug.isDebugBuild)
+        // 注意：这里销毁的是整个 Canvas。勾了这项的话，正式包里 Win / 安卓包都会看不到面板。
+        if (removeFromReleaseBuild && !Application.isEditor && !Debug.isDebugBuild)
         {
             Destroy(gameObject);
             return;

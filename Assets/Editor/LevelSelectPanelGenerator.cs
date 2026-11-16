@@ -132,8 +132,8 @@ public class LevelSelectPanelGenerator : EditorWindow
         }
 
         EditorGUILayout.HelpBox(
-            "生成后面板会随场景一起进包。不想出现在正式版：保持 LevelSelectPanel 上的「正式版保护」勾选即可" +
-            "（正式包里自动销毁，编辑器 / Development Build 里仍可用）。",
+            "生成的面板会随场景进包，正式包（Release）里也能用。\n" +
+            "若只想在编辑器 / Development Build 里出现，勾选 LevelSelectPanel 上的「正式包中移除」即可。",
             MessageType.None);
     }
 
@@ -348,7 +348,7 @@ public class LevelSelectPanelGenerator : EditorWindow
         panelLogic.startVisible = _startVisible;
         panelLogic.toggleKey = _toggleKey;
         panelLogic.closeButton = closeButton;
-        panelLogic.devOnly = true;
+        panelLogic.removeFromReleaseBuild = false;
 
         EditorSceneManager.MarkSceneDirty(scene);
         Undo.SetCurrentGroupName(UndoName);
