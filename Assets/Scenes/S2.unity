@@ -4174,42 +4174,6 @@ CompositeCollider2D:
         Y: -468750
       - X: 7750000
         Y: -1718750
-  - m_Collider: {fileID: 1592244839}
-    m_ColliderPaths:
-    - - X: 4250000
-        Y: 1406250
-      - X: 4250000
-        Y: 2500000
-      - X: 4125000
-        Y: 2968750
-      - X: 3500000
-        Y: 2968750
-      - X: 2875000
-        Y: 2500000
-      - X: 2500000
-        Y: 2031250
-      - X: 2500000
-        Y: 1406250
-      - X: 2750000
-        Y: 1093750
-      - X: 3875000
-        Y: 1093750
-    - - X: -4750000
-        Y: 1406250
-      - X: -4750000
-        Y: 2187500
-      - X: -5000000
-        Y: 2343750
-      - X: -5625000
-        Y: 2343750
-      - X: -5750000
-        Y: 2031250
-      - X: -5875000
-        Y: 1406250
-      - X: -5625000
-        Y: 1093750
-      - X: -5000000
-        Y: 1093750
   - m_Collider: {fileID: 450094032}
     m_ColliderPaths:
     - - X: 8000000
@@ -4243,19 +4207,6 @@ CompositeCollider2D:
     - - {x: 0.7999707, y: -0.5}
       - {x: 0.7999918, y: 0.078132704}
       - {x: 0.6999896, y: 0.171875}
-      - {x: 0.425, y: 0.1719044}
-      - {x: 0.4249992, y: 0.2500033}
-      - {x: 0.4124786, y: 0.296875}
-      - {x: 0.3499931, y: 0.2968699}
-      - {x: 0.287498, y: 0.2499975}
-      - {x: 0.25, y: 0.203116}
-      - {x: 0.2499706, y: 0.171875}
-      - {x: -0.475, y: 0.1719044}
-      - {x: -0.4750125, y: 0.21875781}
-      - {x: -0.5000074, y: 0.234375}
-      - {x: -0.5625069, y: 0.2343578}
-      - {x: -0.5750004, y: 0.2031232}
-      - {x: -0.5812731, y: 0.171875}
       - {x: -0.6750048, y: 0.17187311}
       - {x: -0.71250373, y: 0.156246}
       - {x: -0.8, y: 0.0624898}
@@ -4839,7 +4790,7 @@ PrefabInstance:
     - target: {fileID: 3187676314288489103, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -726672860, guid: 929ef4742d9fe114b8e0093c52a9a98d, type: 3}
+      objectReference: {fileID: 2056072601, guid: f1669d48b6d758a4787e955f3276f89a, type: 3}
     - target: {fileID: 3187676314288489103, guid: c6b0e442736c81a419711eeb21cd8319, type: 3}
       propertyPath: m_Color.b
       value: 0.15686275
@@ -17032,7 +16983,6 @@ GameObject:
   - component: {fileID: 1592244838}
   - component: {fileID: 1592244841}
   - component: {fileID: 1592244840}
-  - component: {fileID: 1592244839}
   m_Layer: 0
   m_Name: Grass
   m_TagString: Ground
@@ -17055,42 +17005,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 209426709}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!19719996 &1592244839
-TilemapCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592244837}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 1
-  m_Offset: {x: 0, y: 0}
-  m_MaximumTileChangeCount: 1000
-  m_ExtrusionFactor: 0
-  m_UseDelaunayMesh: 0
 --- !u!483693784 &1592244840
 TilemapRenderer:
   m_ObjectHideFlags: 0

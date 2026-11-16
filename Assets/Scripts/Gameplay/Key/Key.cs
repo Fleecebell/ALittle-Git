@@ -123,7 +123,8 @@ public class Key : MonoBehaviour
         if (isCollected) return;
 
         // P1 或 P2 触碰钥匙
-        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Player2"))
+        bool isPlayer1 = collision.gameObject.CompareTag("Player");
+        if (!isPlayer1 && !collision.gameObject.CompareTag("Player2"))
             return;
 
         isCollected = true;
@@ -133,17 +134,37 @@ public class Key : MonoBehaviour
         Debug.Log($"[Key] {name} 被 {collision.gameObject.name} 拿到, hasKey=true");
 
         // 激活灵光球, 飞向主角 P1 (到达后变成钥匙跟随主角)
-        ActivateKeyOrb();
+        // P1 自己碰到就用 P1 本体; P2(影子)碰到才去查找 P1
+        ActivateKeyOrb(isPlayer1 ? collision.gameObject : ResolvePlayer());
 
         // 播放收集动画: 放大 → 缩小 → 禁用
         PlayCollectAnimation();
     }
 
     /// <summary>
+    /// 查找真正的主角 P1.
+    /// 不能只用 FindGameObjectWithTag("Player"): 场景里可能还有别的物体被误标成 Player
+    /// (例如 Assets/Scenes/Date/9102.unity 里的 "Light 2D"), 那样灵光球会飞到一个不会动的
+    /// 物体上, 表现就是"钥匙飞到某个非玩家位置后固定住, 再也不跟随".
+    /// 优先用 MoveFirst 组件定位（P1 身上一定有它，且全场景只有一个）。
+    /// </summary>
+    private static GameObject ResolvePlayer()
+    {
+        MoveFirst p1 = FindObjectOfType<MoveFirst>();
+        if (p1 != null) return p1.gameObject;
+
+        GameObject byTag = GameObject.FindGameObjectWithTag("Player");
+        if (byTag != null) return byTag;
+
+        Debug.LogWarning("[Key] 找不到主角 P1 (MoveFirst / Tag=Player 都没有)!");
+        return null;
+    }
+
+    /// <summary>
     /// 激活场景里已有的灵光球, 重置状态后飞向主角 P1
     /// (不再用 Instantiate 克隆, 直接用场景里已有的 KeyOrb 物体)
     /// </summary>
-    private void ActivateKeyOrb()
+    private void ActivateKeyOrb(GameObject player)
     {
         if (keyOrb == null)
         {
@@ -151,12 +172,7 @@ public class Key : MonoBehaviour
             return;
         }
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null)
-        {
-            Debug.LogWarning("找不到 Tag 为 Player 的主角!");
-            return;
-        }
+        if (player == null) return;
 
         // 激活灵光球物体
         keyOrb.gameObject.SetActive(true);
