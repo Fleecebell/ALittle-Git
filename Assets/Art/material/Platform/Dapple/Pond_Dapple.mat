@@ -46,7 +46,7 @@ Material:
     - _UseMaskTex: 0
     m_Colors:
     - _DappleAnchorPos: {r: 0, g: 0, b: 0, a: 0}
-    - _DappleColor: {r: 0.17003201, g: 0.6301887, b: 0.5510993, a: 1}
+    - _DappleColor: {r: 0.26449975, g: 0.690566, b: 0.55938387, a: 1}
     - _MaskWorldOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _MaskWorldSize: {r: 32, g: 8, b: 0, a: 0}
   m_BuildTextureStacks: []
