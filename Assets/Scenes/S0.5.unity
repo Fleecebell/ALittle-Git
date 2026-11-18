@@ -7950,6 +7950,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TumbleweedSpawner
       objectReference: {fileID: 0}
+    - target: {fileID: 4986399192613608054, guid: 264a85b2ae46f5d46b9677c48b65ee3d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7819736279238367672, guid: 264a85b2ae46f5d46b9677c48b65ee3d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.04
@@ -8111,6 +8115,10 @@ PrefabInstance:
     - target: {fileID: 7696816615484169493, guid: 135465f65eaba5e48a4679ac3212d395, type: 3}
       propertyPath: m_Name
       value: Tumbleweed
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696816615484169493, guid: 135465f65eaba5e48a4679ac3212d395, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

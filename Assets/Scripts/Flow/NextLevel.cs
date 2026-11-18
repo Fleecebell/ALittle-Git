@@ -4,15 +4,16 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// 通关门: 玩家带钥匙走到门 → 触发锁动画 → 动画播完后通关
+/// 通关门: 玩家碰到门就算通关 (有锁的门需要手里有钥匙)
 ///
 /// 判断逻辑 (简化版):
 ///   - 有锁(lockAnimator != null) → 需要钥匙才能通关
 ///   - 没锁 → 默认已解锁, 直接通关
 ///
 /// 碰门时:
-///   1. 已解锁 → 直接通关
-///   2. 未解锁 + 有钥匙 → 触发锁动画 → 动画播完 → 通关
+///   1. 已解锁 → 碰到即通关
+///   2. 未解锁 + 有钥匙 → 碰到即判定通关 (冻结计时器 + 上报埋点),
+///      锁动画只作表现, 播完必定切关, 不需要玩家留在门里再碰一次
 ///   3. 未解锁 + 没钥匙 → 提示, 不通关
 /// </summary>
 public class NextLevel : MonoBehaviour
@@ -83,6 +84,10 @@ public class NextLevel : MonoBehaviour
         {
             if (door != null)
             {
+                // 已经判定通关的门不再重置: 通关瞬间已经冻结计时并上报,
+                // 剩下的只是转场, 这时玩家死亡重生不应该把这次通关"撤回"
+                if (door.hasCleared) continue;
+
                 door.isUnlocking = false;
                 door.hasCleared = false;
                 door.playersInTrigger = 0;
@@ -138,30 +143,59 @@ public class NextLevel : MonoBehaviour
     }
 
     /// <summary>
-    /// 尝试通关/解锁. 已解锁 → 通关; 有钥匙 → 播解锁动画; 没钥匙 → 不动.
+    /// 尝试通关. 已解锁 → 碰到即通关; 有钥匙 → 碰到即判定通关并播解锁动画; 没钥匙 → 不动.
     /// </summary>
     private void TryClear()
     {
-        if (hasCleared || isUnlocking)
+        if (hasCleared)
             return;
 
-        // 已解锁 → 直接通关
+        // 已解锁 → 碰到即通关
         if (isUnlocked)
         {
-            GoToNextLevel();
+            MarkCleared();
+            LoadNextLevelScene();
             return;
         }
 
-        // 有钥匙 → 触发解锁动画
+        // 有钥匙 → 碰到的这一帧就算通关, 锁动画只作表现
         if (Key.hasKey)
         {
-            if (showDebug) Debug.Log("[NextLevel] 玩家有钥匙, 开始解锁动画");
+            if (isUnlocking) return;
+
+            if (showDebug) Debug.Log("[NextLevel] 玩家有钥匙, 碰到门即判定通关, 播放解锁动画");
+            MarkCleared();
             StartCoroutine(UnlockSequence());
         }
     }
 
     /// <summary>
-    /// 解锁流程协程: 播放锁动画 → 等动画播完 → 通关(如果玩家还在门内)
+    /// 通关判定瞬间 (一关只执行一次):
+    /// 1) 冻结 UI 计时器, 取"碰到终点这一帧"的时间作为本关成绩
+    /// 2) 用这个时间上报通关埋点 (服务器直接读 duration_s, 不自己算时长)
+    /// </summary>
+    private void MarkCleared()
+    {
+        if (hasCleared) return;
+        hasCleared = true;
+
+        float finalSeconds = -1f;
+        UIManager ui = FindObjectOfType<UIManager>();
+        if (ui != null)
+        {
+            ui.StopTimer();
+            finalSeconds = ui.score;
+        }
+        else
+        {
+            Debug.LogWarning("[NextLevel] 场景里没有 UIManager, 计时器无法冻结, 本关时长退回埋点内部累加值");
+        }
+
+        Telemetry.OnLevelClear(finalSeconds);
+    }
+
+    /// <summary>
+    /// 解锁流程协程: 播放锁动画 → 动画播完必定切关 (不再要求玩家留在门里)
     /// </summary>
     private IEnumerator UnlockSequence()
     {
@@ -185,37 +219,17 @@ public class NextLevel : MonoBehaviour
 
         isUnlocking = false;
 
-        // 动画期间玩家死亡重生 → 门被重置回锁定状态, 本次解锁作废
-        if (!isUnlocked)
-        {
-            if (showDebug) Debug.Log("[NextLevel] 解锁过程被重置(死亡重生), 取消本次通关");
-            yield break;
-        }
+        if (showDebug) Debug.Log("[NextLevel] 通关门已解锁, 切关");
 
-        Debug.Log("[NextLevel] 通关门已解锁！");
-
-        // 如果玩家还在门内, 通关
-        if (playerInTrigger)
-        {
-            if (showDebug) Debug.Log("[NextLevel] 玩家还在门内, 通关");
-            GoToNextLevel();
-        }
-        else
-        {
-            if (showDebug) Debug.Log("[NextLevel] 玩家已离开门, 不自动通关, 走回来再碰门通关");
-        }
+        // 通关在碰到门的那一帧就已经判定了, 这里只负责进下一关
+        LoadNextLevelScene();
     }
 
-    private void GoToNextLevel()
+    /// <summary>
+    /// 加载下一关 (通关判定由 MarkCleared 负责, 这里只做转场)
+    /// </summary>
+    private void LoadNextLevelScene()
     {
-        // 防止同一帧/同一扇门重复触发加载
-        if (hasCleared) return;
-        hasCleared = true;
-
-        // [Telemetry] 通关埋点：记录本关时长/死亡数/跳跃数，并把格子统计一次性发完。
-        // 放在加载下一关之前，此时统计还是本关的。
-        Telemetry.OnLevelClear();
-
         int nextScene = currentScene + 1;
 
         if (nextScene < SceneManager.sceneCountInBuildSettings)

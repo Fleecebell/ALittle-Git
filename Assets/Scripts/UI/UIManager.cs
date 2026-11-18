@@ -55,6 +55,8 @@ public class UIManager : MonoBehaviour
         // 未开始计时：等玩家第一次操作（startOnFirstInput 关闭时，Start 里已置 true，走不到这里）
         if (!isTiming)
         {
+            // 死亡/重生动画期间操作是被禁用的，别把这段时间算进成绩（按 R 重开后也走这条路径）
+            if (DeathRespawnVFX.isDead) return;
             if (!AnyGameplayInputDown()) return;
             isTiming = true;
         }
@@ -97,6 +99,21 @@ public class UIManager : MonoBehaviour
         isTiming = true;
         isStopped = true;
         score = elapsedTime;
+        RefreshTimerText();
+    }
+
+    /// <summary>
+    /// 重开本关：计时清零并重新开始计。
+    /// 由 MoveLate.CheckReset() 在玩家按 R 时调用（和死亡重生动画同时发生）。
+    /// 勾了 startOnFirstInput 时，清零后要等玩家重新操作才开始走表，
+    /// 这样死亡/重生的动画时间不会被算进成绩。
+    /// </summary>
+    public void ResetTimer()
+    {
+        elapsedTime = 0f;
+        score = 0f;
+        isStopped = false;
+        isTiming = !startOnFirstInput;
         RefreshTimerText();
     }
 

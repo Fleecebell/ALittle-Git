@@ -13515,20 +13515,26 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 1802762209}
     m_ColliderPaths:
-    - - X: -60000000
-        Y: -25000000
-      - X: -70000000
-        Y: -25000000
-      - X: -70000000
-        Y: -50000000
+    - - X: -60641516
+        Y: -49982672
       - X: -60000000
-        Y: -50000000
+        Y: -49358204
+      - X: -60000000
+        Y: -25000000
+      - X: -70000000
+        Y: -25000000
+      - X: -70000000
+        Y: -49289424
+      - X: -69280576
+        Y: -49998668
   m_CompositePaths:
     m_Paths:
-    - - {x: -6.000029, y: -5}
+    - - {x: -6.928066, y: -4.9998593}
+      - {x: -6.064144, y: -4.99826}
+      - {x: -6, y: -4.935809}
       - {x: -6.000029, y: -2.5}
       - {x: -7, y: -2.5000293}
-      - {x: -6.9999704, y: -5}
+      - {x: -6.999992, y: -4.9289503}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -13657,8 +13663,8 @@ Tilemap:
   - first: {x: -7, y: -5, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 90
-      m_TileSpriteIndex: 90
+      m_TileIndex: 88
+      m_TileSpriteIndex: 88
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -13862,11 +13868,11 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: 64a0aa34106bdbe488d7a143627cd122, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: 5fea12a65f0b7414da1ba453187ab9cb, type: 2}
-  - m_RefCount: 2
+  - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: eb5f92c46d7d0c24c8f6c6d9ba27f188, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 0
@@ -14045,11 +14051,11 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: -1256763105, guid: d24b3cf37b73899428aae91b647c1985, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 812306384, guid: cd9ed8435c106e441b7931e833ba7e1a, type: 3}
-  - m_RefCount: 2
+  - m_RefCount: 1
     m_Data: {fileID: -517158897, guid: cd9ed8435c106e441b7931e833ba7e1a, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 3

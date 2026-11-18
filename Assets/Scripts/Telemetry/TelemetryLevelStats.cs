@@ -396,6 +396,20 @@ public class TelemetryLevelStats
         }
     }
 
+    /// <summary>
+    /// 用外部计时器（UIManager 的关卡计时器）冻结的秒数覆盖本关时长。
+    /// 由 NextLevel 在"碰到终点的那一帧"调用，紧接着就会 CloseLevel，
+    /// 所以这里的值不会再被 Tick 累加改掉。
+    /// seconds &lt; 0 表示忽略（没有 UI 计时器，沿用内部累加值）。
+    /// </summary>
+    public void OverrideDuration(float seconds)
+    {
+        if (!levelOpen || closed) return;
+        if (seconds < 0f) return;
+
+        duration = seconds;
+    }
+
     /// <summary>关卡结束：reason = clear（通关）/ quit（退出、切场景、暂停）</summary>
     public void CloseLevel(string reason)
     {

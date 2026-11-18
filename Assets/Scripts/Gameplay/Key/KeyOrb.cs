@@ -96,8 +96,12 @@ public class KeyOrb : MonoBehaviour
     private Vector3 orbOriginalScale;   // 球视觉的原始缩放 (脉动基于这个值)
     private Vector3 keyOriginalScale;   // 钥匙视觉的原始缩放 (你在Inspector调的大小, 到达后放大到这个值)
     private bool isFollowing = false;   // 是否已到达主角, 进入跟随模式
+    private bool isFlying = false;      // 是否正在飞行 (用于兜底: 飞行被中断时强制进入跟随)
     private GameObject followTarget;    // 跟随的目标(主角)
     private Vector3 followVelocity = Vector3.zero; // SmoothDamp 的当前速度
+    private Tween flyTween;             // 当前飞行 tween (绑定到自身, 才能被 DOKill/重置真正停掉)
+    private float flyDeadline;          // 本次飞行"本该结束"的时间点 (兜底用)
+    private bool warnedNoFollowTarget = false; // 目标丢失警告只打一次, 不刷屏
 
     private void Awake()
     {
@@ -136,10 +140,40 @@ public class KeyOrb : MonoBehaviour
         {
             if (orb != null)
             {
+                // 先彻底停掉飞行/跟随, 再禁用.
+                // 否则飞行 tween 会在物体禁用后继续跑, 完成时把 isFollowing 打开,
+                // 让灵光球带着"已经在跟随"的错误状态被禁用, 再次激活时状态就不对了.
+                orb.KillFlight();
                 orb.transform.DOKill();
+                orb.ClearFollowState();
                 orb.gameObject.SetActive(false);
             }
         }
+    }
+
+    /// <summary>
+    /// 停掉当前飞行 tween. 飞行 tween 之前没有 target, DOKill 杀不到它,
+    /// 会出现两条 tween 同时写 position 互相抢, 或者被禁用后还在后台跑的情况.
+    /// </summary>
+    private void KillFlight()
+    {
+        if (flyTween != null)
+        {
+            if (flyTween.IsActive()) flyTween.Kill();
+            flyTween = null;
+        }
+        isFlying = false;
+    }
+
+    /// <summary>
+    /// 清除跟随状态 (不改视觉, 不改 active)
+    /// </summary>
+    private void ClearFollowState()
+    {
+        isFollowing = false;
+        followTarget = null;
+        followVelocity = Vector3.zero;
+        warnedNoFollowTarget = false;
     }
 
     /// <summary>
@@ -148,15 +182,14 @@ public class KeyOrb : MonoBehaviour
     /// </summary>
     public void ResetState()
     {
-        // 停止所有 DOTween 动画
+        // 停止所有 DOTween 动画 (含飞行 tween)
+        KillFlight();
         transform.DOKill();
         if (orbVisual != null) orbVisual.transform.DOKill();
         if (keyVisual != null) keyVisual.transform.DOKill();
 
         // 清除跟随状态
-        isFollowing = false;
-        followTarget = null;
-        followVelocity = Vector3.zero;
+        ClearFollowState();
 
         // 显示球视觉, 恢复球原始缩放
         if (orbVisual != null)
@@ -184,11 +217,57 @@ public class KeyOrb : MonoBehaviour
     private void Update()
     {
         // 跟随模式: 用 SmoothDamp 延迟跟随主角 (有拖尾感)
-        if (isFollowing && followTarget != null)
+        if (isFollowing)
         {
+            // 跟随目标丢了(被销毁/被换掉)就自己重新找一个,
+            // 否则钥匙会永远停在"目标最后所在的位置", 看起来像卡死不动
+            if (followTarget == null || !followTarget.activeInHierarchy)
+            {
+                GameObject found = FindPlayerTarget();
+                if (found != null)
+                {
+                    followTarget = found;
+                    followVelocity = Vector3.zero;
+                    warnedNoFollowTarget = false;
+                }
+                else
+                {
+                    if (!warnedNoFollowTarget)
+                    {
+                        Debug.LogWarning("[KeyOrb] 跟随目标丢失且找不到主角, 钥匙会停在原地");
+                        warnedNoFollowTarget = true;
+                    }
+                    return;
+                }
+            }
+
             Vector3 targetPos = followTarget.transform.position + followOffset;
             transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref followVelocity, followSmoothTime);
+            return;
         }
+
+        // 兜底: 飞行 tween 被外部干掉(被别的代码 DOKill/被禁用后重新激活等)却没触发完成回调时,
+        // 直接进入跟随模式, 否则钥匙会永远停在半空或起飞点.
+        // 用 flyDeadline 判断"本该飞完了", 避免 tween 刚创建还没起播的那一帧被误判.
+        if (isFlying && flyTween != null && Time.time > flyDeadline && !flyTween.IsActive())
+        {
+            Debug.LogWarning("[KeyOrb] 飞行 tween 未正常完成, 强制进入跟随模式");
+            GameObject player = FindPlayerTarget();
+            if (player != null) OnReachedPlayer(player);
+        }
+    }
+
+    /// <summary>
+    /// 查找真正的主角 P1.
+    /// 优先用 MoveFirst 组件: 场景里可能还有别的物体被误标成 Player
+    /// (例如 9102.unity 里的 "Light 2D"), 用标签找会飞到一个不会动的物体上.
+    /// </summary>
+    private static GameObject FindPlayerTarget()
+    {
+        MoveFirst p1 = FindObjectOfType<MoveFirst>();
+        if (p1 != null) return p1.gameObject;
+
+        return GameObject.FindGameObjectWithTag("Player");
     }
 
     /// <summary>
@@ -196,6 +275,15 @@ public class KeyOrb : MonoBehaviour
     /// </summary>
     public void FlyToPlayer(GameObject player)
     {
+        if (player == null)
+        {
+            Debug.LogWarning("[KeyOrb] FlyToPlayer 收到空的主角引用, 钥匙不会跟随");
+            return;
+        }
+
+        // 保险: 上一段飞行还没结束就先停掉, 避免两条 tween 抢着写 position
+        KillFlight();
+
         Vector3 start = transform.position;
         Vector3 end = player.transform.position;
 
@@ -210,8 +298,11 @@ public class KeyOrb : MonoBehaviour
 
         // 正弦弧线飞行 (移动根物体)
         float t = 0f;
-        DOTween.To(() => t, x => t = x, 1f, duration)
+        isFlying = true;
+        flyDeadline = Time.time + duration + 0.2f;
+        flyTween = DOTween.To(() => t, x => t = x, 1f, duration)
             .SetEase(flyEase)
+            .SetTarget(transform)   // 绑定到自身: ResetState/DOKill 才能真正停掉它
             .OnUpdate(() =>
             {
                 float x = Mathf.Lerp(start.x, end.x, t);
@@ -227,6 +318,24 @@ public class KeyOrb : MonoBehaviour
     /// </summary>
     private void OnReachedPlayer(GameObject player)
     {
+        isFlying = false;
+        if (player == null)
+        {
+            Debug.LogWarning("[KeyOrb] 到达时主角引用为空, 无法进入跟随模式");
+            return;
+        }
+
+        // 0. 先进入跟随模式 (放在所有视觉表现之前):
+        //    之前是放在最后, 一旦中间任何一步抛异常(比如主角在飞行途中被销毁),
+        //    isFollowing 就永远为 false —— 表现就是"钥匙停在半空/起飞点, 再也不跟随".
+        if (!isFollowing)
+        {
+            followTarget = player;
+            isFollowing = true;
+            followVelocity = Vector3.zero;
+            warnedNoFollowTarget = false;
+        }
+
         // 1. 隐藏发光球 (停止脉动 + 禁用)
         if (orbVisual != null)
         {
@@ -282,10 +391,5 @@ public class KeyOrb : MonoBehaviour
         {
             Debug.LogWarning("KeyOrb 未指定 sparklePrefab, 到达主角时无粒子效果");
         }
-
-        // 5. 进入跟随模式 (钥匙跟着主角走, 不销毁)
-        followTarget = player;
-        isFollowing = true;
-        followVelocity = Vector3.zero;
     }
 }

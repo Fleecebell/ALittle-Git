@@ -464,10 +464,20 @@ public class Telemetry : MonoBehaviour
         Instance.stats.RecordJump(actor, position, false);
     }
 
-    /// <summary>通关（在 GoToNextLevel 里调用）</summary>
+    /// <summary>通关（没有 UI 计时器时的兜底），时长沿用埋点内部累加值</summary>
     public static void OnLevelClear()
     {
+        OnLevelClear(-1f);
+    }
+
+    /// <summary>
+    /// 通关。finalSeconds >= 0 时用这个值当本关时长（由 NextLevel 在"碰到终点那一帧"冻结的 UI 计时器成绩传入），
+    /// 传 -1 表示沿用埋点内部累加值。
+    /// </summary>
+    public static void OnLevelClear(float finalSeconds)
+    {
         if (Instance == null) return;
+        Instance.stats.OverrideDuration(finalSeconds);
         Instance.stats.CloseLevel("clear");
     }
 

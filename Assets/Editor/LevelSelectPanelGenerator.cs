@@ -72,8 +72,11 @@ public class LevelSelectPanelGenerator : EditorWindow
 
     private void ResetRange()
     {
-        _fromIndex = 0;
-        _toIndex = Mathf.Max(0, CountBuildScenes() - 1);
+        int total = CountBuildScenes();
+
+        // 默认跳过索引 0（Start 场景），面板从第 1 关开始
+        _fromIndex = total > 1 ? 1 : 0;
+        _toIndex = Mathf.Max(0, total - 1);
     }
 
     // ==================================================================
@@ -133,7 +136,8 @@ public class LevelSelectPanelGenerator : EditorWindow
 
         EditorGUILayout.HelpBox(
             "生成的面板会随场景进包，正式包（Release）里也能用。\n" +
-            "若只想在编辑器 / Development Build 里出现，勾选 LevelSelectPanel 上的「正式包中移除」即可。",
+            "运行时不会修改任何 Unity 配置（Canvas 渲染模式、Sorting Order、坐标都不动），" +
+            "生成时的这些值只是初始值，之后在 Unity 里改了就以你的为准。",
             MessageType.None);
     }
 
@@ -164,9 +168,25 @@ public class LevelSelectPanelGenerator : EditorWindow
             return;
         }
 
-        GameObject existing = GameObject.Find(CanvasName);
-        if (existing != null && !EditorUtility.DisplayDialog("生成选关面板",
-                "当前场景里已经有一个 " + CanvasName + "，继续会用新面板替换它。", "替换", "取消"))
+        // 场景里可能已经生成过多份（含被隐藏的、被拖到别的物体下面的），全部清掉，避免面板叠在一起互相抢点击
+        List<GameObject> existing = new List<GameObject>();
+        LevelSelectPanel[] existingPanels = Object.FindObjectsOfType<LevelSelectPanel>(true);
+        for (int i = 0; i < existingPanels.Length; i++)
+        {
+            if (existingPanels[i] != null && !existing.Contains(existingPanels[i].gameObject))
+                existing.Add(existingPanels[i].gameObject);
+        }
+
+        GameObject[] sceneRoots = scene.GetRootGameObjects();
+        for (int i = 0; i < sceneRoots.Length; i++)
+        {
+            if (sceneRoots[i] != null && sceneRoots[i].name == CanvasName && !existing.Contains(sceneRoots[i]))
+                existing.Add(sceneRoots[i]);
+        }
+
+        if (existing.Count > 0 && !EditorUtility.DisplayDialog("生成选关面板",
+                "当前场景里已经有 " + existing.Count + " 个选关面板，继续会用新面板替换它们。",
+                "替换", "取消"))
             return;
 
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -175,8 +195,11 @@ public class LevelSelectPanelGenerator : EditorWindow
         Undo.IncrementCurrentGroup();
         int undoGroup = Undo.GetCurrentGroup();
 
-        if (existing != null)
-            Undo.DestroyObjectImmediate(existing);
+        for (int i = 0; i < existing.Count; i++)
+        {
+            if (existing[i] != null)
+                Undo.DestroyObjectImmediate(existing[i]);
+        }
 
         EnsureEventSystem();
 
@@ -195,6 +218,8 @@ public class LevelSelectPanelGenerator : EditorWindow
 
         Canvas canvas = canvasGo.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        // 抬到其它 Overlay Canvas 之上，否则会被全屏的透明图挡住点击
+        canvas.sortingOrder = 900;
 
         CanvasScaler scaler = canvasGo.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -348,7 +373,6 @@ public class LevelSelectPanelGenerator : EditorWindow
         panelLogic.startVisible = _startVisible;
         panelLogic.toggleKey = _toggleKey;
         panelLogic.closeButton = closeButton;
-        panelLogic.removeFromReleaseBuild = false;
 
         EditorSceneManager.MarkSceneDirty(scene);
         Undo.SetCurrentGroupName(UndoName);
