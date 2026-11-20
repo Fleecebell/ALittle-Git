@@ -110,6 +110,19 @@ public class ObjectFloat : MonoBehaviour
     [Tooltip("没拖背景时的兜底：勾选 = 涟漪画在最上层；取消 = 画在最底层")]
     public bool rippleOnTop = true;
 
+    [Header("原地漂浮（不飘走）")]
+    [Tooltip("拖入 Image：这些物体只在原位附近朝随机方向漂浮，不会被推走")]
+    public List<Image> anchorObjects = new List<Image>();
+
+    [Tooltip("漂浮幅度，占画面宽度的比例（0.02 = 2%）")]
+    public float anchorAmplitude = 0.02f;
+
+    [Tooltip("漂浮速度（每秒摆动的弧度，越大越快）")]
+    public float anchorSpeed = 1.5f;
+
+    [Tooltip("每个物体的速度随机浮动比例（0.25 = 各自 ±25%）")]
+    public float anchorSpeedVariation = 0.25f;
+
     // ================= 运行时数据 =================
     class Item
     {
@@ -130,7 +143,22 @@ public class ObjectFloat : MonoBehaviour
         public float spinDir;          // 自转方向 +1 / -1
     }
 
+    // 原地漂浮的物体（不回原位、只在小范围内晃）
+    class AnchorItem
+    {
+        public Image img;
+        public RectTransform rect;
+        public Canvas canvas;
+        public Vector3 home;        // 原位
+        public Vector2 dir;         // 主方向
+        public Vector2 perp;        // 副方向（垂直）
+        public float phase;         // 相位，让每个物体不同步
+        public float speedMul;      // 速度随机倍数
+        public float startTime;     // 开始时间（用于缓入，避免开局跳一下）
+    }
+
     private List<Item> items = new List<Item>();
+    private List<AnchorItem> anchors = new List<AnchorItem>();
 
     void Start()
     {
@@ -169,6 +197,33 @@ public class ObjectFloat : MonoBehaviour
 
             items.Add(it);
         }
+
+        // 原地漂浮列表
+        anchors.Clear();
+        foreach (Image img in anchorObjects)
+        {
+            if (img == null)
+                continue;
+
+            if (objects.Contains(img))
+            {
+                Debug.LogWarning("ObjectFloat: " + img.name + " 同时在“漂浮的物体”和“原地漂浮”里，已忽略原地漂浮");
+                continue;
+            }
+
+            AnchorItem a = new AnchorItem();
+            a.img = img;
+            a.rect = img.rectTransform;
+            a.canvas = img.GetComponentInParent<Canvas>();
+            a.home = a.rect.position;
+            a.dir = Random.insideUnitCircle.normalized;
+            a.perp = new Vector2(-a.dir.y, a.dir.x);
+            a.phase = Random.Range(0f, Mathf.PI * 2f);
+            a.speedMul = 1f + Random.Range(-anchorSpeedVariation, anchorSpeedVariation);
+            a.startTime = Time.time;
+
+            anchors.Add(a);
+        }
     }
 
     void Update()
@@ -185,7 +240,7 @@ public class ObjectFloat : MonoBehaviour
     // LateUpdate：比其它改位置/旋转的 UI 脚本更晚执行
     void LateUpdate()
     {
-        if (items.Count == 0)
+        if (items.Count == 0 && anchors.Count == 0)
             return;
 
         float remaining = Mathf.Min(Time.deltaTime, 0.1f);
@@ -218,6 +273,40 @@ public class ObjectFloat : MonoBehaviour
         }
 
         UpdateRipples(Time.deltaTime);
+        UpdateAnchors();
+    }
+
+    // 原地漂浮：在 home 附近按正弦来回晃，幅度/速度可调，永远飘不走
+    void UpdateAnchors()
+    {
+        if (anchors.Count == 0)
+            return;
+
+        float now = Time.time;
+
+        for (int i = 0; i < anchors.Count; i++)
+        {
+            AnchorItem a = anchors[i];
+            if (a.rect == null)
+                continue;
+
+            if (!GetArea(a.canvas, out Rect area))
+                continue;
+
+            float amp = area.width * anchorAmplitude;
+            float ramp = Mathf.Clamp01(now - a.startTime);   // 一秒钟内缓入，开局不跳
+
+            a.rect.position = a.home + AnchorOffset(a, amp, now) * ramp;
+        }
+    }
+
+    Vector3 AnchorOffset(AnchorItem a, float amplitude, float time)
+    {
+        float t = time * anchorSpeed * a.speedMul + a.phase;
+
+        Vector3 main = (Vector3)a.dir * (Mathf.Sin(t) * amplitude);
+        Vector3 side = (Vector3)a.perp * (Mathf.Sin(t * 0.7f + a.phase * 1.7f) * amplitude * 0.35f);
+        return main + side;
     }
 
     void Step(float dt)
@@ -321,14 +410,19 @@ public class ObjectFloat : MonoBehaviour
         else if (it.pos.y > maxY) { it.pos.y = maxY; it.vel.y = -Mathf.Abs(it.vel.y); it.wanderDir.y = -Mathf.Abs(it.wanderDir.y); }
     }
 
-    // 取物体所在 Canvas 的世界矩形；拿不到就用摄像机视口
     bool GetArea(Item it, out Rect area)
+    {
+        return GetArea(it != null ? it.canvas : null, out area);
+    }
+
+    // 取 Canvas 的世界矩形；拿不到就用摄像机视口
+    bool GetArea(Canvas canvas, out Rect area)
     {
         area = new Rect(0f, 0f, 1920f, 1080f);
 
-        if (it.canvas != null)
+        if (canvas != null)
         {
-            RectTransform cr = (RectTransform)it.canvas.transform;
+            RectTransform cr = (RectTransform)canvas.transform;
             Vector3 a = cr.TransformPoint(cr.rect.min);
             Vector3 b = cr.TransformPoint(cr.rect.max);
 
@@ -663,5 +757,6 @@ public class ObjectFloat : MonoBehaviour
         }
         rippleContainers.Clear();
         ripples.Clear();
+        anchors.Clear();
     }
 }
