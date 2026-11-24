@@ -1,0 +1,23 @@
+{
+  "name": "Unity.Pipeline.Cinemachine2.Editor",
+  "references": [
+    "Unity.Pipeline",
+    "Unity.Pipeline.Attributes",
+    "Unity.Pipeline.Editor",
+    "Cinemachine"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "defineConstraints": [
+    "TRUECLI_CM2"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.unity.cinemachine",
+      "expression": "[2.8.0,3.0.0)",
+      "define": "TRUECLI_CM2"
+    }
+  ],
+  "autoReferenced": true
+}

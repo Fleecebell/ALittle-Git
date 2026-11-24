@@ -1,0 +1,8 @@
+{
+  "name": "Unity.Pipeline.UGUI.Editor",
+  "references": ["Unity.Pipeline", "Unity.Pipeline.Attributes", "Unity.Pipeline.Editor", "Unity.ugui", "Unity.Pipeline.VisualUI"],
+  "includePlatforms": ["Editor"],
+  "defineConstraints": ["TRUECLI_UGUI"],
+  "versionDefines": [{"name":"com.unity.ugui","expression":"1.0.0","define":"TRUECLI_UGUI"}],
+  "autoReferenced": true
+}
