@@ -69,6 +69,24 @@ public class UIButtonAudio : MonoBehaviour
     }
 
     /// <summary>
+    /// 重玩按钮：效果与键盘按 R 完全一致。
+    /// 在按钮的 OnClick 里绑定本方法即可（音效仍由 OnClick 播放）。
+    /// 实现上不直接传送，而是置 MoveLate.isR 标志，
+    /// 由 MoveLate.CheckReset 走与按 R 相同的死亡重生流程（TriggerDeath → DoReset）。
+    /// </summary>
+    public void OnClickReplay()
+    {
+        // 与 MoveLate.CheckReset 中"手动按 R"分支保持一致：埋点 + 计时器清零
+        Telemetry.NoteDeath("manual_r", "player1");
+
+        UIManager ui = FindObjectOfType<UIManager>();
+        if (ui != null) ui.ResetTimer();
+
+        // 置标志，MoveLate.CheckReset 下一帧触发死亡重生动画流程
+        MoveLate.isR = true;
+    }
+
+    /// <summary>
     /// 向 EventTrigger 添加一种事件监听
     /// </summary>
     private void AddTrigger(EventTrigger trigger, EventTriggerType type, UnityEngine.Events.UnityAction action)

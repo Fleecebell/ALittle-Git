@@ -301,7 +301,7 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
 
         // 水里游泳: 在水里时按 空格/W = 向上游
         // WaterPool.SwimUp 内部检查角色顶部是否出水, 出水不施加(防止游出水面)
-        if (currentWaterPool != null && (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W)))
+        if (currentWaterPool != null && Input.AscendHeld)
         {
             currentWaterPool.SwimUp(rb);
         }
@@ -400,7 +400,7 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
     void LadderInput()
     {
         // 爬梯触发：空格 或 W 都可以
-        if (isOnLadder && (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W)))
+        if (isOnLadder && Input.AscendHeld)
         {
             isClimbing = true;
         }
@@ -414,7 +414,7 @@ public class MoveFirst : MonoBehaviour, IWaterResponder
             rb.gravityScale = 0f;
             float v = 0;
             // 向上爬：空格 或 W 都可以
-            if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W)) v = climbSpeed;
+            if (Input.AscendHeld) v = climbSpeed;
             if (Input.GetKey(KeyCode.S)) v = -climbSpeed;
             rb.velocity = new Vector2(rb.velocity.x, v);
         }

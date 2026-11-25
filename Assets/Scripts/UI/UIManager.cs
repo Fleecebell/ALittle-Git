@@ -274,7 +274,7 @@ public class UIManager : MonoBehaviour
     {
         if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.1f) return true;
         if (Input.GetKeyDown(KeyCode.Space)) return true;
-        if (Input.GetKeyDown(KeyCode.W)) return true;
+        if (Input.GetKeyDown(KeyCode.W) || Input.StickUpPressed) return true;
         if (Input.GetKeyDown(KeyCode.S)) return true;
         if (Input.GetKeyDown(KeyCode.E)) return true;
         if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) return true;
