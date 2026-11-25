@@ -13,6 +13,7 @@ public sealed class TouchControls : MonoBehaviour
     public GameObject dashButton, sizeButton;
 
     private const int NoPointer = -1, Mouse = -2;
+    private const float StickDeadZone = 0.15f;
     private int owner = NoPointer;
     private Vector2 origin;
     private MoveFirst player;
@@ -72,11 +73,9 @@ public sealed class TouchControls : MonoBehaviour
             return;
         }
         if (!overlay.gameObject.activeSelf) overlay.gameObject.SetActive(true);
-        Rect area = Screen.safeArea;
-        Vector2 screen = new Vector2(Screen.width, Screen.height);
-        if (screen.x <= 0 || screen.y <= 0) return;
-        safeArea.anchorMin = area.min / screen;
-        safeArea.anchorMax = area.max / screen;
+        Rect area = GameplayHudLayout.NormalizedPlayArea();
+        if (safeArea.anchorMin != area.min) safeArea.anchorMin = area.min;
+        if (safeArea.anchorMax != area.max) safeArea.anchorMax = area.max;
         if (acceptingInput) Input.Sample(ReadStick());
         else Input.ClearTouch();
     }
@@ -129,7 +128,14 @@ public sealed class TouchControls : MonoBehaviour
         float radius = (pad.rect.width - knob.rect.width) * 0.5f;
         Vector2 direction = Vector2.ClampMagnitude((Local(pos) - origin) / radius, 1f);
         knob.anchoredPosition = direction * radius;
-        return direction.magnitude < 0.15f ? Vector2.zero : direction;
+        float distance = direction.magnitude;
+        if (distance <= StickDeadZone) return Vector2.zero;
+
+        // 横移从死区边缘平滑起步，推满时恢复原速。纵向仍用原始位移判断爬梯和游泳。
+        float travel = Mathf.InverseLerp(StickDeadZone, 1f, distance);
+        float strength = travel * Mathf.Lerp(0.7f, 1f, travel);
+        direction.x *= strength / distance;
+        return direction;
     }
 
     private void Release()

@@ -10,6 +10,8 @@ internal sealed class Input : NativeInput
 
     private static readonly HashSet<KeyCode> pending = new HashSet<KeyCode>();
     private static readonly HashSet<KeyCode> pressed = new HashSet<KeyCode>();
+    private static readonly HashSet<int> jumpPointers = new HashSet<int>();
+    private static bool jumpHeld;
     private static Vector2 stick;
     private const float VerticalThreshold = 0.65f;
 
@@ -19,12 +21,28 @@ internal sealed class Input : NativeInput
 
     internal static void Press(KeyCode key) => pending.Add(key);
 
+    internal static void BeginJump(int pointerId)
+    {
+        if (jumpPointers.Add(pointerId) && jumpPointers.Count == 1) Press(KeyCode.Space);
+    }
+
+    internal static void EndJump(int pointerId) => jumpPointers.Remove(pointerId);
+
+    internal static void CancelJump()
+    {
+        jumpPointers.Clear();
+        jumpHeld = false;
+        pending.Remove(KeyCode.Space);
+        pressed.Remove(KeyCode.Space);
+    }
+
     // 在角色 Update 之前锁存。P1、P2 录制、机关和计时器都能读到同一个边沿。
     internal static void Sample(Vector2 direction)
     {
         pressed.Clear();
         pressed.UnionWith(pending);
         pending.Clear();
+        jumpHeld = jumpPointers.Count != 0;
         StickUpPressed = direction.y >= VerticalThreshold && stick.y < VerticalThreshold;
         if (direction.y <= -VerticalThreshold && stick.y > -VerticalThreshold) pressed.Add(KeyCode.S);
         stick = direction;
@@ -33,6 +51,7 @@ internal sealed class Input : NativeInput
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     internal static void ClearTouch()
     {
+        CancelJump();
         pending.Clear();
         pressed.Clear();
         stick = Vector2.zero;
@@ -50,6 +69,7 @@ internal sealed class Input : NativeInput
     public new static bool GetKey(KeyCode key)
     {
         if (NativeInput.GetKey(key) || pressed.Contains(key)) return true;
+        if (key == KeyCode.Space) return jumpHeld;
         if (key == KeyCode.S) return stick.y <= -VerticalThreshold;
         // P2 录制冲刺用 A/D 判断方向，需要和 Horizontal 的胜出方向一致。
         if (key != KeyCode.A && key != KeyCode.D) return false;

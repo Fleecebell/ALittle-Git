@@ -1255,12 +1255,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1399574191646052441, guid: 88bba248ae51dbb4589223d391400421, type: 3}
+      propertyPath: topRightButtons.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7498781210854015853, guid: 88bba248ae51dbb4589223d391400421, type: 3}
       propertyPath: m_Name
       value: SetCanvas
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 997386653473956896, guid: 88bba248ae51dbb4589223d391400421, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88bba248ae51dbb4589223d391400421, type: 3}
