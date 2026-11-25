@@ -139,9 +139,14 @@ namespace Unity.Pipeline.Editor.BuildProcessors
             if (EditorUserBuildSettings.development)
                 return true;
 
-            if (Commands.Build.BuildCommand.ActiveScriptedBuildOptions is { } scriptedOptions
-                && (scriptedOptions & BuildOptions.Development) != 0)
-                return true;
+            // [PATCH-LOCAL 2026-11-25] 仓库里 Editor/Commands/Build/ 目录为空——
+            // 被 .gitignore 的 `[Bb]uild/` 规则吞掉，源码从未提交，导致整个工程编译失败
+            // （CS0234: 命名空间 Unity.Pipeline.Editor.Commands 中不存在类型 Build）。
+            // 这里去掉对 BuildCommand.ActiveScriptedBuildOptions 的依赖。
+            // 补回 Commands/Build 源码后，删除本 PATCH 段并还原下面三行即可。
+            // if (Commands.Build.BuildCommand.ActiveScriptedBuildOptions is { } scriptedOptions
+            //     && (scriptedOptions & BuildOptions.Development) != 0)
+            //     return true;
 
 #if UNITY_6000_6_OR_NEWER
             // ENABLE_PROFILER is emitted for "buildingForEditor || developmentBuild ||
