@@ -1,0 +1,8 @@
+{
+  "name":"Unity.Pipeline.Timeline.Editor",
+  "references":["Unity.Pipeline","Unity.Pipeline.Attributes","Unity.Pipeline.Editor","Unity.Timeline"],
+  "includePlatforms":["Editor"],
+  "defineConstraints":["TRUECLI_TIMELINE"],
+  "versionDefines":[{"name":"com.unity.timeline","expression":"1.7.0","define":"TRUECLI_TIMELINE"}],
+  "autoReferenced":true
+}

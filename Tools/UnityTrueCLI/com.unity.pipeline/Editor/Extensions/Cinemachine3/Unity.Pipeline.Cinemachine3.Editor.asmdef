@@ -1,0 +1,25 @@
+{
+  "name": "Unity.Pipeline.Cinemachine3.Editor",
+  "references": [
+    "Unity.Pipeline",
+    "Unity.Pipeline.Attributes",
+    "Unity.Pipeline.Editor",
+    "Unity.Cinemachine",
+    "Unity.Splines",
+    "Unity.Mathematics"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "defineConstraints": [
+    "TRUECLI_CM3"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.unity.cinemachine",
+      "expression": "[3.0.0,4.0.0)",
+      "define": "TRUECLI_CM3"
+    }
+  ],
+  "autoReferenced": true
+}

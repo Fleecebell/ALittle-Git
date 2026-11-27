@@ -1,0 +1,6 @@
+{
+  "name":"Unity.Pipeline.Input.Editor",
+  "references":["Unity.Pipeline","Unity.Pipeline.Attributes","Unity.Pipeline.Editor","Unity.InputSystem"],
+  "includePlatforms":["Editor"],
+  "autoReferenced":true
+}

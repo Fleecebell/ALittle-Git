@@ -34,7 +34,7 @@ public class NextLevel : MonoBehaviour
 
     private int currentScene;
 
-    // 触发区内的玩家数量. P1 / P2 都算, 用计数可以避免"一人离开就当没人"的误判
+    // 记录主角仍在触发区内的碰撞体数量。
     private int playersInTrigger = 0;
     private bool playerInTrigger => playersInTrigger > 0;
 
@@ -97,17 +97,14 @@ public class NextLevel : MonoBehaviour
         }
     }
 
-    // P1(Player) 和 P2(Player2) 都能触发:
-    // Key 允许 P1/P2 任意一方捡钥匙, 通关门也必须允许任意一方通过,
-    // 否则 P2 拿到钥匙后走到门前不会有任何反应(连日志都不会打印).
-    private static bool IsPlayer(Collider2D collision)
+    private static bool IsMainPlayer(Collider2D collision)
     {
-        return collision.CompareTag("Player") || collision.CompareTag("Player2");
+        return collision.CompareTag("Player");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!IsPlayer(collision))
+        if (!IsMainPlayer(collision))
             return;
 
         playersInTrigger++;
@@ -127,7 +124,7 @@ public class NextLevel : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (IsPlayer(collision))
+        if (IsMainPlayer(collision))
             playersInTrigger = Mathf.Max(0, playersInTrigger - 1);
     }
 
