@@ -7,7 +7,7 @@ using NativeInput = UnityEngine.Input;
 public sealed class TouchControls : MonoBehaviour
 {
     public enum DisplayMode { Auto, Always, Never }
-    [Tooltip("Auto 在移动设备和编辑器显示，桌面正式包隐藏。Always 也支持鼠标拖动。")]
+    [Tooltip("Auto 跟随当前构建平台：Android/iOS 显示，Windows/macOS/Linux 隐藏。Always 强制显示（可用鼠标调试），Never 强制隐藏。")]
     public DisplayMode mode;
     public RectTransform overlay, safeArea, pad, knob;
     public GameObject dashButton, sizeButton;
@@ -56,11 +56,14 @@ public sealed class TouchControls : MonoBehaviour
     private bool ShouldShow()
     {
         if (mode == DisplayMode.Never) return false;
-        if (mode == DisplayMode.Always || Application.isEditor || Application.isMobilePlatform) return true;
-#if UNITY_STANDALONE
+        if (mode == DisplayMode.Always) return true;
+        // 编辑器和正式包共用当前构建目标的平台宏。
+#if UNITY_ANDROID || UNITY_IOS
+        return true;
+#elif UNITY_STANDALONE
         return false;
 #else
-        return NativeInput.touchSupported;
+        return Application.isMobilePlatform || NativeInput.touchSupported;
 #endif
     }
 
