@@ -69,6 +69,9 @@ public class PlayerSquashStretch : MonoBehaviour
     [Tooltip("被另一个角色踩到时横向拉宽。勾上=禁用")]
     [SerializeField] private bool disableSteppedOnWiden = false;
 
+    [Tooltip("贴墙时让精灵那条边贴住墙面（不穿进墙、也不留缝）。勾上=禁用")]
+    [SerializeField] private bool disableWallHug = false;
+
     // 说明：这两个开关故意做成"勾上=禁用"，因为它们是后加字段。
     // 如果老序列化数据里没有这个键、Unity 又没套用字段初始值，bool 会变成 false = 功能开启，
     // 行为仍然正确；反过来写成 enableXxx=true 的话就可能被吃成 false，功能静默失效。
@@ -118,15 +121,24 @@ public class PlayerSquashStretch : MonoBehaviour
     [SerializeField] private bool holdWhileSteppedOn = true;
 
     // ===================== 弹簧 =====================
-    [Header("=== 弹簧 ===")]
-    [Tooltip("弹簧刚度。默认 220 与开始界面的 Q 弹参数一致（手感统一）")]
+    [Header("=== 弹簧（Q 弹本身的速度） ===")]
+    [Tooltip("★Q 弹速度总开关★ 1 = 默认；2 = 回弹快一倍（约 0.13 秒回中）；0.5 = 慢一倍（软绵绵）。" +
+             "只改快慢、不改幅度 —— 内部按 刚度×速度²、阻尼×速度 等比缩放，所以过冲次数和形状保持不变")]
+    [SerializeField, Range(0.2f, 3f)] private float bounceSpeed = 1f;
+
+    [Tooltip("弹簧刚度（进阶）。想统一改快慢请用上面的 bounceSpeed，别直接动这个")]
     [SerializeField, Range(20f, 600f)] private float stiffness = 220f;
 
-    [Tooltip("阻尼。14 约等于 0.47 阻尼比（会过冲 1~2 次，就是 Q 弹的来源）")]
+    [Tooltip("阻尼（进阶）。14 约等于 0.47 阻尼比（会过冲 1~2 次，就是 Q 弹的来源）")]
     [SerializeField, Range(1f, 60f)] private float damping = 14f;
 
     [Tooltip("积分最大步长（秒）。掉帧时防止弹簧炸开，与 ObjectFloat 一致用 1/120")]
     [SerializeField] private float maxSubStep = 1f / 120f;
+
+    // bounceSpeed 统一换算成等效刚度/阻尼（等比缩放，阻尼比不变 → 形状不变、只改快慢）
+    private float BounceMult => Mathf.Max(0.01f, bounceSpeed);
+    private float EffStiffness => Mathf.Max(1f, stiffness) * BounceMult * BounceMult;
+    private float EffDamping => Mathf.Max(0f, damping) * BounceMult;
 
     // ===================== 调试 =====================
     [Header("=== 调试 ===")]
@@ -171,6 +183,10 @@ public class PlayerSquashStretch : MonoBehaviour
 
     // 被踩状态（FixedUpdate 每帧先清空，再由 OnCollisionStay2D 置位；与 MoveLate 的 isSteppedOn 同款写法）
     private bool steppedOnThisFrame;
+    // 左右两侧是否有墙（同样每帧清空再由 OnCollisionStay2D 置位）。
+    // 从碰撞法线免费得到，不用额外射线：法线朝 +x = 墙在我左边，朝 -x = 墙在我右边（法线由对方指向我）。
+    private bool wallLeftThisFrame;
+    private bool wallRightThisFrame;
     // 被踩冲量的小去抖，防止接触反复成立导致连弹
     private float steppedOnCooldown;
 
@@ -210,6 +226,7 @@ public class PlayerSquashStretch : MonoBehaviour
         if (maxActorLandingWiden <= 0.0001f) maxActorLandingWiden = 0.12f;
         if (steppedOnWidenKick <= 0.0001f) steppedOnWidenKick = 0.12f;
         if (steppedOnHoldWiden < 0f) steppedOnHoldWiden = 0.08f;
+        if (bounceSpeed <= 0.01f) bounceSpeed = 1f;
     }
 
     private void Start()
@@ -244,7 +261,7 @@ public class PlayerSquashStretch : MonoBehaviour
         if (!loggedVersionBanner)
         {
             loggedVersionBanner = true;
-            Debug.Log($"[Squash] v6 已加载（世界轴缩放 + 画面保留翻滚，art={(art != null ? "OK" : "缺失→需重跑菜单")}）", this);
+            Debug.Log($"[Squash] v8 已加载（世界轴缩放 + 贴墙对齐，art={(art != null ? "OK" : "缺失→需重跑菜单")}）", this);
         }
     }
 
@@ -264,6 +281,8 @@ public class PlayerSquashStretch : MonoBehaviour
         // 再由 OnCollisionStay2D 在"头上确实有人"时置位，Update 里读到的就是本帧状态。
         // 不清空的话，被踩过一次就会永远保持拉宽。
         steppedOnThisFrame = false;
+        wallLeftThisFrame = false;
+        wallRightThisFrame = false;
     }
 
     private void Update()
@@ -342,7 +361,7 @@ public class PlayerSquashStretch : MonoBehaviour
         {
             float h = Mathf.Min(dt, step);
             dt -= h;
-            velocity += ((target - value) * stiffness - velocity * damping) * h;
+            velocity += ((target - value) * EffStiffness - velocity * EffDamping) * h;
             value += velocity * h;
         }
     }
@@ -435,6 +454,38 @@ public class PlayerSquashStretch : MonoBehaviour
         // 直接写世界位置：父级是旋转过的方块，写 localPosition 会让"下移"变成斜着移动
         Vector3 wp = visual.position;
         wp.y = targetWorldY;
+
+        // ---- 贴墙：让精灵那条边贴住碰撞体的那个面 ----
+        // 压扁会横向鼓起、空中拉伸会横向收窄（碰撞体永远不变），贴着墙时就会
+        // 一会儿穿进墙里、一会儿和墙之间留条缝。这里沿 x 把精灵整体挪一下，
+        // 让它靠墙那条边和碰撞体的面重合。只在单侧有墙时处理（两边都夹住就居中）。
+        if (!disableWallHug && (wallLeftThisFrame ^ wallRightThisFrame))
+        {
+            float colliderHalfW = colliderHalfX * absCos + colliderHalfY * absSin;
+            float colliderCenterX = transform.position.x + (colliderOffset.x * cosA - colliderOffset.y * sinA);
+
+            float spriteHalfW, spriteCenterOffX;
+            if (art != null)
+            {
+                // 世界轴缩放：水平半宽只跟 sx 有关
+                spriteHalfW = sxWorld * (spriteSize.x * 0.5f * absCos + spriteSize.y * 0.5f * absSin);
+                spriteCenterOffX = sxWorld * (spriteCenter.x * cosA - spriteCenter.y * sinA);
+            }
+            else
+            {
+                // 方块自身轴缩放
+                spriteHalfW = spriteSize.x * 0.5f * sxWorld * absCos + spriteSize.y * 0.5f * syWorld * absSin;
+                spriteCenterOffX = spriteCenter.x * sxWorld * cosA - spriteCenter.y * syWorld * sinA;
+            }
+
+            float spriteCenterX = wp.x + spriteCenterOffX;
+            float dx = wallLeftThisFrame
+                ? (colliderCenterX - colliderHalfW) - (spriteCenterX - spriteHalfW)   // 贴左墙：左边对齐
+                : (colliderCenterX + colliderHalfW) - (spriteCenterX + spriteHalfW);  // 贴右墙：右边对齐
+
+            wp.x += Mathf.Clamp(dx, -1f, 1f);   // 夹紧，防止脏数据把精灵甩出去
+        }
+
         visual.position = wp;
     }
 
@@ -496,14 +547,30 @@ public class PlayerSquashStretch : MonoBehaviour
         }
     }
 
-    // 持续被踩：只有"接触法线朝下且接触点在我上半身"才算，与 MoveLate 的 isSteppedOn 同款语义
+    // 持续接触时做两件事：
+    //   1. 记录左右两侧有没有墙（免费，不用额外射线）—— 贴墙时精灵那条边要贴住墙面；
+    //   2. （可选）判断"我头上是不是站着另一个角色"，用于被压时的保持拉宽。
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (disableSteppedOnWiden || !holdWhileSteppedOn) return;
+        if (visual == null) return;
         if (DeathRespawnVFX.isDead) return;
 
         Collider2D other = collision.collider;
         if (other == null) return;
+
+        // ---- 1. 左右墙检测（法线由对方指向我：+x = 墙在我左边）----
+        if (!disableWallHug)
+        {
+            foreach (ContactPoint2D contact in collision.contacts)
+            {
+                float nx = contact.normal.x;
+                if (nx > 0.7f) wallLeftThisFrame = true;
+                else if (nx < -0.7f) wallRightThisFrame = true;
+            }
+        }
+
+        // ---- 2. 被踩检测 ----
+        if (disableSteppedOnWiden || !holdWhileSteppedOn) return;
         if (!other.CompareTag("Player") && !other.CompareTag("Player2")) return;
 
         float myCenterY = transform.position.y;   // 不用 Collider2D.bounds：autoSyncTransforms=false 时它可能是脏值
@@ -528,7 +595,7 @@ public class PlayerSquashStretch : MonoBehaviour
 
         // 冲量 → 初始速度。弹簧峰值位移约等于 kick/ω，所以取 kick = amount*ω 时
         // 峰值正好是 amount，改 stiffness 不会改变观感幅度（只改回弹快慢）。
-        float omega = Mathf.Sqrt(Mathf.Max(1f, stiffness));
+        float omega = Mathf.Sqrt(Mathf.Max(1f, EffStiffness));
         deformVVel -= amount * omega;
 
         if (showDebug)
@@ -541,7 +608,7 @@ public class PlayerSquashStretch : MonoBehaviour
         float amount = EvaluateAmount(impactSpeed, maxAmount);
         if (amount <= 0.0001f) return;
 
-        float omega = Mathf.Sqrt(Mathf.Max(1f, stiffness));
+        float omega = Mathf.Sqrt(Mathf.Max(1f, EffStiffness));
         deformHVel += amount * omega;
 
         if (showDebug)
@@ -598,9 +665,44 @@ public class PlayerSquashStretch : MonoBehaviour
     [ContextMenu("手动触发一次最大压扁")]
     private void TestMaxSquash()
     {
-        float omega = Mathf.Sqrt(Mathf.Max(1f, stiffness));
+        float omega = Mathf.Sqrt(Mathf.Max(1f, EffStiffness));
         deformVVel -= maxSquash * omega;
         deformHVel += maxActorLandingWiden * omega;
+    }
+
+    /// <summary>
+    /// 调幅度曲线时的"作弊条"：在 Inspector 里右键组件 → 打印幅度映射表。
+    /// 改完 impactResponse / minImpactSpeed / maxImpactSpeed 点一下，就能看到几档典型落地速度
+    /// 各自压多少，不用进 Play 盲目试。
+    /// （曲线"改了没感觉"的最常见原因：实际撞击速度都挤在 t=0.8~1.0 的尾巴上。）
+    /// </summary>
+    [ContextMenu("打印幅度映射表（改完曲线点这里）")]
+    private void PrintImpactTable()
+    {
+        float[] samples = { minImpactSpeed, 7f, 10.9f, 13f, 15.34f, 18.8f, 24f };
+        string[] notes = { "阈值(刚好不弹)", "小跳", "1格高落下", "中跳", "满跳落回", "3格高落下", "很高" };
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"[Squash] 幅度映射（min={minImpactSpeed:F1} max={maxImpactSpeed:F1} " +
+                      $"maxSquash={maxSquash:F2} bounceSpeed={bounceSpeed:F2}）");
+        sb.AppendLine("   撞击速度   t(曲线横轴)   压扁量    说明");
+
+        foreach (float v in System.Linq.Enumerable.Distinct(samples))
+        {
+            float t = Mathf.InverseLerp(minImpactSpeed, Mathf.Max(minImpactSpeed + 0.01f, maxImpactSpeed), v);
+            float shaped = (impactResponse != null && impactResponse.length > 0)
+                ? Mathf.Clamp01(impactResponse.Evaluate(t)) : t;
+            float amount = maxSquash * shaped;
+
+            string note = "";
+            for (int i = 0; i < samples.Length; i++)
+                if (Mathf.Abs(samples[i] - v) < 0.001f) { note = notes[i]; break; }
+
+            sb.AppendLine($"   {v,7:F2}   {t,8:F3}    {amount,7:F3}    {note}");
+        }
+
+        sb.AppendLine("   提示：这一列压扁量差异不明显，就把 maxImpactSpeed 调大（比如 26），让常用落地速度落在曲线中段。");
+        Debug.Log(sb.ToString(), this);
     }
 
     private void OnDrawGizmosSelected()

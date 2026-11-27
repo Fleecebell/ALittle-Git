@@ -467,8 +467,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4f315e29786ac040bcd77612ad38dcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visual: {fileID: 8155224253791019007}
-  art: {fileID: 6281219689248365708}
+  visual: {fileID: 0}
+  art: {fileID: 0}
   feelSettings: {fileID: 11400000, guid: d8fdc1b77d022dd47a98f0d5530c3e8f, type: 2}
   bodyCollider: {fileID: 0}
   enableLandingSquash: 1
@@ -477,39 +477,40 @@ MonoBehaviour:
   disableSteppedOnWiden: 0
   minImpactSpeed: 5
   maxImpactSpeed: 18
-  maxSquash: 0.2
-  axisShare: 0.7
+  maxSquash: 0.329
+  axisShare: 0.6
   impactResponse:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
+      time: -0.010000007
+      value: 0.009416778
+      inSlope: 1.7410097
+      outSlope: 1.7410097
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.57666665
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1
-      outSlope: 0
+      inSlope: -1.7973744
+      outSlope: -1.7973744
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.06333324
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxAirStretch: 0.12
+  maxAirStretch: 0.195
   stretchRefSpeed: 18
   riseStretchScale: 0.6
   maxActorLandingWiden: 0.12
   steppedOnWidenKick: 0.12
   steppedOnHoldWiden: 0.08
   holdWhileSteppedOn: 1
+  bounceSpeed: 1.89
   stiffness: 220
   damping: 14
   maxSubStep: 0.008333334
@@ -16481,8 +16482,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4f315e29786ac040bcd77612ad38dcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visual: {fileID: 4528954965899552348}
-  art: {fileID: 3584855434176767536}
+  visual: {fileID: 0}
+  art: {fileID: 0}
   feelSettings: {fileID: 11400000, guid: d8fdc1b77d022dd47a98f0d5530c3e8f, type: 2}
   bodyCollider: {fileID: 0}
   enableLandingSquash: 1
@@ -16491,39 +16492,40 @@ MonoBehaviour:
   disableSteppedOnWiden: 0
   minImpactSpeed: 5
   maxImpactSpeed: 18
-  maxSquash: 0.2
-  axisShare: 0.7
+  maxSquash: 0.329
+  axisShare: 0.6
   impactResponse:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
+      time: -0.010000007
+      value: 0.009416778
+      inSlope: 1.7410097
+      outSlope: 1.7410097
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.57666665
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1
-      outSlope: 0
+      inSlope: -1.7973744
+      outSlope: -1.7973744
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.06333324
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxAirStretch: 0.12
+  maxAirStretch: 0.195
   stretchRefSpeed: 18
   riseStretchScale: 0.6
   maxActorLandingWiden: 0.12
   steppedOnWidenKick: 0.12
   steppedOnHoldWiden: 0.08
   holdWhileSteppedOn: 1
+  bounceSpeed: 1.89
   stiffness: 220
   damping: 14
   maxSubStep: 0.008333334
