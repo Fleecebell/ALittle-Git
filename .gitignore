@@ -4,6 +4,9 @@
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
+# 上面两条会误吞 Unity 包里的源码目录（如 Tools/UnityTrueCLI/com.unity.pipeline/Editor/Commands/Build/）
+!**/Editor/Commands/Build/
+!**/Editor/Commands/Build/**
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
 .codebase-memory/
@@ -52,3 +55,6 @@ OutPackages/Unity-Skills-main/docs/installation-demo.gif
 
 # 扩展自带运行时（codely-unity-lsp-server、TJGenerators 等，数百 MB，可自动重新下载）
 .codely-cli/extensions/
+
+# 本地打包验证产物
+Builds/

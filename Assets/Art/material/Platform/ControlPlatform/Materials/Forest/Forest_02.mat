@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Forest_02
+  m_Shader: {fileID: 4800000, guid: 234341d6911ac95488a3f11b6f6eb049, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PatternTex:
+        m_Texture: {fileID: 2800000, guid: 996386331b1ed6548a362e5a0d7828e9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _PatternAnchor: 1
+    - _PatternScale: 0.41
+    - _PatternStrength: 0.62
+    m_Colors:
+    - _BaseColor: {r: 0.5924529, g: 0.45062745, b: 0.23586327, a: 1}
+    - _PatternColor: {r: 0.34509805, g: 0.255068, b: 0.07843136, a: 1}
+    - _PatternOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _PlatformAnchorPos: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []

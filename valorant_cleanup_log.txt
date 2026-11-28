@@ -1,0 +1,22 @@
+﻿=== cleanup start ===
+[23:29:12] Elevated: True
+[23:29:12] FOUND: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ACLOS
+[23:29:12]   reg delete output: 操作成功完成。 
+[23:29:12]   DELETED (reg.exe)
+[23:29:12] not present: HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\ACLOS
+[23:29:12] not present: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ACLOS
+[23:29:12] not present: HKLM\SOFTWARE\ACLOS
+[23:29:12] not present: HKLM\SOFTWARE\WOW6432Node\ACLOS
+[23:29:12] not present: HKLM\SOFTWARE\AntiCheatExpert
+[23:29:12] not present: HKLM\SOFTWARE\WOW6432Node\AntiCheatExpert
+[23:29:12] === verify ===
+[23:29:12]   HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ACLOS -> False
+[23:29:12]   HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\ACLOS -> False
+[23:29:12]   HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ACLOS -> False
+[23:29:12]   HKLM\SOFTWARE\ACLOS -> False
+[23:29:12]   HKLM\SOFTWARE\WOW6432Node\ACLOS -> False
+[23:29:12]   HKLM\SOFTWARE\AntiCheatExpert -> False
+[23:29:12]   HKLM\SOFTWARE\WOW6432Node\AntiCheatExpert -> False
+[23:29:12] === scan uninstall entries ===
+[23:29:14]   none left
+[23:29:14] === cleanup end ===

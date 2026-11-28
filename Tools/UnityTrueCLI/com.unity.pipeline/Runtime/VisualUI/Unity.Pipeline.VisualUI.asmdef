@@ -1,0 +1,7 @@
+{
+  "name": "Unity.Pipeline.VisualUI",
+  "references": ["Unity.ugui"],
+  "defineConstraints": ["TRUECLI_UGUI"],
+  "versionDefines": [{"name":"com.unity.ugui","expression":"1.0.0","define":"TRUECLI_UGUI"}],
+  "autoReferenced": true
+}

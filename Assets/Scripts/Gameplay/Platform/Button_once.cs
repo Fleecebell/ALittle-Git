@@ -1,0 +1,167 @@
+using UnityEngine;
+using System.Collections.Generic;
+using System;
+
+public class Button_once : MonoBehaviour
+{
+    GameObject big_button;
+
+    [Header("移动物体")]
+    public GameObject wall0;
+    private Vector3 wall0_pos;
+    [Header("目标位置")]
+    public Transform wall1_pos;
+    [Header("移动速度")]
+    public float speed = 2f;
+
+    [Header("触发方式")]
+    [Tooltip("勾选：一次性——踩一次就移过去并停住（只有按 R / 死亡才复原）。" +
+             "不勾选：踩住时移过去，松开/离开按钮自动平滑返回原位。")]
+    public bool oneTime = true;
+
+    bool wall_isgone = false;
+    // 返回原位中：死亡/按R复原后平台平滑移回起点，此期间忽略触发，防止玩家站在上面又把它推走
+    bool returning = false;
+
+    // 平台移动增量
+    private Vector3 previousWall0Pos;
+    public Vector3 PlatformDelta { get; private set; }
+
+    // SmoothStep 进度（0=起点，1=目标），direction 表示方向（+1前进，-1返回），用于慢快慢曲线
+    private float moveProgress = 0f;
+    private int direction = 1;
+
+    // 静态字典：平台 GameObject → 获取其移动增量的委托
+    // 角色脚本通过它自动找到平台，无需手动配置。支持所有平台类型。
+    public static Dictionary<GameObject, Func<Vector3>> PlatformDeltas = new Dictionary<GameObject, Func<Vector3>>();
+
+    // 所有活跃实例，用于死亡时统一复原所有按钮
+    private static List<Button_once> activeInstances = new List<Button_once>();
+
+    // 把平台位置喂给斑驳/木纹 shader，移动时贴图才不会在表面滑动（无需任何手动组件）
+    private readonly PlatformAnchorFeeder _anchorFeeder = new PlatformAnchorFeeder();
+
+    // 死亡/按R时统一复原所有按钮（由 DeathRespawnVFX.TriggerDeath 调用）
+    public static void ResetAllButtons()
+    {
+        for (int i = activeInstances.Count - 1; i >= 0; i--)
+        {
+            if (activeInstances[i] != null)
+                activeInstances[i].ResetButton();
+        }
+    }
+
+    void Start()
+    {
+        if (!activeInstances.Contains(this))
+            activeInstances.Add(this);
+
+        big_button = transform.Find("big").gameObject;
+        if (wall0 != null)
+        {
+            wall0_pos = wall0.transform.position;
+            previousWall0Pos = wall0.transform.position;
+            PlatformDeltas[wall0] = () => PlatformDelta;
+            // 先喂一次锚点，避免第一帧贴图还按世界坐标采样
+            _anchorFeeder.Feed(wall0.transform);
+        }
+        else
+        {
+            Debug.Log("未正确设置移动物体");
+        }
+        wall_isgone = false;
+        PlatformDelta = Vector3.zero;
+    }
+
+    void Update()
+    {
+        if (wall0 == null) return;
+
+        previousWall0Pos = wall0.transform.position;
+
+        if (returning && moveProgress <= 0f)
+        {
+            // 已平滑回到起点，结束返回状态
+            returning = false;
+        }
+
+        if (wall_isgone && !returning)
+        {
+            big_button.SetActive(false);
+            direction = 1;
+        }
+        else
+        {
+            big_button.SetActive(true);
+            direction = -1;
+        }
+
+        // 基于单个进度变量移动，保证方向切换时不会瞬移
+        moveProgress = Mathf.Clamp01(moveProgress + direction * speed * Time.deltaTime);
+        float t = Mathf.SmoothStep(0f, 1f, moveProgress);
+        wall0.transform.position = Vector3.Lerp(wall0_pos, wall1_pos.position, t);
+
+        // 移动后立刻把平台位置喂给斑驳/木纹 shader
+        _anchorFeeder.Feed(wall0.transform);
+
+        PlatformDelta = wall0.transform.position - previousWall0Pos;
+
+        if (Input.GetKeyDown(KeyCode.R) || Die.playerDying)
+        {
+            ResetButton();
+        }
+    }
+
+    // 复原按钮：平滑返回起点（不清零进度，靠 direction=-1 平滑移回），期间忽略触发
+    public void ResetButton()
+    {
+        wall_isgone = false;
+        returning = true;
+    }
+
+    // 一次性模式：Enter 触发一次并保持按下，玩家离开也不回弹，只有按 R / 死亡才复原。
+    // 非一次性模式：Stay 保持按下（踩住），Exit 松开即平滑返回原位。
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!oneTime) return;
+        if (IsPlayer(collision))
+        {
+            // 返回原位期间忽略触发
+            if (returning) return;
+            wall_isgone = true;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (oneTime) return;
+        if (IsPlayer(collision))
+        {
+            // 返回原位期间忽略触发
+            if (returning) return;
+            wall_isgone = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (oneTime) return;
+        if (IsPlayer(collision))
+        {
+            // 松开/离开按钮 -> 平滑返回原位
+            wall_isgone = false;
+        }
+    }
+
+    private static bool IsPlayer(Collider2D collision)
+    {
+        return collision.CompareTag("Player") || collision.CompareTag("Player2");
+    }
+
+    private void OnDestroy()
+    {
+        activeInstances.Remove(this);
+        if (wall0 != null && PlatformDeltas.ContainsKey(wall0))
+            PlatformDeltas.Remove(wall0);
+    }
+}

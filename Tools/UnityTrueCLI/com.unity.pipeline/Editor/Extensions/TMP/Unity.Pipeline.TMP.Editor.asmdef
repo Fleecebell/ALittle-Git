@@ -1,0 +1,8 @@
+{
+  "name":"Unity.Pipeline.TMP.Editor",
+  "references":["Unity.Pipeline","Unity.Pipeline.Attributes","Unity.Pipeline.Editor","Unity.TextMeshPro","Unity.ugui"],
+  "includePlatforms":["Editor"],
+  "defineConstraints":["TRUECLI_TMP"],
+  "versionDefines":[{"name":"com.unity.textmeshpro","expression":"3.0.0","define":"TRUECLI_TMP"},{"name":"com.unity.ugui","expression":"2.0.0","define":"TRUECLI_TMP"}],
+  "autoReferenced":true
+}
